@@ -4,6 +4,7 @@ import { Snackbar } from "./components/Snackbar"
 import { SnackbarProvider } from "./contexts/snackbarContext"
 import { PaperProvider } from "react-native-paper"
 import { UserProvider } from "./contexts/userContext"
+import { NavigationContainer } from "@react-navigation/native"
 
 interface ProvidersProps {
     children?: React.ReactNode
@@ -11,13 +12,15 @@ interface ProvidersProps {
 
 export const Providers: React.FC<ProvidersProps> = ({ children }) => {
     return (
-        <PaperProvider theme={theme}>
-            <SnackbarProvider>
-                <UserProvider>
-                    {children}
-                    <Snackbar />
-                </UserProvider>
-            </SnackbarProvider>
-        </PaperProvider>
+        <NavigationContainer>
+            <PaperProvider theme={theme}>
+                <SnackbarProvider>
+                    <UserProvider>
+                        {children}
+                        <Snackbar />
+                    </UserProvider>
+                </SnackbarProvider>
+            </PaperProvider>
+        </NavigationContainer>
     )
 }

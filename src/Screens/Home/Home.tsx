@@ -15,21 +15,21 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
     const [form, setForm] = useState<"login" | "signup">()
 
     return (
-        <Surface style={{ flex: 1, backgroundColor: colors.primary, justifyContent: "center", alignItems: "center", gap: 20, paddingHorizontal: 80 }}>
+        <Surface style={{ flex: 1, backgroundColor: colors.primary, justifyContent: "center", alignItems: "center", gap: 20, paddingHorizontal: 60 }}>
             <Logo />
             {!form && (
                 <Surface style={{ gap: 10, backgroundColor: "transparent", alignItems: "center" }}>
                     <Button onPress={() => setForm("login")} icon={"account-outline"}>
                         Login
                     </Button>
-                    <Pressable>
-                        <Text style={{ color: colors.secondary }}>
-                            Ainda não tem uma conta? <Text style={{ color: colors.secondary, fontWeight: "bold" }}>Faça o cadastro</Text>{" "}
-                        </Text>
-                    </Pressable>
                 </Surface>
             )}
             {form == "login" && <Login navigation={navigation} />}
+            <Pressable>
+                <Text style={{ color: colors.secondary }}>
+                    Ainda não tem uma conta? <Text style={{ color: colors.secondary, fontWeight: "bold" }}>Faça o cadastro</Text>{" "}
+                </Text>
+            </Pressable>
         </Surface>
     )
 }

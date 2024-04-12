@@ -3,6 +3,7 @@ import React, { useEffect } from "react"
 import { User } from "../types/server/class"
 import { api } from "../backend/api"
 import { useSnackbar } from "../hooks/useSnackbar"
+import { useUser } from "../hooks/useUser"
 
 interface keepSessionProps {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
@@ -10,6 +11,7 @@ interface keepSessionProps {
 
 export const KeepSession: React.FC<keepSessionProps> = ({ setLoading }) => {
     const { snackbar } = useSnackbar()
+    const { onLogin } = useUser()
 
     const handleSession = async () => {
         const keepSession = JSON.parse((await AsyncStorage.getItem("stay_connected")) || "false")
@@ -23,7 +25,7 @@ export const KeepSession: React.FC<keepSessionProps> = ({ setLoading }) => {
                     const response = await api.post("/login/keep_session", session)
                     const user = response.data
                     if (user) {
-                        snackbar("logado")
+                        onLogin(user)
                     } else {
                         snackbar("Não foi possível recuperar a sessão. Faça o login novamente")
                     }

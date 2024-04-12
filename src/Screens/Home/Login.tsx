@@ -1,10 +1,10 @@
 import { NavigationProp } from "@react-navigation/native"
 import React, { useEffect, useRef, useState } from "react"
-import { Surface, Switch } from "react-native-paper"
+import { Surface, Switch, Text } from "react-native-paper"
 import { TextInput } from "./TextInput"
 import { useFormik } from "formik"
 import { LoginForm } from "../../types/server/login"
-import { Keyboard, KeyboardAvoidingView, TextInput as TextInputRef } from "react-native"
+import { Keyboard, KeyboardAvoidingView, TextInput as TextInputRef, View } from "react-native"
 import { Button } from "./Button"
 import { api } from "../../backend/api"
 import { AxiosError } from "axios"
@@ -12,6 +12,7 @@ import { useSnackbar } from "../../hooks/useSnackbar"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { KeepSession } from "../../components/KeepSession"
 import { colors } from "../../style/colors"
+import { useUser } from "../../hooks/useUser"
 
 interface LoginProps {
     navigation: NavigationProp<any, any>
@@ -20,6 +21,7 @@ interface LoginProps {
 export const Login: React.FC<LoginProps> = ({ navigation }) => {
     const password_ref = useRef<TextInputRef>(null)
     const { snackbar } = useSnackbar()
+    const { onLogin } = useUser()
 
     const [loading, setLoading] = useState(false)
     const [keepSession, setKeepSession] = useState(false)
@@ -38,7 +40,7 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
                 const response = await api.post("/login", values)
                 const user = response.data
                 if (user) {
-                    console.log(user)
+                    onLogin(user)
                     if (keepSession) {
                         await AsyncStorage.setItem("session", JSON.stringify(user))
                     }
@@ -89,8 +91,11 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
                 onSubmitEditing={() => formik.handleSubmit()}
                 readOnly={loading}
             />
-            <Surface style={{ flexDirection: "row", backgroundColor: "transparent" }}>
-                <Switch value={keepSession} onValueChange={(value) => handleStayConnected(value)} color={colors.success} />
+            <Surface style={{ flexDirection: "row", backgroundColor: "transparent", alignItems: "center", justifyContent: "space-between" }}>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+                    <Switch value={keepSession} onValueChange={(value) => handleStayConnected(value)} color={colors.success} />
+                    <Text style={{ color: colors.secondary }}>Manter-se conectado</Text>
+                </View>
                 <Button loading={loading} onPress={() => formik.handleSubmit()}>
                     Entrar
                 </Button>

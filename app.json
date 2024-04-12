@@ -1,31 +1,41 @@
 {
   "expo": {
-    "name": "loucaselisas.native",
-    "slug": "loucaselisas.native",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-        "adaptiveIcon": {
-            "foregroundImage": "./assets/adaptive-icon.png",
-            "backgroundColor": "#ffffff"
-        },
-        "softwareKeyboardLayoutMode": "pan"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "name": "Loucas e Lisas",
+      "slug": "loucaselisasnative",
+      "owner": "agenciaboz-dev",
+      "version": "1.0.0",
+      "orientation": "portrait",
+      "icon": "./assets/icon.png",
+      "userInterfaceStyle": "light",
+      "splash": {
+          "image": "./assets/splash.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#000"
+      },
+      "assetBundlePatterns": ["**/*"],
+      "ios": {
+          "userInterfaceStyle": "light",
+          "supportsTablet": false,
+          "bundleIdentifier": "com.agenciabozdev.loucaselisas"
+      },
+      "android": {
+          "userInterfaceStyle": "light",
+          "adaptiveIcon": {
+              "foregroundImage": "./assets/foreground-icon.png",
+              "monochromeImage": "./assets/adaptive-icon.png",
+              "backgroundColor": "#000"
+          },
+          "softwareKeyboardLayoutMode": "pan",
+          "package": "com.agenciabozdev.loucaselisas"
+      },
+      "web": {
+          "favicon": "./assets/favicon.png"
+      },
+      "plugins": [["./plugins/withDisableForcedDarkModeAndroid.js", {}]],
+      "extra": {
+          "eas": {
+              "projectId": "4dd09afc-0e4d-4b39-bfd3-8b67e07148b3"
+          }
+      }
   }
 }

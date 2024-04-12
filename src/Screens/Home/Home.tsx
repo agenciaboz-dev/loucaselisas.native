@@ -25,7 +25,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                 </Surface>
             )}
             {form == "login" && <Login navigation={navigation} />}
-            <Pressable>
+            <Pressable onPress={() => navigation.navigate("signup")}>
                 <Text style={{ color: colors.secondary }}>
                     Ainda não tem uma conta? <Text style={{ color: colors.secondary, fontWeight: "bold" }}>Faça o cadastro</Text>{" "}
                 </Text>

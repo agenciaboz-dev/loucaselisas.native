@@ -1,7 +1,7 @@
 import React from "react"
 import { View } from "react-native"
 import { Avatar, IconButton, Menu, Surface, Text } from "react-native-paper"
-import { avatar_placeholder } from "../../tools/avatar_placeholder"
+import { avatar_placeholder } from "../../tools/placeholders"
 
 interface NotificationItemProps {}
 

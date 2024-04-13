@@ -4,7 +4,7 @@ import { useUser } from "../../hooks/useUser"
 import { Pressable, View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { colors } from "../../style/colors"
-import { avatar_placeholder } from "../../tools/avatar_placeholder"
+import { avatar_placeholder } from "../../tools/placeholders"
 import { NotificationItem } from "./NotificationItem"
 
 interface HeaderProps {}

@@ -17,7 +17,7 @@ import { api } from "../../backend/api"
 import { useUser } from "../../hooks/useUser"
 import { AxiosError } from "axios"
 import { useSnackbar } from "../../hooks/useSnackbar"
-import { avatar_placeholder } from "../../tools/avatar_placeholder"
+import { avatar_placeholder } from "../../tools/placeholders"
 
 interface SignupProps {}
 

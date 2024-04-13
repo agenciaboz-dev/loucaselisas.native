@@ -249,6 +249,9 @@ export type UserForm = Omit<WithoutFunctions<User>, "id" | "admin" | "favorite_c
     creator: CreatorForm | null;
     payment_cards: PaymentCardForm[];
 };
+export type PartialUser = Partial<User> & {
+    id: string;
+};
 export declare class User {
     id: string;
     username: string;
@@ -283,10 +286,10 @@ export declare class User {
     static updateImage(data: UserImageForm & {
         id: string;
     }, socket: Socket): Promise<void>;
-    static signup(socket: Socket, data: UserForm): Promise<void>;
+    static signup(data: UserForm, socket?: Socket): Promise<string | User | undefined>;
     static list(socket: Socket): Promise<void>;
     static login(data: LoginForm, socket?: Socket): Promise<User | null>;
     load(data: UserPrisma): void;
-    update(data: Partial<UserPrisma>, socket?: Socket): Promise<void>;
+    update(data: Partial<UserPrisma>, socket?: Socket): Promise<string | undefined>;
     updateImage(data: UserImageForm, socket?: Socket): Promise<void>;
 }

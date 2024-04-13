@@ -2,6 +2,7 @@ import { NavigationProp } from "@react-navigation/native"
 import { NativeStackNavigationOptions, createNativeStackNavigator } from "@react-navigation/native-stack"
 import React from "react"
 import { Dashboard } from "./Dashboard"
+import { default_navigator_options } from "../../../tools/default_navigator_options"
 
 interface PanelProps {
     navigation: NavigationProp<any, any>
@@ -10,13 +11,8 @@ interface PanelProps {
 const PanelStack = createNativeStackNavigator()
 
 export const Panel: React.FC<PanelProps> = ({ navigation }) => {
-    const navigator_options: NativeStackNavigationOptions = {
-        animation: "slide_from_right",
-        headerShown: false,
-    }
-
     return (
-        <PanelStack.Navigator screenOptions={navigator_options}>
+        <PanelStack.Navigator screenOptions={default_navigator_options}>
             <PanelStack.Screen name="dashboard" component={Dashboard} />
         </PanelStack.Navigator>
     )

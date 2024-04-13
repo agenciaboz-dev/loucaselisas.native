@@ -17,7 +17,7 @@ export declare class Role {
     general_permissions: GeneralPermissions;
     constructor(data: RolePrisma);
     static existsDefault(): Promise<boolean>;
-    static createDefault(socket: Socket): Promise<void>;
+    static createDefault(socket?: Socket): Promise<void>;
     load(data: RolePrisma): void;
     update(data: Partial<Role>): Promise<void>;
 }

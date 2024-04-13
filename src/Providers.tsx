@@ -1,5 +1,5 @@
 import React from "react"
-import { theme } from "./style/theme"
+import { navigation_theme, paper_theme } from "./style/theme"
 import { Snackbar } from "./components/Snackbar"
 import { SnackbarProvider } from "./contexts/snackbarContext"
 import { PaperProvider, Text } from "react-native-paper"
@@ -13,8 +13,8 @@ interface ProvidersProps {
 
 export const Providers: React.FC<ProvidersProps> = ({ children }) => {
     return (
-        <NavigationContainer>
-            <PaperProvider theme={theme}>
+        <NavigationContainer theme={navigation_theme}>
+            <PaperProvider theme={paper_theme}>
                 <SnackbarProvider>
                     <UserProvider>
                         {children}

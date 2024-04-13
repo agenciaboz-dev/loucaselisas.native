@@ -236,7 +236,7 @@ export const Signup: React.FC<SignupProps> = ({}) => {
                     />
                     <Dropdown
                         ref={dropdown_refs[9]}
-                        data={estados}
+                        data={estados.reverse()}
                         labelField="label"
                         onChange={(item) => formik.setFieldValue("uf", item.value)}
                         valueField="value"

@@ -17,7 +17,7 @@ export const Panel: React.FC<PanelProps> = ({ navigation }) => {
 
     return (
         <PanelStack.Navigator screenOptions={navigator_options}>
-            <PanelStack.Screen name="panel" component={Dashboard} />
+            <PanelStack.Screen name="dashboard" component={Dashboard} />
         </PanelStack.Navigator>
     )
 }

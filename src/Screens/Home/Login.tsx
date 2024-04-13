@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { KeepSession } from "../../components/KeepSession"
 import { colors } from "../../style/colors"
 import { useUser } from "../../hooks/useUser"
+import { User } from "../../types/server/class"
 
 interface LoginProps {
     navigation: NavigationProp<any, any>
@@ -62,6 +63,14 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
     }
 
     useEffect(() => {
+        AsyncStorage.getItem("session").then((result) => {
+            if (result) {
+                const user = JSON.parse(result) as User
+                formik.setFieldValue("login", user.email)
+                formik.setFieldValue("password", user.password)
+            }
+        })
+
         AsyncStorage.getItem("stay_connected").then((result) => {
             if (!!result) {
                 setKeepSession(!!result)

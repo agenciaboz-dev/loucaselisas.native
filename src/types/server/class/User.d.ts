@@ -285,7 +285,7 @@ export declare class User {
     }, socket: Socket): Promise<void>;
     static signup(socket: Socket, data: UserForm): Promise<void>;
     static list(socket: Socket): Promise<void>;
-    static login(data: LoginForm, socket?: Socket): Promise<void>;
+    static login(data: LoginForm, socket?: Socket): Promise<User | null>;
     load(data: UserPrisma): void;
     update(data: Partial<UserPrisma>, socket?: Socket): Promise<void>;
     updateImage(data: UserImageForm, socket?: Socket): Promise<void>;

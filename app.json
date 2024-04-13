@@ -31,7 +31,15 @@
       "web": {
           "favicon": "./assets/favicon.png"
       },
-      "plugins": [["./plugins/withDisableForcedDarkModeAndroid.js", {}]],
+      "plugins": [
+          ["./plugins/withDisableForcedDarkModeAndroid.js", {}],
+          [
+              "expo-image-picker",
+              {
+                  "photosPermission": "The app accesses your photos to let you upload it in your profile."
+              }
+          ]
+      ],
       "extra": {
           "eas": {
               "projectId": "4dd09afc-0e4d-4b39-bfd3-8b67e07148b3"

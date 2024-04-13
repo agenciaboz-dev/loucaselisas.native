@@ -38,13 +38,14 @@ export const FormText = React.forwardRef<React.ElementRef<typeof OriginalInput>,
                 dense
                 returnKeyType={props.returnKeyType || "next"}
                 error={error}
-                value={props.mask ? masked(props.formik.values[props.name], props.mask) : props.formik.values[props.name] || ""}
+                value={props.value || (props.mask ? masked(props.formik.values[props.name], props.mask) : props.formik.values[props.name] || "")}
                 // @ts-ignore
                 onChangeText={
-                    props.mask
+                    props.onChangeText ||
+                    (props.mask
                         ? (value) => props.formik.setFieldValue(props.name, masked(value, props.mask))
                         : // @ts-ignore
-                          props.formik.handleChange(props.name)
+                          props.formik.handleChange(props.name))
                 }
                 onBlur={props.formik.handleBlur(props.name)}
             />

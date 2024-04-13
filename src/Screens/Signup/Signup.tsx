@@ -1,26 +1,34 @@
 import { useFormik } from "formik"
-import React, { useRef, useState } from "react"
-import { Icon, Surface, Text, TextInput as PaperInput } from "react-native-paper"
+import React, { useEffect, useRef, useState } from "react"
+import { Icon, Surface, Text, TextInput as PaperInput, Avatar } from "react-native-paper"
 import { UserForm } from "../../types/server/class"
 import { colors } from "../../style/colors"
 import { FormText } from "../../components/FormText"
-import { KeyboardAvoidingView, Pressable, TextInput, View } from "react-native"
+import { Keyboard, KeyboardAvoidingView, Pressable, ScrollView, TextInput, View } from "react-native"
 import { Dropdown, IDropdownRef } from "react-native-element-dropdown"
 import DatePicker from "react-native-date-picker"
 import { estados } from "../../tools/estadosBrasil"
 import { dropdown_style } from "../../style/dropdown_style"
 import { Button } from "../../components/Button"
-import { mask } from "react-native-mask-text"
-import * as Yup from "yup"
 import { useSignupSchema } from "../../hooks/useSignupSchema"
+import * as ImagePicker from "expo-image-picker"
+import unmask from "../../tools/unmask"
+import { api } from "../../backend/api"
+import { useUser } from "../../hooks/useUser"
+import { AxiosError } from "axios"
+import { useSnackbar } from "../../hooks/useSnackbar"
 
 interface SignupProps {}
 
 export const Signup: React.FC<SignupProps> = ({}) => {
     const schema = useSignupSchema()
+    const { onLogin } = useUser()
+    const { snackbar } = useSnackbar()
 
     const [selectDate, setSelectDate] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [image, setImage] = useState<ImagePicker.ImagePickerAsset | null>(null)
+    const [keyboardActive, setKeyboardActive] = useState(false)
 
     const eighteen_years_behind = new Date(new Date().getFullYear() - 18, new Date().getMonth() - 1, new Date().getDate())
 
@@ -47,11 +55,33 @@ export const Signup: React.FC<SignupProps> = ({}) => {
             uf: "",
             username: "",
         },
-        onSubmit(values, formikHelpers) {
+        async onSubmit(values, formikHelpers) {
             if (loading) return
-            console.log(values)
             setLoading(true)
-            setTimeout(() => setLoading(false), 2000)
+
+            const data: UserForm = {
+                ...values,
+                cpf: unmask(values.cpf),
+                phone: unmask(values.phone),
+                image: image ? { name: "profile.png", base64: image.base64 as string } : null,
+            }
+
+            try {
+                const response = await api.post("/signup", data)
+                const user = response.data
+                console.log(user)
+                if (user) {
+                    onLogin(user)
+                }
+            } catch (error) {
+                console.log(error)
+                if (error instanceof AxiosError) {
+                    const message = error.response?.data
+                    snackbar("Erro: " + message)
+                }
+            } finally {
+                setLoading(false)
+            }
         },
         validationSchema: schema,
     })
@@ -76,8 +106,54 @@ export const Signup: React.FC<SignupProps> = ({}) => {
         setSelectDate(false)
     }
 
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+            base64: true,
+        })
+
+        if (!result.canceled) {
+            setImage(result.assets[0])
+        }
+    }
+
+    useEffect(() => {
+        console.log(formik.values)
+    }, [formik.values])
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", (event) => {
+            setKeyboardActive(true)
+        })
+        const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
+            setKeyboardActive(false)
+        })
+
+        return () => {
+            keyboardDidShowListener.remove()
+            keyboardDidHideListener.remove()
+        }
+    }, [])
+
     return (
-        <KeyboardAvoidingView behavior="height" style={{ flex: 1, padding: 20, paddingTop: 100, gap: 30 }}>
+        <ScrollView
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{ gap: 20, paddingBottom: keyboardActive ? 400 : 60 }}
+            style={{ flex: 1, padding: 20, paddingVertical: 60 }}
+        >
+            <Text variant="displayLarge" style={{ alignSelf: "center" }}>
+                Cadastre-se
+            </Text>
+            <View style={{ alignItems: "center", gap: 10 }}>
+                <Avatar.Image size={150} source={{ uri: image?.uri || "https://avatar.iran.liara.run/public" }} />
+                <Button mode="contained" style={{ width: 150 }} onPress={() => pickImage()}>
+                    Inserir foto
+                </Button>
+            </View>
             <Surface style={{ backgroundColor: colors.box, padding: 20, borderRadius: 20, gap: 10 }}>
                 <FormText ref={input_refs[0]} name="name" label={"Nome completo"} onSubmitEditing={() => focusInput(1)} formik={formik} />
                 <FormText
@@ -141,11 +217,12 @@ export const Signup: React.FC<SignupProps> = ({}) => {
                             onSubmitEditing={() => focusInput(6)}
                             readOnly
                             right={<PaperInput.Icon icon={"calendar-range"} pointerEvents="none" />}
+                            value={formik.values.birth ? new Date(Number(formik.values.birth)).toLocaleDateString("pt-br") : ""}
                         />
                     </Pressable>
                 </View>
                 <FormText ref={input_refs[7]} name="profession" formik={formik} label={"Profissão"} onSubmitEditing={() => focusInput(8)} />
-                <View style={{ flexDirection: "row", gap: 10, width: "100%", minHeight: formik.errors.phone ? 65 : undefined }}>
+                <View style={{ flexDirection: "row", gap: 10, width: "100%" }}>
                     <FormText
                         ref={input_refs[8]}
                         name="phone"
@@ -155,6 +232,7 @@ export const Signup: React.FC<SignupProps> = ({}) => {
                         keyboardType="number-pad"
                         style={{ flex: 1, minWidth: 156.5 }}
                         maxLength={16}
+                        mask={"(99) 9 9999-9999"}
                     />
                     <Dropdown
                         ref={dropdown_refs[9]}
@@ -165,6 +243,7 @@ export const Signup: React.FC<SignupProps> = ({}) => {
                         value={formik.values.uf}
                         style={[dropdown_style]}
                         placeholder="Estado"
+                        dropdownPosition="top"
                     />
                 </View>
                 <View style={{ flexDirection: "row", gap: 10, width: "100%" }}>
@@ -187,13 +266,18 @@ export const Signup: React.FC<SignupProps> = ({}) => {
                         keyboardType="twitter"
                         returnKeyType="done"
                         autoCapitalize="none"
-                        style={{ width: "120%" }}
+                        style={{ width: "122%" }}
                         left={<PaperInput.Icon icon="at" />}
                     />
                 </View>
             </Surface>
 
-            <Button mode="contained" onPress={() => formik.handleSubmit()} style={{ width: 200, alignSelf: "center" }} loading={loading}>
+            <Button
+                mode="contained"
+                onPress={() => formik.handleSubmit()}
+                style={{ width: 200, alignSelf: "center", marginBottom: 30 }}
+                loading={loading}
+            >
                 Cadastrar-se
             </Button>
 
@@ -211,6 +295,6 @@ export const Signup: React.FC<SignupProps> = ({}) => {
                 theme="light"
                 maximumDate={eighteen_years_behind}
             />
-        </KeyboardAvoidingView>
+        </ScrollView>
     )
 }

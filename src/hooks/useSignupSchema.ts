@@ -8,10 +8,11 @@ export const useSignupSchema = () => {
     return Yup.object().shape({
         bio: Yup.string().max(300, "Bio pode ter no máximo 300 caracteres"),
 
-        birth: Yup.date().max(
-            new Date(new Date().getFullYear() - 18, new Date().getMonth() - 1, new Date().getDate()),
-            "Você precisa ter pelo menos 18 anos"
-        ),
+        birth: Yup.string().test("birth-valid", "Você precisa ter pelo menos 18 anos", (value) => {
+            const max = new Date(new Date().getFullYear() - 18, new Date().getMonth() - 1, new Date().getDate())
+            const date = new Date(Number(value))
+            return date <= max
+        }),
 
         cover: Yup.mixed().nullable(),
 
@@ -56,9 +57,7 @@ export const useSignupSchema = () => {
             )
             .nullable(),
 
-        phone: Yup.string()
-            .matches(/^\(\d{2}\)\s\d{4,5}\-\d{4}$/, "Telefone inválido")
-            .required(required_message),
+        phone: Yup.string().matches(/^\(\d{2}\) \d \d{4}-\d{4}$/, "Telefone inválido"),
 
         profession: Yup.string().nullable(),
         pronoun: Yup.string().nullable(),

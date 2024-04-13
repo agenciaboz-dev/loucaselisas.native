@@ -17,6 +17,7 @@ import { api } from "../../backend/api"
 import { useUser } from "../../hooks/useUser"
 import { AxiosError } from "axios"
 import { useSnackbar } from "../../hooks/useSnackbar"
+import { avatar_placeholder } from "../../tools/avatar_placeholder"
 
 interface SignupProps {}
 
@@ -149,7 +150,7 @@ export const Signup: React.FC<SignupProps> = ({}) => {
                 Cadastre-se
             </Text>
             <View style={{ alignItems: "center", gap: 10 }}>
-                <Avatar.Image size={150} source={{ uri: image?.uri || "https://avatar.iran.liara.run/public" }} />
+                <Avatar.Image size={150} source={{ uri: image?.uri || avatar_placeholder }} />
                 <Button mode="contained" style={{ width: 150 }} onPress={() => pickImage()}>
                     Inserir foto
                 </Button>

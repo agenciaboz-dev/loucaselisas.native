@@ -4,6 +4,7 @@ import { Home } from "./Screens/Home/Home"
 import { MainScreen } from "./Screens/MainScreen/MainScreen"
 import { Signup } from "./Screens/Signup/Signup"
 import { Header } from "./components/Header/Header"
+import { Account } from "./Screens/Account/Account"
 
 interface RoutesProps {}
 

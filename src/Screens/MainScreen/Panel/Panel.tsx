@@ -1,15 +1,23 @@
 import { NavigationProp } from "@react-navigation/native"
+import { NativeStackNavigationOptions, createNativeStackNavigator } from "@react-navigation/native-stack"
 import React from "react"
-import { Surface, Text } from "react-native-paper"
+import { Dashboard } from "./Dashboard"
 
 interface PanelProps {
     navigation: NavigationProp<any, any>
 }
 
+const PanelStack = createNativeStackNavigator()
+
 export const Panel: React.FC<PanelProps> = ({ navigation }) => {
+    const navigator_options: NativeStackNavigationOptions = {
+        animation: "slide_from_right",
+        headerShown: false,
+    }
+
     return (
-        <Surface style={{ flex: 1 }}>
-            <Text>painel</Text>
-        </Surface>
+        <PanelStack.Navigator screenOptions={navigator_options}>
+            <PanelStack.Screen name="panel" component={Dashboard} />
+        </PanelStack.Navigator>
     )
 }

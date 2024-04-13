@@ -13,7 +13,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
 
     return user ? (
         <View style={{ flexDirection: "row", paddingVertical: 15, alignItems: "center", gap: 10 }}>
-            <Pressable onPress={() => navigation.navigate("home")}>
+            <Pressable onPress={() => navigation.navigate("setup")}>
                 <Avatar.Image size={50} source={{ uri: user.image || undefined }} />
             </Pressable>
             <Text variant="titleLarge">{user.name}</Text>

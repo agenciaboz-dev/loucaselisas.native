@@ -4,7 +4,7 @@ import { Surface, Text } from "react-native-paper"
 import { colors } from "../../style/colors"
 import { Logo } from "../../components/Logo"
 import { Button } from "./Button"
-import { Pressable } from "react-native"
+import { Pressable, TouchableOpacity } from "react-native"
 import { Login } from "./Login"
 
 interface HomeProps {
@@ -25,11 +25,11 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                 </Surface>
             )}
             {form == "login" && <Login navigation={navigation} />}
-            <Pressable onPress={() => navigation.navigate("signup")}>
+            <TouchableOpacity onPress={() => navigation.navigate("signup")}>
                 <Text style={{ color: colors.secondary }}>
                     Ainda não tem uma conta? <Text style={{ color: colors.secondary, fontWeight: "bold" }}>Faça o cadastro</Text>{" "}
                 </Text>
-            </Pressable>
+            </TouchableOpacity>
         </Surface>
     )
 }

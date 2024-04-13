@@ -1,7 +1,7 @@
 import { NavigationProp } from "@react-navigation/native"
 import React from "react"
-import { TouchableOpacity } from "react-native"
-import { Icon, Surface, Text } from "react-native-paper"
+import { TouchableOpacity, ViewStyle } from "react-native"
+import { Icon, Surface, Text, TouchableRipple } from "react-native-paper"
 
 interface SetupProps {
     navigation: NavigationProp<any, any>
@@ -21,31 +21,38 @@ export const Setup: React.FC<SetupProps> = ({ navigation }) => {
         { icon: "wifi", label: "Termos", route: "terms" },
     ]
 
+    const wrapper_style: ViewStyle = { borderRadius: 15, paddingVertical: 10 }
+
+    const touchable_style: ViewStyle = {
+        flexDirection: "row",
+        width: "100%",
+        alignItems: "center",
+        gap: 20,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+    }
+
     return (
         <Surface style={{ flex: 1, padding: 20, gap: 20 }}>
-            <Surface style={{ padding: 20, borderRadius: 15, gap: 20 }}>
+            <Surface style={wrapper_style}>
                 {account_menus.map((menu) => (
-                    <TouchableOpacity
-                        key={menu.route}
-                        style={{ flexDirection: "row", width: "100%", alignItems: "center", gap: 20 }}
-                        onPress={() => console.log(menu.route)}
-                    >
-                        <Icon size={24} source={menu.icon} />
-                        <Text>{menu.label}</Text>
-                    </TouchableOpacity>
+                    <TouchableRipple key={menu.route} style={touchable_style} onPress={() => console.log(menu.route)}>
+                        <>
+                            <Icon size={24} source={menu.icon} />
+                            <Text>{menu.label}</Text>
+                        </>
+                    </TouchableRipple>
                 ))}
             </Surface>
 
-            <Surface style={{ padding: 20, borderRadius: 15, gap: 20 }}>
+            <Surface style={wrapper_style}>
                 {other_menus.map((menu) => (
-                    <TouchableOpacity
-                        key={menu.route}
-                        style={{ flexDirection: "row", width: "100%", alignItems: "center", gap: 20 }}
-                        onPress={() => console.log(menu.route)}
-                    >
-                        <Icon size={24} source={menu.icon} />
-                        <Text>{menu.label}</Text>
-                    </TouchableOpacity>
+                    <TouchableRipple key={menu.route} style={touchable_style} onPress={() => console.log(menu.route)}>
+                        <>
+                            <Icon size={24} source={menu.icon} />
+                            <Text>{menu.label}</Text>
+                        </>
+                    </TouchableRipple>
                 ))}
             </Surface>
         </Surface>

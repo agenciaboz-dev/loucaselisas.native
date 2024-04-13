@@ -64,7 +64,12 @@ export const Signup: React.FC<SignupProps> = ({}) => {
                 ...values,
                 cpf: unmask(values.cpf),
                 phone: unmask(values.phone),
-                image: image ? { name: "profile.png", base64: image.base64 as string } : null,
+                image: image
+                    ? {
+                          name: image?.uri.substring(image?.uri.lastIndexOf("/") + 1, image?.uri.length) || "profile.png",
+                          base64: image.base64 as string,
+                      }
+                    : null,
             }
 
             try {

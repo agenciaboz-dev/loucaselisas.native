@@ -6,6 +6,7 @@ import { UserFormComponent } from "../../../components/UserForm"
 import { useUser } from "../../../hooks/useUser"
 import { useSnackbar } from "../../../hooks/useSnackbar"
 import { User } from "../../../types/server/class"
+import { ScreenTitle } from "../../../components/ScreenTItle"
 
 interface ProfileProps {
     navigation: NavigationProp<any, any>
@@ -28,9 +29,7 @@ export const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             style={{ flex: 1, padding: 20, paddingBottom: 0 }}
             contentContainerStyle={{ gap: 20 }}
         >
-            <Text variant="titleLarge" style={{ alignSelf: "center" }}>
-                Editar perfil
-            </Text>
+            <ScreenTitle title="Editar perfil" />
 
             <UserFormComponent submitLabel="Salvar" onSubmit={onSubmit} user={user} />
         </ScrollView>

@@ -71,7 +71,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
 
             try {
                 const response = user
-                    ? await api.patch("/user", { ...data, image: undefined, cover: undefined, id: user.id })
+                    ? await api.patch("/user", { ...data, image: undefined, cover: undefined, bio: undefined, id: user.id })
                     : await api.post("/signup", data)
                 const responded_user = response.data
                 console.log(responded_user)

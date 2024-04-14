@@ -9,6 +9,7 @@ import { EditBio } from "./EditBio"
 import * as ImagePicker from "expo-image-picker"
 import { api } from "../../backend/api"
 import { UserImageForm } from "../../types/server/class/User"
+import { MenuGroup } from "./MenuGroup"
 
 interface AccountProps {
     navigation: NavigationProp<any, any>
@@ -96,6 +97,20 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
                     </Text>
                 </Pressable>
             )}
+            <MenuGroup
+                title="Conta"
+                menuItems={[
+                    { title: "Gerenciar seu plano", icon: "currency-usd", route: "setup:account" },
+                    { title: "Editar perfil", icon: "account", route: "setup:profile" },
+                ]}
+            />
+            <MenuGroup
+                title="Pagamento"
+                menuItems={[
+                    { title: "Histórico de pedidos", icon: "refresh", route: "setup:account" },
+                    { title: "Cartões de pagamento salvos", icon: "credit-card", route: "setup:profile" },
+                ]}
+            />
         </Surface>
     ) : null
 }

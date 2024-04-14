@@ -47,7 +47,7 @@ export declare const course_include: {
 export type CoursePrisma = Prisma.CourseGetPayload<{
     include: typeof course_include;
 }>;
-export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "owner" | "gallery" | "categories" | "creators" | "chat"> & {
+export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published"> & {
     lessons: LessonForm[];
     cover?: FileUpload;
     gallery: GalleryForm;

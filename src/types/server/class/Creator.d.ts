@@ -91,6 +91,9 @@ export type CreatorPrisma = Prisma.CreatorGetPayload<{
 }>;
 export type CreatorType = WithoutFunctions<Creator>;
 export type CreatorForm = Omit<WithoutFunctions<Creator>, "active" | "courses" | "id">;
+export type PartialCreator = Partial<Creator> & {
+    id: string;
+};
 export declare class Creator {
     id: string;
     user_id: string;
@@ -104,7 +107,15 @@ export declare class Creator {
     constructor(id: string, data?: CreatorPrisma);
     init(): Promise<void>;
     static list(socket: Socket): Promise<void>;
-    static new(socket: Socket, data: CreatorForm): Promise<void>;
-    static delete(socket: Socket, id: string): Promise<void>;
+    static new(data: CreatorForm, socket?: Socket): Promise<Creator | undefined>;
+    static delete(id: string, socket?: Socket): Promise<{
+        id: string;
+        user_id: string;
+        nickname: string;
+        language: string;
+        description: string;
+        active: boolean;
+    } | undefined>;
     load(data: CreatorPrisma): void;
+    update(data: PartialCreator): Promise<this | undefined>;
 }

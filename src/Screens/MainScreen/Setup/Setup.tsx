@@ -8,6 +8,7 @@ import { Profile } from "./Profile"
 import { Delete } from "./Delete"
 import { ManagePlan } from "./Plan/ManagePlan"
 import { ContractDetails } from "./Plan/ContractDetails"
+import { PlanHistory } from "./PlanHistory/PlanHistory"
 
 interface SetupProps {
     navigation: NavigationProp<any, any>
@@ -24,6 +25,7 @@ export const Setup: React.FC<SetupProps> = ({ navigation }) => {
             <Stack.Screen name="setup:delete" component={Delete} />
             <Stack.Screen name="setup:plan" component={ManagePlan} />
             <Stack.Screen name="setup:plan:details" component={ContractDetails} />
+            <Stack.Screen name="setup:plan:history" component={PlanHistory} />
         </Stack.Navigator>
     )
 }

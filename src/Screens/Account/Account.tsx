@@ -108,7 +108,7 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
             <MenuGroup
                 title="Pagamento"
                 menuItems={[
-                    { title: "Histórico de pedidos", icon: "refresh", route: "setup:account" },
+                    { title: "Histórico de pedidos", icon: "refresh", route: "setup:plan:history" },
                     { title: "Cartões de pagamento salvos", icon: "credit-card", route: "setup:profile" },
                 ]}
             />

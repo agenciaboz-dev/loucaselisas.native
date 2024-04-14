@@ -248,7 +248,7 @@ export interface UserImageForm {
     image?: FileUpload | null;
     cover?: FileUpload | null;
 }
-export type UserForm = Omit<WithoutFunctions<User>, "id" | "plan" | "admin" | "favorite_creators" | "favorite_courses" | "payment_cards" | "creator" | "student" | "role" | "cover" | "image" | "payment_cards"> & {
+export type UserForm = Omit<WithoutFunctions<User>, "id" | "plan" | "plan_history" | "admin" | "favorite_creators" | "favorite_courses" | "payment_cards" | "creator" | "student" | "role" | "cover" | "image" | "payment_cards"> & {
     image: FileUpload | null;
     cover: FileUpload | null;
     student: boolean;

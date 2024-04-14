@@ -7,6 +7,12 @@ export declare const plan_contract_include: {
 export type PlanContractPrisma = Prisma.PlanContractGetPayload<{
     include: typeof plan_contract_include;
 }>;
+export declare const contract_log_include: {
+    plan: true;
+};
+export type ContractLogPrisma = Prisma.ContractLogsGetPayload<{
+    include: typeof contract_log_include;
+}>;
 export declare class PlanContract {
     id: number;
     start_date: string;
@@ -32,4 +38,12 @@ export declare class Plan {
     constructor(id: number, data?: PlanPrisma);
     load(data: PlanPrisma): void;
     init(): Promise<void>;
+}
+export declare class ContractLog {
+    id: number;
+    start_date: string;
+    end_date: string;
+    paid: number;
+    plan: Plan;
+    constructor(data: ContractLogPrisma);
 }

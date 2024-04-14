@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Icon, Surface, Text, TextInput as PaperInput, Avatar } from "react-native-paper"
-import * as ImagePicker from "expo-image-picker"
 import { useSignupSchema } from "../hooks/useSignupSchema"
 import { User, UserForm } from "../types/server/class"
 import { useFormik } from "formik"
@@ -16,6 +15,7 @@ import { dropdown_style } from "../style/dropdown_style"
 import { estados } from "../tools/estadosBrasil"
 import { Button } from "./Button"
 import DatePicker from "react-native-date-picker"
+import { mask } from "react-native-mask-text"
 
 interface UserFormProps {
     user?: User
@@ -31,36 +31,33 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
 
     const [selectDate, setSelectDate] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [image, setImage] = useState<ImagePicker.ImagePickerAsset | null>(null)
     const [keyboardActive, setKeyboardActive] = useState(false)
 
     const eighteen_years_behind = new Date(new Date().getFullYear() - 18, new Date().getMonth() - 1, new Date().getDate())
 
     const formik = useFormik<UserForm>({
-        initialValues: user
-            ? { ...user, image: null, cover: null, student: true }
-            : {
-                  bio: "",
-                  birth: "",
-                  cover: null,
-                  cpf: "",
-                  creator: null,
-                  email: "",
-                  google_id: null,
-                  google_token: null,
-                  image: null,
-                  instagram: "",
-                  name: "",
-                  password: "",
-                  payment_cards: [],
-                  phone: "",
-                  profession: "",
-                  pronoun: "",
-                  student: true,
-                  tiktok: "",
-                  uf: "",
-                  username: "",
-              },
+        initialValues: {
+            bio: "",
+            birth: "",
+            cover: null,
+            cpf: "",
+            creator: null,
+            email: "",
+            google_id: null,
+            google_token: null,
+            image: null,
+            instagram: "",
+            name: "",
+            password: "",
+            payment_cards: [],
+            phone: "",
+            profession: "",
+            pronoun: "",
+            student: true,
+            tiktok: "",
+            uf: "",
+            username: "",
+        },
         async onSubmit(values, formikHelpers) {
             if (loading) return
             setLoading(true)
@@ -73,11 +70,13 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
             }
 
             try {
-                const response = await api.post("/signup", data)
-                const user = response.data
-                console.log(user)
-                if (user) {
-                    onSubmit(user)
+                const response = user
+                    ? await api.patch("/user", { ...data, image: undefined, cover: undefined, id: user.id })
+                    : await api.post("/signup", data)
+                const responded_user = response.data
+                console.log(responded_user)
+                if (responded_user) {
+                    onSubmit(responded_user)
                 }
             } catch (error) {
                 console.log(error)
@@ -124,6 +123,21 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
             setKeyboardActive(false)
         })
 
+        if (user) {
+            formik.setFieldValue("name", user.name)
+            formik.setFieldValue("cpf", mask(user.cpf, "999.999.999-99"))
+            formik.setFieldValue("username", user.username)
+            formik.setFieldValue("email", user.email)
+            formik.setFieldValue("password", user.password)
+            formik.setFieldValue("pronoun", user.pronoun)
+            formik.setFieldValue("birth", user.birth)
+            formik.setFieldValue("profession", user.profession)
+            formik.setFieldValue("phone", mask(user.phone, "(99) 9 9999-9999"))
+            formik.setFieldValue("uf", user.uf)
+            formik.setFieldValue("instagram", user.instagram)
+            formik.setFieldValue("tiktok", user.tiktok)
+        }
+
         return () => {
             keyboardDidShowListener.remove()
             keyboardDidHideListener.remove()
@@ -132,7 +146,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
 
     return (
         <View style={{ flex: 1, gap: 20, paddingBottom: keyboardActive ? 400 : 60 }}>
-            <Surface style={{ backgroundColor: colors.box, padding: 20, borderRadius: 20, gap: 10 }}>
+            <Surface style={{ backgroundColor: colors.box, padding: 10, borderRadius: 20, gap: 10 }}>
                 <FormText
                     ref={input_refs[0]}
                     name="name"
@@ -150,6 +164,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                     autoCapitalize={"none"}
                     onSubmitEditing={() => focusInput(2)}
                     keyboardType="numeric"
+                    disabled={!!user}
                 />
                 <FormText
                     ref={input_refs[2]}
@@ -160,6 +175,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                     onSubmitEditing={() => focusInput(3)}
                     left={<PaperInput.Icon icon="at" />}
                     keyboardType="twitter"
+                    disabled={!!user}
                 />
                 <FormText
                     ref={input_refs[3]}
@@ -169,6 +185,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                     keyboardType="email-address"
                     autoCapitalize={"none"}
                     onSubmitEditing={() => focusInput(4)}
+                    disabled={!!user}
                 />
                 <FormText
                     ref={input_refs[4]}
@@ -215,7 +232,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                         label={"Telefone"}
                         onSubmitEditing={() => focusInput(9)}
                         keyboardType="number-pad"
-                        style={{ flex: 1, minWidth: 156.5 }}
+                        style={{ flex: 1, minWidth: 170 }}
                         maxLength={16}
                         mask={"(99) 9 9999-9999"}
                     />
@@ -251,7 +268,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                         keyboardType="twitter"
                         returnKeyType="done"
                         autoCapitalize="none"
-                        style={{ width: "122%" }}
+                        style={{ width: "128%" }}
                         left={<PaperInput.Icon icon="at" />}
                     />
                 </View>

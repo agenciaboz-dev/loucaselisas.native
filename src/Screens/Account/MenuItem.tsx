@@ -13,8 +13,7 @@ export const MenuItem: React.FC<MenuItemType> = ({ icon, title, route }) => {
     const navigation = useNavigation<any>()
 
     const onPress = () => {
-        console.log("aaa")
-        // navigation.navigate(route)
+        navigation.navigate(route)
     }
     return (
         <Surface style={{ flexDirection: "row", borderRadius: 10 }}>

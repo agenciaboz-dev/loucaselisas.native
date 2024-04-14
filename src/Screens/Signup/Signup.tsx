@@ -19,6 +19,7 @@ import { AxiosError } from "axios"
 import { useSnackbar } from "../../hooks/useSnackbar"
 import { avatar_placeholder } from "../../tools/placeholders"
 import { UserFormComponent } from "../../components/UserForm"
+import { ScreenTitle } from "../../components/ScreenTItle"
 
 interface SignupProps {}
 
@@ -49,9 +50,7 @@ export const Signup: React.FC<SignupProps> = ({}) => {
             style={{ flex: 1, padding: 20, paddingTop: 60, paddingBottom: 0 }}
             contentContainerStyle={{ gap: 20 }}
         >
-            <Text variant="displayLarge" style={{ alignSelf: "center" }}>
-                Cadastre-se
-            </Text>
+            <ScreenTitle title="Cadastre-se" />
 
             <View style={{ alignItems: "center", gap: 10 }}>
                 <Avatar.Image size={150} source={{ uri: image?.uri || avatar_placeholder }} />

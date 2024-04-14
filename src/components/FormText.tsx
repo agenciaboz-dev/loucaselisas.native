@@ -1,12 +1,14 @@
 import React, { FocusEvent } from "react"
 import { Text, TextInput, TextInputProps } from "react-native-paper"
-import { TextInput as OriginalInput, View } from "react-native"
+import { DimensionValue, TextInput as OriginalInput, View } from "react-native"
 import { colors } from "../style/colors"
 import { FormikErrors, FormikTouched } from "formik"
 import { mask as masked } from "react-native-mask-text"
 
 export interface FormTextProps extends TextInputProps {
     name: string
+    width?: DimensionValue
+    flex?: number
     mask?: string | string[]
     formik: {
         values: any
@@ -25,7 +27,7 @@ export const FormText = React.forwardRef<React.ElementRef<typeof OriginalInput>,
     const error = !!(props.formik.touched[props.name] && props.formik.errors[props.name])
     const error_text = props.formik.errors[props.name] as string
     return (
-        <View style={{}}>
+        <View style={{ width: props.width, flex: props.flex }}>
             <TextInput
                 ref={ref}
                 {...props}

@@ -115,10 +115,6 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
     }
 
     useEffect(() => {
-        console.log(formik.values)
-    }, [formik.values])
-
-    useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", (event) => {
             setKeyboardActive(true)
         })

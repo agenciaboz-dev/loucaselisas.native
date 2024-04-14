@@ -45,5 +45,6 @@ export declare class ContractLog {
     end_date: string;
     paid: number;
     plan: Plan;
+    static getUserLogs(user_id: string): Promise<ContractLog[]>;
     constructor(data: ContractLogPrisma);
 }

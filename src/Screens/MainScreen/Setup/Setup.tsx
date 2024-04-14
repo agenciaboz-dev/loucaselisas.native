@@ -9,6 +9,8 @@ import { Delete } from "./Delete"
 import { ManagePlan } from "./Plan/ManagePlan"
 import { ContractDetails } from "./Plan/ContractDetails"
 import { PlanHistory } from "./PlanHistory/PlanHistory"
+import { SavedCards } from "./SavedCards/SavedCards"
+import { CardForm } from "./SavedCards/CardForm"
 
 interface SetupProps {
     navigation: NavigationProp<any, any>
@@ -26,6 +28,8 @@ export const Setup: React.FC<SetupProps> = ({ navigation }) => {
             <Stack.Screen name="setup:plan" component={ManagePlan} />
             <Stack.Screen name="setup:plan:details" component={ContractDetails} />
             <Stack.Screen name="setup:plan:history" component={PlanHistory} />
+            <Stack.Screen name="setup:cards" component={SavedCards} />
+            <Stack.Screen name="setup:cards:form" component={CardForm} />
         </Stack.Navigator>
     )
 }

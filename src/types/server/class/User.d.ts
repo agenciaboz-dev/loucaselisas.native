@@ -6,6 +6,7 @@ import { PaymentCard, PaymentCardForm } from "./PaymentCard";
 import { FileUpload, WithoutFunctions } from "./helpers";
 import { Creator, CreatorForm, Student } from "./index";
 import { Role } from "./Role";
+import { PlanContract } from "./Plan";
 export declare const user_include: {
     creator: {
         include: {
@@ -233,6 +234,11 @@ export declare const user_include: {
             profile_permissions: true;
         };
     };
+    plan: {
+        include: {
+            plan_data: true;
+        };
+    };
 };
 export type UserPrisma = Prisma.UserGetPayload<{
     include: typeof user_include;
@@ -242,7 +248,7 @@ export interface UserImageForm {
     image?: FileUpload | null;
     cover?: FileUpload | null;
 }
-export type UserForm = Omit<WithoutFunctions<User>, "id" | "admin" | "favorite_creators" | "favorite_courses" | "payment_cards" | "creator" | "student" | "role" | "cover" | "image" | "payment_cards"> & {
+export type UserForm = Omit<WithoutFunctions<User>, "id" | "plan" | "admin" | "favorite_creators" | "favorite_courses" | "payment_cards" | "creator" | "student" | "role" | "cover" | "image" | "payment_cards"> & {
     image: FileUpload | null;
     cover: FileUpload | null;
     student: boolean;
@@ -277,12 +283,11 @@ export declare class User {
     payment_cards: PaymentCard[];
     creator: Creator | null;
     student: Student | null;
+    plan: PlanContract | null;
     role: Role;
     constructor(id: string, user_prisma?: UserPrisma);
     init(): Promise<void>;
-    static update(data: Partial<UserPrisma> & {
-        id: string;
-    }, socket: Socket): Promise<void>;
+    static update(data: PartialUser, socket: Socket): Promise<void>;
     static updateImage(data: UserImageForm & {
         id: string;
     }, socket: Socket): Promise<void>;
@@ -290,6 +295,6 @@ export declare class User {
     static list(socket: Socket): Promise<void>;
     static login(data: LoginForm, socket?: Socket): Promise<User | null>;
     load(data: UserPrisma): void;
-    update(data: Partial<UserPrisma>, socket?: Socket): Promise<string | undefined>;
+    update(data: Partial<User>, socket?: Socket): Promise<string | undefined>;
     updateImage(data: UserImageForm, socket?: Socket): Promise<void>;
 }

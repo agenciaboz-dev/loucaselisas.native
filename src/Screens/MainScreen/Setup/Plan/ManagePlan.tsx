@@ -1,5 +1,5 @@
-import { NavigationProp } from "@react-navigation/native"
-import React, { useEffect, useState } from "react"
+import { NavigationProp, useFocusEffect } from "@react-navigation/native"
+import React, { useCallback, useEffect, useState } from "react"
 import { Surface } from "react-native-paper"
 import { ScreenTitle } from "../../../../components/ScreenTItle"
 import { Plan } from "../../../../types/server/class/Plan"
@@ -12,11 +12,10 @@ interface ManagePlanProps {
 }
 
 export const ManagePlan: React.FC<ManagePlanProps> = ({ navigation }) => {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [plans, setPlans] = useState<Plan[]>([])
 
     const refreshPlans = async () => {
-        if (loading) return
         setLoading(true)
         try {
             const response = await api.get("/plan")
@@ -29,9 +28,11 @@ export const ManagePlan: React.FC<ManagePlanProps> = ({ navigation }) => {
         }
     }
 
-    useEffect(() => {
-        refreshPlans()
-    }, [])
+    useFocusEffect(
+        useCallback(() => {
+            refreshPlans()
+        }, [])
+    )
 
     return (
         <Surface style={{ flex: 1, padding: 20 }}>

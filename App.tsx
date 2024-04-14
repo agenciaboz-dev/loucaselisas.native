@@ -9,7 +9,7 @@ export default function App() {
 
     return (
         <>
-            <StatusBar animated backgroundColor={colors.primary} style="light" />
+            <StatusBar animated translucent />
             <Providers>
                 <Routes />
             </Providers>

@@ -3,16 +3,19 @@ import React from "react"
 import { TouchableOpacity, ViewStyle } from "react-native"
 import { Icon, Surface, Text, TouchableRipple } from "react-native-paper"
 import { SetupMenu } from "../../../types/SetupMenu"
+import { useUser } from "../../../hooks/useUser"
 
 interface MenusProps {
     navigation: NavigationProp<any, any>
 }
 
 export const Menus: React.FC<MenusProps> = ({ navigation }) => {
+    const { logout } = useUser()
+
     const account_menus: SetupMenu[] = [
         { icon: "account", label: "Ver conta", route: "setup:account" },
         { icon: "account-circle", label: "Perfil", route: "setup:profile" },
-        { icon: "alpha-x-circle-outline", label: "Sair", route: "home" },
+        { icon: "alpha-x-circle-outline", label: "Sair", route: "home", onPress: logout },
     ]
 
     const other_menus: SetupMenu[] = [
@@ -35,7 +38,11 @@ export const Menus: React.FC<MenusProps> = ({ navigation }) => {
 
     const onMenuPress = (menu: SetupMenu) => {
         try {
-            navigation.navigate(menu.route)
+            if (menu.onPress) {
+                menu.onPress()
+            } else {
+                navigation.navigate(menu.route)
+            }
         } catch (error) {
             console.log(`there is no route called ${menu.route}`)
         }

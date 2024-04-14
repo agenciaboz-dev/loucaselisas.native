@@ -12,5 +12,10 @@ export const useUser = () => {
         navigation.navigate("mainscreen")
     }
 
-    return { ...context, onLogin }
+    const logout = () => {
+        navigation.navigate("home")
+        context.setUser(null)
+    }
+
+    return { ...context, onLogin, logout }
 }

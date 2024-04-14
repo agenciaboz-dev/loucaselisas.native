@@ -5,6 +5,7 @@ import { Menus } from "./Menus"
 import { Account } from "../../Account/Account"
 import { default_navigator_options } from "../../../tools/default_navigator_options"
 import { Profile } from "./Profile"
+import { Delete } from "./Delete"
 
 interface SetupProps {
     navigation: NavigationProp<any, any>
@@ -18,6 +19,7 @@ export const Setup: React.FC<SetupProps> = ({ navigation }) => {
             <Stack.Screen name="setup:menus" component={Menus} />
             <Stack.Screen name="setup:account" component={Account} />
             <Stack.Screen name="setup:profile" component={Profile} />
+            <Stack.Screen name="setup:delete" component={Delete} />
         </Stack.Navigator>
     )
 }

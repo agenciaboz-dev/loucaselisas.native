@@ -102,6 +102,7 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
                 menuItems={[
                     { title: "Gerenciar seu plano", icon: "currency-usd", route: "setup:account" },
                     { title: "Editar perfil", icon: "account", route: "setup:profile" },
+                    { title: "Deletar conta", icon: "alpha-x-circle-outline", route: "setup:delete" },
                 ]}
             />
             <MenuGroup

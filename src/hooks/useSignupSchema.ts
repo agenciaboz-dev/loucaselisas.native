@@ -9,6 +9,7 @@ export const useSignupSchema = () => {
         bio: Yup.string().max(300, "Bio pode ter no máximo 300 caracteres"),
 
         birth: Yup.string().test("birth-valid", "Você precisa ter pelo menos 18 anos", (value) => {
+            if (!value) return true
             const max = new Date(new Date().getFullYear() - 18, new Date().getMonth() - 1, new Date().getDate())
             const date = new Date(Number(value))
             return date <= max

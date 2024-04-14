@@ -10,6 +10,8 @@ export const useUser = () => {
     const onLogin = (user: User) => {
         context.setUser(user)
         navigation.navigate("mainscreen")
+
+        console.log(JSON.stringify(user, null, 4))
     }
 
     const logout = () => {

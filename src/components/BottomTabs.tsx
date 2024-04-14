@@ -8,6 +8,8 @@ import { Search } from "../Screens/MainScreen/Search/Search"
 import { Favorites } from "../Screens/MainScreen/Favorites/Favorites"
 import { Setup } from "../Screens/MainScreen/Setup/Setup"
 import { Account } from "../Screens/Account/Account"
+import { useUser } from "../hooks/useUser"
+import { CreatorStack } from "../Screens/Creator/CreatorStack"
 
 interface BottomTabsProps {}
 
@@ -16,10 +18,11 @@ const Tab = createMaterialBottomTabNavigator()
 const getIcon = (name: string, focused: boolean) => <Icon color={focused ? colors.secondary : colors.primary} size={24} source={name} />
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
-    return (
+    const { user } = useUser()
+    return user ? (
         <Tab.Navigator
             theme={paper_theme}
-            initialRouteName="panel"
+            initialRouteName={!!user.creator ? "creator" : "panel"}
             activeColor={colors.primary}
             inactiveColor={colors.primary}
             activeIndicatorStyle={{ backgroundColor: colors.primary }}
@@ -34,6 +37,13 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                     tabBarIcon: (tab) => getIcon("apps", tab.focused),
                 }}
             />
+            {user.creator && (
+                <Tab.Screen
+                    name="creator"
+                    component={CreatorStack}
+                    options={{ tabBarLabel: "Criador", tabBarIcon: (tab) => getIcon("account", tab.focused) }}
+                />
+            )}
             <Tab.Screen name="search" component={Search} options={{ tabBarLabel: "Buscar", tabBarIcon: (tab) => getIcon("magnify", tab.focused) }} />
             <Tab.Screen
                 name="favorites"
@@ -46,5 +56,5 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                 options={{ tabBarLabel: "Config", tabBarIcon: (tab) => getIcon("cog-outline", tab.focused) }}
             />
         </Tab.Navigator>
-    )
+    ) : null
 }

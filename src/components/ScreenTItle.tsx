@@ -14,7 +14,7 @@ export const ScreenTitle: React.FC<ScreenTitleProps> = ({ title, hideBackArrow }
         <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
             <IconButton icon={"chevron-left"} onPress={() => navigation.goBack()} style={{ margin: 0 }} />
             <Text variant="titleLarge" style={{ alignSelf: "center" }}>
-                Editar perfil
+                {title}
             </Text>
         </View>
     )

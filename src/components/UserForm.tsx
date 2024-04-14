@@ -90,7 +90,9 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
         },
         validationSchema: schema,
         validateOnChange: false,
+        validateOnMount: false,
     })
+
     const input_refs = Object.entries(formik.values).map(([key, value]) => useRef<TextInput>(null))
     const dropdown_refs = Object.entries(formik.values).map(([key, value]) => useRef<IDropdownRef>(null))
     const focusInput = (index: number) => {

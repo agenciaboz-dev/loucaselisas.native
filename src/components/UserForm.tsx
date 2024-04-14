@@ -251,30 +251,26 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                         dropdownPosition="top"
                     />
                 </View>
-                <View style={{ flexDirection: "row", gap: 10, width: "100%" }}>
-                    <FormText
-                        ref={input_refs[10]}
-                        name="instagram"
-                        formik={formik}
-                        label={"Instagram"}
-                        onSubmitEditing={() => focusInput(11)}
-                        keyboardType="twitter"
-                        autoCapitalize="none"
-                        style={{ width: "100%" }}
-                        left={<PaperInput.Icon icon="at" />}
-                    />
-                    <FormText
-                        ref={input_refs[11]}
-                        name="tiktok"
-                        formik={formik}
-                        label={"Tiktok"}
-                        keyboardType="twitter"
-                        returnKeyType="done"
-                        autoCapitalize="none"
-                        style={{ width: "128%" }}
-                        left={<PaperInput.Icon icon="at" />}
-                    />
-                </View>
+                <FormText
+                    ref={input_refs[10]}
+                    name="instagram"
+                    formik={formik}
+                    label={"Instagram"}
+                    onSubmitEditing={() => focusInput(11)}
+                    keyboardType="twitter"
+                    autoCapitalize="none"
+                    left={<PaperInput.Icon icon="at" />}
+                />
+                <FormText
+                    ref={input_refs[11]}
+                    name="tiktok"
+                    formik={formik}
+                    label={"Tiktok"}
+                    keyboardType="twitter"
+                    returnKeyType="done"
+                    autoCapitalize="none"
+                    left={<PaperInput.Icon icon="at" />}
+                />
             </Surface>
 
             <Button

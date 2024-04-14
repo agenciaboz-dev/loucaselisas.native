@@ -199,7 +199,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                     secureTextEntry
                     onSubmitEditing={() => focusInput(5)}
                 />
-                <View style={{ flexDirection: "row", gap: 10 }}>
+                <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
                     <Dropdown
                         ref={dropdown_refs[5]}
                         data={[
@@ -221,6 +221,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                             formik={formik}
                             onSubmitEditing={() => focusInput(6)}
                             readOnly
+                            flex={1}
                             right={<PaperInput.Icon icon={"calendar-range"} pointerEvents="none" />}
                             value={formik.values.birth ? new Date(Number(formik.values.birth)).toLocaleDateString("pt-br") : ""}
                         />
@@ -251,26 +252,30 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                         dropdownPosition="top"
                     />
                 </View>
-                <FormText
-                    ref={input_refs[10]}
-                    name="instagram"
-                    formik={formik}
-                    label={"Instagram"}
-                    onSubmitEditing={() => focusInput(11)}
-                    keyboardType="twitter"
-                    autoCapitalize="none"
-                    left={<PaperInput.Icon icon="at" />}
-                />
-                <FormText
-                    ref={input_refs[11]}
-                    name="tiktok"
-                    formik={formik}
-                    label={"Tiktok"}
-                    keyboardType="twitter"
-                    returnKeyType="done"
-                    autoCapitalize="none"
-                    left={<PaperInput.Icon icon="at" />}
-                />
+                <View style={{ flexDirection: "row", gap: 10 }}>
+                    <FormText
+                        ref={input_refs[10]}
+                        name="instagram"
+                        formik={formik}
+                        label={"Instagram"}
+                        onSubmitEditing={() => focusInput(11)}
+                        keyboardType="twitter"
+                        autoCapitalize="none"
+                        left={<PaperInput.Icon icon="at" />}
+                        flex={1}
+                    />
+                    <FormText
+                        ref={input_refs[11]}
+                        name="tiktok"
+                        formik={formik}
+                        label={"Tiktok"}
+                        keyboardType="twitter"
+                        returnKeyType="done"
+                        autoCapitalize="none"
+                        flex={1}
+                        left={<PaperInput.Icon icon="at" />}
+                    />
+                </View>
             </Surface>
 
             <Button

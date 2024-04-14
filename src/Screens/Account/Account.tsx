@@ -1,6 +1,6 @@
 import { NavigationProp } from "@react-navigation/native"
 import React, { useState } from "react"
-import { Pressable, TouchableOpacity, View } from "react-native"
+import { Pressable, ScrollView, TouchableOpacity, View } from "react-native"
 import { Avatar, Button, Icon, IconButton, Surface, Text } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
 import placeholders from "../../tools/placeholders"
@@ -58,7 +58,7 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
     }
 
     return user ? (
-        <Surface style={{ flex: 1, padding: 20, gap: 10 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 10 }}>
             <View style={{ position: "relative", height: 200, justifyContent: "space-between", alignItems: "flex-end", flexDirection: "row" }}>
                 <Image
                     source={user.cover || placeholders.cover_placeholder}
@@ -109,9 +109,9 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
                 title="Pagamento"
                 menuItems={[
                     { title: "Histórico de pedidos", icon: "refresh", route: "setup:plan:history" },
-                    { title: "Cartões de pagamento salvos", icon: "credit-card", route: "setup:profile" },
+                    { title: "Cartões de pagamento salvos", icon: "credit-card", route: "setup:cards" },
                 ]}
             />
-        </Surface>
+        </ScrollView>
     ) : null
 }

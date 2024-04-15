@@ -1,90 +1,9 @@
 import { Prisma } from "@prisma/client";
 import { FileUpload, WithoutFunctions } from "./helpers";
-import { Course } from "./Course";
 import { Socket } from "socket.io";
 export declare const creator_include: {
     categories: true;
-    courses: {
-        include: {
-            categories: true;
-            chat: {
-                include: {
-                    media: {
-                        include: {
-                            images: true;
-                            videos: true;
-                        };
-                    };
-                    messages: true;
-                };
-            };
-            creators: {
-                include: {
-                    user: true;
-                };
-            };
-            gallery: {
-                include: {
-                    images: true;
-                    videos: true;
-                };
-            };
-            owner: {
-                include: {
-                    user: true;
-                };
-            };
-            students: true;
-            favorited_by: true;
-            lessons: {
-                include: {
-                    image: true;
-                    video: true;
-                };
-            };
-        };
-    };
     favorited_by: true;
-    owned_courses: {
-        include: {
-            categories: true;
-            chat: {
-                include: {
-                    media: {
-                        include: {
-                            images: true;
-                            videos: true;
-                        };
-                    };
-                    messages: true;
-                };
-            };
-            creators: {
-                include: {
-                    user: true;
-                };
-            };
-            gallery: {
-                include: {
-                    images: true;
-                    videos: true;
-                };
-            };
-            owner: {
-                include: {
-                    user: true;
-                };
-            };
-            students: true;
-            favorited_by: true;
-            lessons: {
-                include: {
-                    image: true;
-                    video: true;
-                };
-            };
-        };
-    };
 };
 export type CreatorPrisma = Prisma.CreatorGetPayload<{
     include: typeof creator_include;
@@ -107,10 +26,8 @@ export declare class Creator {
     description: string;
     active: boolean;
     favorited_by: number;
-    owned_courses: Course[];
     cover: string | null;
     image: string | null;
-    courses: Course[];
     constructor(id: string, data?: CreatorPrisma);
     init(): Promise<void>;
     static list(socket?: Socket): Promise<Creator[]>;

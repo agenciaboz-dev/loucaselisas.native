@@ -12,6 +12,7 @@ import { api } from "../../../../backend/api"
 import { colors } from "../../../../style/colors"
 import { NavigationProp, useFocusEffect, useNavigation } from "@react-navigation/native"
 import { Course } from "../../../../types/server/class/Course"
+import { CourseContainer } from "./CourseContainer"
 
 interface ResumeProps {}
 
@@ -138,11 +139,12 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
             </View>
             <FlatList
                 data={ownedCourses}
-                renderItem={({ item }) => <Text>{item.name}</Text>}
+                renderItem={({ item }) => <CourseContainer course={item} />}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
-                contentContainerStyle={{ gap: 20, marginHorizontal: -20, paddingHorizontal: 20 }}
+                style={{ marginHorizontal: -20 }}
+                contentContainerStyle={{ gap: 20, flex: 1, paddingHorizontal: 20 }}
                 ListEmptyComponent={<Text style={{ flex: 1, textAlign: "center" }}>Você ainda não possui nenhum curso</Text>}
                 refreshing={refreshing}
                 onRefresh={refreshCourses}

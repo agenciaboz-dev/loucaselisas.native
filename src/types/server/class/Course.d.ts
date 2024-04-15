@@ -71,10 +71,11 @@ export declare class Course {
     price: number;
     lessons: Lesson[];
     owner: Partial<Creator>;
+    owner_id: string;
     gallery: Gallery;
     categories: Category[];
     creators: Partial<Creator>[];
     chat: Chat | null;
     constructor(data: CoursePrisma);
-    static new(socket: Socket, data: CourseForm): Promise<void>;
+    static new(data: CourseForm, socket?: Socket): Promise<Course | undefined>;
 }

@@ -38,19 +38,19 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
     }
 
     const uploadImage = async (type: "cover" | "profile") => {
-        if (!user || uploading) return
+        if (!creator || uploading) return
 
         const image = await pickImage(type == "cover" ? [5, 2] : [1, 1])
         const filename = image?.uri.substring(image?.uri.lastIndexOf("/") + 1, image?.uri.length) || "cover.png"
         if (image?.base64) {
             setUploading(type)
             const data: UserImageForm = {
-                id: user.id,
+                id: creator.id,
                 cover: type == "cover" ? { name: filename, base64: image.base64 } : undefined,
                 image: type == "profile" ? { name: filename, base64: image.base64 } : undefined,
             }
             try {
-                const response = await api.patch("/user/image", data)
+                const response = await api.patch("/creator/image", data)
                 const updated_user = response.data
                 setUser(updated_user)
             } catch (error) {
@@ -88,7 +88,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         >
             <View style={{ position: "relative", height: 200, justifyContent: "space-between", alignItems: "flex-end", flexDirection: "row" }}>
                 <Image
-                    source={user.cover || placeholders.cover_placeholder}
+                    source={creator.cover || placeholders.cover_placeholder}
                     style={{ width: "100%", height: 150, borderRadius: 15, position: "absolute", top: 0, left: 0, objectFit: "contain" }}
                 />
                 <IconButton
@@ -100,7 +100,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 />
                 <Icon size={30} source={"instagram"} />
                 <View style={{ position: "relative" }}>
-                    <Avatar.Image size={100} source={{ uri: user.image || placeholders.avatar_placeholder }} />
+                    <Avatar.Image size={100} source={{ uri: creator.image || placeholders.avatar_placeholder }} />
                     <IconButton
                         size={20}
                         icon={"pencil-outline"}

@@ -19,10 +19,10 @@ import { currencyMask } from "../../tools/currencyMask"
 import { unmaskCurrency } from "../../tools/unmaskCurrency"
 import { Button } from "../../components/Button"
 import { useSnackbar } from "../../hooks/useSnackbar"
-import { GalleryForm } from "../../types/server/class/Gallery"
 import { GalleryFormComponent } from "./GalleryForm"
 import { ImagePickerAsset } from "expo-image-picker"
 import { FileUpload } from "../../types/server/class/helpers"
+import { GalleryForm } from "../../types/server/class/Gallery/Gallery"
 
 interface CourseFormProps {
     navigation: NavigationProp<any, any>
@@ -42,7 +42,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
     const [participantsText, setParticipantsText] = useState("")
 
     const [categories, setCategories] = useState<Category[]>([])
-    const [gallery, setGallery] = useState<GalleryForm>({ images: [], videos: [], name: "" })
+    const [gallery, setGallery] = useState<GalleryForm>({ media: [], name: "" })
     const [cover, setCover] = useState<FileUpload | null>(null)
 
     const required_field_message = "Campo obrigatório."
@@ -66,7 +66,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
             categories: [],
             creators: [],
             description: "",
-            gallery: { images: [], name: "Primeira galeria", videos: [] },
+            gallery: { media: [], name: "Primeira galeria" },
             language: "pt-br",
             name: "",
             owner_id: creator.id,

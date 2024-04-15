@@ -36,14 +36,14 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
         >
             <Video
                 ref={video}
-                style={{ width, height, position: "absolute" }}
+                style={{ width, height, position: "absolute", top: -0 }}
                 source={require("../../../assets/background.mp4")}
                 useNativeControls={false}
                 shouldPlay
-                resizeMode={ResizeMode.STRETCH}
+                resizeMode={ResizeMode.COVER}
                 isLooping
             />
-            <Logo />
+            <Logo invert />
             {!form && (
                 <Surface style={{ gap: 10, backgroundColor: "transparent", alignItems: "center" }}>
                     <Button onPress={() => setForm("login")} icon={"account-outline"}>

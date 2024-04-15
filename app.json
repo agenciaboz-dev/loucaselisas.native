@@ -25,7 +25,7 @@
               "monochromeImage": "./assets/adaptive-icon.png",
               "backgroundColor": "#000"
           },
-          "softwareKeyboardLayoutMode": "pan",
+          "softwareKeyboardLayoutMode": "resize",
           "package": "com.agenciabozdev.loucaselisas"
       },
       "web": {

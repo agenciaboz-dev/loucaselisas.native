@@ -32,7 +32,6 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
 
     const [selectDate, setSelectDate] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [keyboardActive, setKeyboardActive] = useState(false)
 
     const eighteen_years_behind = new Date(new Date().getFullYear() - 18, new Date().getMonth() - 1, new Date().getDate())
 
@@ -116,13 +115,6 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
     }
 
     useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", (event) => {
-            setKeyboardActive(true)
-        })
-        const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
-            setKeyboardActive(false)
-        })
-
         if (user) {
             formik.setFieldValue("name", user.name)
             formik.setFieldValue("cpf", mask(user.cpf, "999.999.999-99"))
@@ -137,15 +129,10 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
             formik.setFieldValue("instagram", user.instagram)
             formik.setFieldValue("tiktok", user.tiktok)
         }
-
-        return () => {
-            keyboardDidShowListener.remove()
-            keyboardDidHideListener.remove()
-        }
     }, [])
 
     return (
-        <View style={{ flex: 1, gap: 20, paddingBottom: keyboardActive ? 400 : 60 }}>
+        <View style={{ flex: 1, gap: 20, paddingBottom: 60 }}>
             <Surface style={{ backgroundColor: colors.box, padding: 10, borderRadius: 20, gap: 10 }}>
                 <FormText
                     ref={input_refs[0]}

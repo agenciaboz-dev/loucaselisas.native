@@ -1,11 +1,11 @@
 import React from "react"
 import { Button, IconButton, Surface, TextInput } from "react-native-paper"
-import { GalleryForm } from "../../types/server/class/Gallery"
 import { ScrollView, View, ViewStyle } from "react-native"
 import * as ImagePicker from "expo-image-picker"
 import { Image } from "expo-image"
 import { FileUpload } from "../../types/server/class/helpers"
 import { colors } from "../../style/colors"
+import { GalleryForm } from "../../types/server/class/Gallery/Gallery"
 
 interface GalleryFormProps {
     gallery: GalleryForm
@@ -43,7 +43,9 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
         const media = await pickMedia([16, 9])
         const filename = media?.uri.substring(media?.uri.lastIndexOf("/") + 1, media?.uri.length) || ""
         if (media?.base64) {
-            // const
+            const updated_gallery = { ...gallery }
+            updated_gallery.media.push({ name: filename, base64: media.base64 })
+            setGallery(updated_gallery)
         }
     }
 
@@ -79,14 +81,23 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
                         Capa
                     </Button>
                 )}
-                <Button
-                    mode="outlined"
-                    style={add_media_button_style}
-                    contentStyle={{ height: "100%", width: button_size }}
-                    onPress={() => console.log("aa")}
-                >
+                <Button mode="outlined" style={add_media_button_style} contentStyle={{ height: "100%", width: button_size }} onPress={addMedia}>
                     Adicionar mídia
                 </Button>
+                {gallery.media.map((media, index) => (
+                    <View style={{ position: "relative" }} key={media.name + index.toString()}>
+                        <Image
+                            source={{ uri: "data:image/png;base64," + media.base64 }}
+                            style={{ width: button_size, height: button_size, borderRadius: 15 }}
+                        />
+                        <IconButton
+                            icon={"delete-circle"}
+                            style={{ position: "absolute", right: 0, bottom: 0, backgroundColor: colors.secondary }}
+                            iconColor={colors.primary}
+                            // onPress={pickCover}
+                        />
+                    </View>
+                ))}
             </ScrollView>
         </View>
     )

@@ -10,6 +10,7 @@ import * as ImagePicker from "expo-image-picker"
 import { api } from "../../backend/api"
 import { UserImageForm } from "../../types/server/class/User"
 import { MenuGroup } from "./MenuGroup"
+import images from "../../tools/images"
 
 interface AccountProps {
     navigation: NavigationProp<any, any>
@@ -83,7 +84,7 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
                         mode="contained"
                     />
                 </View>
-                <Icon size={30} source={"instagram"} />
+                <Image source={images.tiktok_icon} style={{ height: 30, aspectRatio: "1/1" }} contentFit="contain" />
             </View>
             <Text style={{ alignSelf: "center" }} variant="bodyLarge">
                 {user.name}

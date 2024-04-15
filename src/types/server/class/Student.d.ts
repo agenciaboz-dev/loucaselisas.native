@@ -8,8 +8,7 @@ export declare const student_include: {
                 include: {
                     media: {
                         include: {
-                            images: true;
-                            videos: true;
+                            media: true;
                         };
                     };
                     messages: true;
@@ -22,8 +21,7 @@ export declare const student_include: {
             };
             gallery: {
                 include: {
-                    images: true;
-                    videos: true;
+                    media: true;
                 };
             };
             owner: {

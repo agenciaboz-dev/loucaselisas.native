@@ -12,8 +12,7 @@ export declare const course_include: {
         include: {
             media: {
                 include: {
-                    images: true;
-                    videos: true;
+                    media: true;
                 };
             };
             messages: true;
@@ -26,8 +25,7 @@ export declare const course_include: {
     };
     gallery: {
         include: {
-            images: true;
-            videos: true;
+            media: true;
         };
     };
     owner: {

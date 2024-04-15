@@ -24,8 +24,7 @@ export declare const user_include: {
                         include: {
                             media: {
                                 include: {
-                                    images: true;
-                                    videos: true;
+                                    media: true;
                                 };
                             };
                             messages: true;
@@ -38,8 +37,7 @@ export declare const user_include: {
                     };
                     gallery: {
                         include: {
-                            images: true;
-                            videos: true;
+                            media: true;
                         };
                     };
                     owner: {
@@ -133,7 +131,9 @@ export declare class User {
     }, socket: Socket): Promise<void>;
     static signup(data: UserForm, socket?: Socket): Promise<string | User | undefined>;
     static list(socket: Socket): Promise<void>;
-    static login(data: LoginForm, socket?: Socket): Promise<User | null>;
+    static login(data: LoginForm & {
+        admin?: boolean;
+    }, socket?: Socket): Promise<User | null>;
     load(data: UserPrisma): void;
     update(data: Partial<User>, socket?: Socket): Promise<string | undefined>;
     updateImage(data: UserImageForm, socket?: Socket): Promise<void>;

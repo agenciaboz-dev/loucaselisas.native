@@ -4,7 +4,7 @@ import { Surface, Text } from "react-native-paper"
 import { colors } from "../../style/colors"
 import { Logo } from "../../components/Logo"
 import { Button } from "./Button"
-import { Dimensions, Pressable, TouchableOpacity } from "react-native"
+import { Dimensions, Pressable, ScrollView, TouchableOpacity } from "react-native"
 import { Login } from "./Login"
 import { ResizeMode, Video } from "expo-av"
 import { setStatusBarStyle } from "expo-status-bar"
@@ -29,7 +29,11 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
     )
 
     return (
-        <Surface style={{ flex: 1, backgroundColor: colors.primary, justifyContent: "center", alignItems: "center", gap: 20, paddingHorizontal: 60 }}>
+        <ScrollView
+            keyboardShouldPersistTaps={"handled"}
+            style={{ backgroundColor: colors.primary }}
+            contentContainerStyle={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 20, paddingHorizontal: 60 }}
+        >
             <Video
                 ref={video}
                 style={{ width, height, position: "absolute" }}
@@ -53,6 +57,6 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                     Ainda não tem uma conta? <Text style={{ color: colors.secondary, fontWeight: "bold" }}>Faça o cadastro</Text>{" "}
                 </Text>
             </TouchableOpacity>
-        </Surface>
+        </ScrollView>
     )
 }

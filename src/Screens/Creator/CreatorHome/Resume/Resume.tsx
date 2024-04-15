@@ -13,6 +13,7 @@ import { colors } from "../../../../style/colors"
 import { NavigationProp, useFocusEffect, useNavigation } from "@react-navigation/native"
 import { Course } from "../../../../types/server/class/Course"
 import { CourseContainer } from "./CourseContainer"
+import images from "../../../../tools/images"
 
 interface ResumeProps {}
 
@@ -111,7 +112,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                         mode="contained"
                     />
                 </View>
-                <Icon size={30} source={"instagram"} />
+                <Image source={images.tiktok_icon} style={{ height: 30, aspectRatio: "1/1" }} contentFit="contain" />
             </View>
             <Text style={{ alignSelf: "center" }} variant="bodyLarge">
                 {creator.nickname}

@@ -19,6 +19,10 @@ import { currencyMask } from "../../tools/currencyMask"
 import { unmaskCurrency } from "../../tools/unmaskCurrency"
 import { Button } from "../../components/Button"
 import { useSnackbar } from "../../hooks/useSnackbar"
+import { GalleryForm } from "../../types/server/class/Gallery"
+import { GalleryFormComponent } from "./GalleryForm"
+import { ImagePickerAsset } from "expo-image-picker"
+import { FileUpload } from "../../types/server/class/helpers"
 
 interface CourseFormProps {
     navigation: NavigationProp<any, any>
@@ -38,6 +42,8 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
     const [participantsText, setParticipantsText] = useState("")
 
     const [categories, setCategories] = useState<Category[]>([])
+    const [gallery, setGallery] = useState<GalleryForm>({ images: [], videos: [], name: "" })
+    const [cover, setCover] = useState<FileUpload | null>(null)
 
     const required_field_message = "Campo obrigatório."
 
@@ -274,6 +280,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
                 numberOfLines={5}
                 transparent
             />
+            <GalleryFormComponent gallery={gallery} setGallery={setGallery} cover={cover} setCover={setCover} />
             <Button mode="contained" style={{ alignSelf: "center" }} loading={loading} onPress={() => formik.handleSubmit()}>
                 Enviar para análise
             </Button>

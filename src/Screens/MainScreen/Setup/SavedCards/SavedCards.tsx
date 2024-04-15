@@ -1,5 +1,5 @@
-import { NavigationProp } from "@react-navigation/native"
-import React, { useState } from "react"
+import { NavigationProp, useFocusEffect } from "@react-navigation/native"
+import React, { useCallback, useState } from "react"
 import { Surface } from "react-native-paper"
 import { ScreenTitle } from "../../../../components/ScreenTItle"
 import { FlatList } from "react-native"
@@ -7,6 +7,8 @@ import { useUser } from "../../../../hooks/useUser"
 import { CardContainer } from "./CardContainer"
 import { Button } from "../../../../components/Button"
 import { api } from "../../../../backend/api"
+import { PaymentCard } from "../../../../types/server/class/PaymentCard"
+import { useSnackbar } from "../../../../hooks/useSnackbar"
 
 interface SavedCardsProps {
     navigation: NavigationProp<any, any>
@@ -14,14 +16,29 @@ interface SavedCardsProps {
 
 export const SavedCards: React.FC<SavedCardsProps> = ({ navigation }) => {
     const { user, refresh } = useUser()
+    const { snackbar } = useSnackbar()
 
     const [loading, setLoading] = useState(false)
+    const [cards, setCards] = useState<PaymentCard[]>([])
 
     const refreshData = async () => {
         setLoading(true)
-        await refresh()
-        setLoading(false)
+        try {
+            const response = await api.get("/card", { params: { user_id: user?.id } })
+            setCards(response.data)
+        } catch (error) {
+            console.log(error)
+            snackbar("erro ao recuperar cartões salvos")
+        } finally {
+            setLoading(false)
+        }
     }
+
+    useFocusEffect(
+        useCallback(() => {
+            refreshData()
+        }, [])
+    )
 
     return user ? (
         <Surface style={{ flex: 1, padding: 20, gap: 10, paddingBottom: 0 }}>
@@ -30,7 +47,7 @@ export const SavedCards: React.FC<SavedCardsProps> = ({ navigation }) => {
                 Adicionar cartão
             </Button>
             <FlatList
-                data={user.payment_cards.sort((a, b) => b.id - a.id)}
+                data={cards.sort((a, b) => b.id - a.id)}
                 renderItem={({ item }) => <CardContainer card={item} />}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item) => item.id.toString()}

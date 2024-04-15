@@ -20,7 +20,7 @@ interface CardFormProps {
 }
 
 export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
-    const { user, setUser } = useUser()
+    const { user } = useUser()
     const { snackbar } = useSnackbar()
     const route = useRoute<any>()
     const card = route.params?.card as PaymentCard | undefined
@@ -56,6 +56,7 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
             validity: "",
             bank: null,
             flag: null,
+            user_id: user!.id,
         },
         validateOnChange: false,
         validateOnMount: false,
@@ -65,19 +66,14 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
             if (!user || loading) return
             setLoading(true)
 
-            const data: { user_id: string; card: PaymentCardForm } = {
-                user_id: user.id,
-                card: {
-                    ...values,
-                    number: unmask(values.number),
-                },
+            const data: PaymentCardForm = {
+                ...values,
+                number: unmask(values.number),
             }
 
             try {
-                const response = card ? await api.patch("user/card", data) : await api.post("/user/card", data)
-                const updated_user = response.data
+                const response = card ? await api.patch("/card", data) : await api.post("/card", data)
                 snackbar("Cartão salvo")
-                setUser(updated_user)
                 navigation.goBack()
             } catch (error) {
                 console.log(error)
@@ -103,9 +99,8 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
                 onPress: async () => {
                     setLoading(true)
                     try {
-                        const response = await api.delete("/user/card", { data: { card_id: card?.id } })
+                        const response = await api.delete("/card", { data: { card_id: card?.id } })
                         snackbar("Cartão deletado")
-                        setUser(response.data)
                         navigation.goBack()
                     } catch (error) {
                         console.log(error)

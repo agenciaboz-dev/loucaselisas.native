@@ -106,7 +106,7 @@ export declare class Creator {
     courses: Course[];
     constructor(id: string, data?: CreatorPrisma);
     init(): Promise<void>;
-    static list(socket: Socket): Promise<void>;
+    static list(socket?: Socket): Promise<Creator[]>;
     static new(data: CreatorForm, socket?: Socket): Promise<Creator | undefined>;
     static delete(id: string, socket?: Socket): Promise<{
         id: string;

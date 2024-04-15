@@ -1,5 +1,5 @@
 import { Image } from "expo-image"
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import { FlatList, Pressable, ScrollView, View } from "react-native"
 import { Avatar, Icon, IconButton, Surface, Text, TextInput } from "react-native-paper"
 import { useUser } from "../../../../hooks/useUser"
@@ -10,17 +10,20 @@ import * as ImagePicker from "expo-image-picker"
 import { UserImageForm } from "../../../../types/server/class/User"
 import { api } from "../../../../backend/api"
 import { colors } from "../../../../style/colors"
-import { NavigationProp, useNavigation } from "@react-navigation/native"
+import { NavigationProp, useFocusEffect, useNavigation } from "@react-navigation/native"
+import { Course } from "../../../../types/server/class/Course"
 
 interface ResumeProps {}
 
 export const Resume: React.FC<ResumeProps> = ({}) => {
     const navigation = useNavigation<NavigationProp<any, any>>()
-    const { user, setUser } = useUser()
+    const { user, setUser, refresh } = useUser()
     const creator = user?.creator
 
     const [uploading, setUploading] = useState<"cover" | "profile">()
     const [editingDescription, setEditingDescription] = useState(false)
+    const [refreshing, setRefreshing] = useState(false)
+    const [ownedCourses, setOwnedCourses] = useState<Course[]>([])
 
     const pickImage = async (aspect: [number, number]) => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -57,6 +60,25 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
             }
         }
     }
+
+    const refreshCourses = async () => {
+        setRefreshing(true)
+        try {
+            const response = await api.get("/course/owner", { params: { owner_id: creator?.id } })
+            console.log(response.data)
+            setOwnedCourses(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+
+        setRefreshing(false)
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            refreshCourses()
+        }, [])
+    )
 
     return creator ? (
         <ScrollView
@@ -115,13 +137,15 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 <IconButton icon={"apps"} />
             </View>
             <FlatList
-                data={creator.courses}
+                data={ownedCourses}
                 renderItem={({ item }) => <Text>{item.name}</Text>}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={{ gap: 20, marginHorizontal: -20, paddingHorizontal: 20 }}
                 ListEmptyComponent={<Text style={{ flex: 1, textAlign: "center" }}>Você ainda não possui nenhum curso</Text>}
+                refreshing={refreshing}
+                onRefresh={refreshCourses}
             />
             <Button
                 mode="contained"

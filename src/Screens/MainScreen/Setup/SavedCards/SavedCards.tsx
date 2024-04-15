@@ -13,20 +13,14 @@ interface SavedCardsProps {
 }
 
 export const SavedCards: React.FC<SavedCardsProps> = ({ navigation }) => {
-    const { user, setUser } = useUser()
+    const { user, refresh } = useUser()
 
     const [loading, setLoading] = useState(false)
 
-    const refresh = async () => {
+    const refreshData = async () => {
         setLoading(true)
-        try {
-            const response = await api.get("/user", { params: { id: user?.id } })
-            setUser(response.data)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
+        await refresh()
+        setLoading(false)
     }
 
     return user ? (
@@ -43,7 +37,7 @@ export const SavedCards: React.FC<SavedCardsProps> = ({ navigation }) => {
                 style={{ width: "100%" }}
                 contentContainerStyle={{ gap: 20, paddingVertical: 20, paddingHorizontal: 5 }}
                 refreshing={loading}
-                onRefresh={refresh}
+                onRefresh={refreshData}
             />
         </Surface>
     ) : null

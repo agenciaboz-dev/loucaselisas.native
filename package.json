@@ -29,6 +29,7 @@
         "formik": "^2.4.5",
         "react": "18.2.0",
         "react-native": "0.73.6",
+        "react-native-controlled-mentions": "^2.2.5",
         "react-native-date-picker": "^5.0.1",
         "react-native-element-dropdown": "^2.10.4",
         "react-native-gesture-handler": "^2.16.0",

@@ -7,6 +7,7 @@ export declare class Category {
     id: string;
     name: string;
     cover: string;
+    static list(): Promise<Category[]>;
     constructor(data: CategoryPrisma);
     load(data: CategoryPrisma): void;
 }

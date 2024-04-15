@@ -68,6 +68,7 @@ export declare class Course {
     language: string;
     recorder: string | null;
     favorited_by: number;
+    price: number;
     lessons: Lesson[];
     owner: Partial<Creator>;
     gallery: Gallery;

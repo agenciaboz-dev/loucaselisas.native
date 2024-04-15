@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Icon, Surface, Text, TextInput as PaperInput, Avatar } from "react-native-paper"
+import { Icon, Surface, Text, TextInput as PaperInput, Avatar, useTheme } from "react-native-paper"
 import { useSignupSchema } from "../hooks/useSignupSchema"
 import { User, UserForm } from "../types/server/class"
 import { useFormik } from "formik"
@@ -26,6 +26,7 @@ interface UserFormProps {
 }
 
 export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, externalData, submitLabel }) => {
+    const theme = useTheme()
     const schema = useSignupSchema()
     const { snackbar } = useSnackbar()
 
@@ -208,6 +209,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                         value={formik.values.pronoun}
                         style={dropdown_style}
                         placeholder="Pronome"
+                        placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
                     />
                     <Pressable onPress={() => setSelectDate(true)} style={{ flex: 1.28 }}>
                         <FormText
@@ -246,6 +248,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                         style={[dropdown_style]}
                         placeholder="Estado"
                         dropdownPosition="top"
+                        placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
                     />
                 </View>
                 <View style={{ flexDirection: "row", gap: 10 }}>

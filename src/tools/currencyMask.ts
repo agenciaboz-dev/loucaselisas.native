@@ -1,5 +1,9 @@
 import { numericFormatter } from "react-number-format"
 
-export const currencyMask = (value: number | string) => {
-    return numericFormatter(value.toString(), { decimalSeparator: ",", thousandSeparator: ".", prefix: "R$ " })
+interface Options {
+    withoutAffix?: boolean
+}
+
+export const currencyMask = (value: number | string, options?: Options) => {
+    return numericFormatter(value.toString(), { decimalSeparator: ",", thousandSeparator: ".", prefix: options?.withoutAffix ? "" : "R$ " })
 }

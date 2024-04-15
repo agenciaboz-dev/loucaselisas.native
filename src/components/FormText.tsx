@@ -21,6 +21,7 @@ export interface FormTextProps extends TextInputProps {
         }
         setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => Promise<void> | Promise<FormikErrors<any>>
     }
+    transparent?: boolean
 }
 
 export const FormText = React.forwardRef<React.ElementRef<typeof OriginalInput>, FormTextProps>((props, ref) => {
@@ -32,7 +33,7 @@ export const FormText = React.forwardRef<React.ElementRef<typeof OriginalInput>,
                 ref={ref}
                 {...props}
                 mode="outlined"
-                style={[{ backgroundColor: colors.box, flexShrink: 0 }, props.style]}
+                style={[{ backgroundColor: props.transparent ? "transparent" : colors.box, flexShrink: 0 }, props.style]}
                 outlineStyle={{
                     borderRadius: 10,
                     borderColor: error ? colors.error : undefined,

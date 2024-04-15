@@ -37,7 +37,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
             <Video
                 ref={video}
                 style={{ width, height, position: "absolute", top: -0 }}
-                source={require("../../../assets/background.mp4")}
+                source={require("../../../assets/background.webm")}
                 useNativeControls={false}
                 shouldPlay
                 resizeMode={ResizeMode.COVER}

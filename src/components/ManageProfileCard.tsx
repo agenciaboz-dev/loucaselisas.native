@@ -1,6 +1,6 @@
 import { Image } from "expo-image"
 import { ImagePickerAsset } from "expo-image-picker"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { View } from "react-native"
 import placeholders from "../tools/placeholders"
 import { Avatar, IconButton, Text, TextInput } from "react-native-paper"
@@ -12,11 +12,11 @@ import { Button } from "./Button"
 interface ManageProfileCardProps {
     cover: string | null
     picture: string | null
-    onUpdatePicture: (image: ImagePickerAsset) => void
-    onUpdateCover: (image: ImagePickerAsset) => void
+    onUpdatePicture: (image: ImagePickerAsset) => Promise<void>
+    onUpdateCover: (image: ImagePickerAsset) => Promise<void>
     name: string
     description: string
-    onUpdateDescription: (text: string) => void
+    onUpdateDescription: (text: string) => Promise<void>
 }
 
 export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
@@ -28,43 +28,50 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
     description,
     onUpdateDescription,
 }) => {
-    const [loading, setLoading] = useState<"cover" | "profile" | "description">()
+    const [uploadingPicuture, setUploadingPicuture] = useState<"cover" | "profile">()
+    const [savingDescription, setSavingDescription] = useState(false)
     const [editing, setEditing] = useState(false)
     const [descriptionState, setDescriptionState] = useState(description)
 
     const onEditImage = async (type: "cover" | "profile") => {
-        if (loading == type) return
+        if (uploadingPicuture == type) return
 
         const result = await pickMedia(type == "cover" ? [16, 9] : [1, 1])
         if (result) {
-            setLoading(type)
+            setUploadingPicuture(type)
             const image = result[0]
             try {
                 if (type == "cover") {
-                    onUpdateCover(image)
+                    await onUpdateCover(image)
                 } else {
-                    onUpdatePicture(image)
+                    await onUpdatePicture(image)
                 }
             } catch (error) {
                 console.log(error)
             } finally {
-                setLoading(undefined)
+                setUploadingPicuture(undefined)
             }
         }
     }
 
-    const onEditDescription = () => {
-        if (loading == "description") return
+    const onEditDescription = async () => {
+        if (savingDescription) return
 
-        setLoading("description")
+        setSavingDescription(true)
         try {
-            onUpdateDescription(descriptionState)
+            await onUpdateDescription(descriptionState)
         } catch (error) {
             console.log(error)
         } finally {
-            setLoading(undefined)
+            setSavingDescription(false)
         }
     }
+
+    useEffect(() => {
+        if (!editing && descriptionState != description) {
+            onEditDescription()
+        }
+    }, [editing])
 
     return (
         <View style={{}}>
@@ -87,7 +94,7 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                     <IconButton
                         icon={"pencil-outline"}
                         style={{ position: "absolute", top: 0, right: 0 }}
-                        loading={loading == "cover"}
+                        loading={uploadingPicuture == "cover"}
                         onPress={() => onEditImage("cover")}
                         mode="contained"
                     />
@@ -115,7 +122,7 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                                 size={20}
                                 icon={"pencil-outline"}
                                 style={{ position: "absolute", top: -10, right: -10 }}
-                                loading={loading == "profile"}
+                                loading={uploadingPicuture == "profile"}
                                 onPress={() => onEditImage("profile")}
                                 mode="contained"
                             />
@@ -127,6 +134,7 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                             iconColor={editing ? colors.secondary : colors.primary}
                             containerColor={editing ? colors.primary : colors.secondary}
                             onPress={() => setEditing((value) => !value)}
+                            loading={savingDescription}
                         />
                     </View>
                 </View>
@@ -136,25 +144,16 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                 {name}
             </Text>
             {editing ? (
-                <View style={{ gap: 5 }}>
-                    <TextInput
-                        mode="outlined"
-                        multiline
-                        label={"Descrição"}
-                        value={descriptionState}
-                        onChangeText={setDescriptionState}
-                        numberOfLines={5}
-                        style={{ backgroundColor: "transparent" }}
-                        disabled={loading == "description"}
-                    />
-                    <IconButton
-                        loading={loading == "description"}
-                        style={{ alignSelf: "flex-end" }}
-                        icon={"check"}
-                        onPress={onEditDescription}
-                        mode="contained"
-                    />
-                </View>
+                <TextInput
+                    mode="outlined"
+                    multiline
+                    label={"Descrição"}
+                    value={descriptionState}
+                    onChangeText={setDescriptionState}
+                    numberOfLines={5}
+                    style={{ backgroundColor: "transparent" }}
+                    disabled={savingDescription}
+                />
             ) : (
                 <Text numberOfLines={3} style={{ position: "relative" }}>
                     {description || <Button labelStyle={{ textDecorationLine: "underline" }}>Inserir uma descrição</Button>}

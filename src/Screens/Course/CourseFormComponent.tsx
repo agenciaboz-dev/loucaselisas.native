@@ -70,7 +70,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
             categories: [],
             creators: [],
             description: "",
-            gallery: { media: [], name: "Primeira galeria" },
+            gallery: { media: [], name: "Galeria do curso" },
             language: "pt-br",
             name: "",
             owner_id: creator.id,

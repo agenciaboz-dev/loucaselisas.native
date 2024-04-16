@@ -75,7 +75,9 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
     return (
         <View style={{ flex: 1, gap: 10 }}>
             <TextInput
-                label="Galeria 1"
+                label="Galeria do curso"
+                dense
+                readOnly
                 value={gallery.name}
                 onChangeText={(value) => setGallery((gallery) => ({ ...gallery, name: value }))}
                 mode="flat"

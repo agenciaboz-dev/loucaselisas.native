@@ -101,6 +101,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         <ScrollView
             keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}
         >
             <View style={{ position: "relative", height: 200, justifyContent: "space-between", alignItems: "flex-end", flexDirection: "row" }}>

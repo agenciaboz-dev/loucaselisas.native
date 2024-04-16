@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar"
 import { Providers } from "./src/Providers"
-import { colors } from "./src/style/colors"
 import { Routes } from "./src/Routes"
 import { useKeepAwake } from "expo-keep-awake"
+import { SafeAreaView } from "react-native"
 
 export default function App() {
     useKeepAwake()

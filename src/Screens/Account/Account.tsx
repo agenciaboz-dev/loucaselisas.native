@@ -59,7 +59,7 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
     }
 
     return user ? (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 10 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 10 }} showsVerticalScrollIndicator={false}>
             <View style={{ position: "relative", height: 200, justifyContent: "space-between", alignItems: "flex-end", flexDirection: "row" }}>
                 <Image
                     source={user.cover || placeholders.cover}

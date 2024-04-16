@@ -33,7 +33,7 @@ export const Delete: React.FC<DeleteProps> = ({ navigation }) => {
     }
 
     return (
-        <Surface style={{ flex: 1, padding: 20, gap: 10, justifyContent: "center", alignItems: "center" }}>
+        <View style={{ flex: 1, padding: 20, gap: 10, justifyContent: "center", alignItems: "center" }}>
             <Text>Tem certeza que deseja deletar sua conta? </Text>
             <Text>Essa ação é irreversível</Text>
 
@@ -45,6 +45,6 @@ export const Delete: React.FC<DeleteProps> = ({ navigation }) => {
                     Sim
                 </Button>
             </View>
-        </Surface>
+        </View>
     )
 }

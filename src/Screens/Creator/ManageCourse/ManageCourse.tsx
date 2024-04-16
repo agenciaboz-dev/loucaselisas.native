@@ -46,7 +46,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
     )
 
     return course ? (
-        <Surface style={{ flex: 1, padding: 20, gap: 10 }}>
+        <View style={{ flex: 1, padding: 20, gap: 10 }}>
             <ScreenTitle
                 title={course.name}
                 right={
@@ -107,6 +107,6 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
             </TouchableRipple>
 
             <MiniStatistics course={course} />
-        </Surface>
+        </View>
     ) : null
 }

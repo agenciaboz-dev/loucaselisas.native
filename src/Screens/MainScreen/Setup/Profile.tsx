@@ -24,6 +24,7 @@ export const Profile: React.FC<ProfileProps> = ({ navigation }) => {
 
     return user ? (
         <ScrollView
+            showsVerticalScrollIndicator={false}
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="handled"
             style={{ flex: 1, padding: 20, paddingBottom: 0 }}

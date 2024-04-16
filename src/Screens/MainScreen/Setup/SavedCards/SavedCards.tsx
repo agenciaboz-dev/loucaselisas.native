@@ -2,7 +2,7 @@ import { NavigationProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useState } from "react"
 import { Surface } from "react-native-paper"
 import { ScreenTitle } from "../../../../components/ScreenTItle"
-import { FlatList } from "react-native"
+import { FlatList, View } from "react-native"
 import { useUser } from "../../../../hooks/useUser"
 import { CardContainer } from "./CardContainer"
 import { Button } from "../../../../components/Button"
@@ -41,7 +41,7 @@ export const SavedCards: React.FC<SavedCardsProps> = ({ navigation }) => {
     )
 
     return user ? (
-        <Surface style={{ flex: 1, padding: 20, gap: 10, paddingBottom: 0 }}>
+        <View style={{ flex: 1, padding: 20, gap: 10, paddingBottom: 0 }}>
             <ScreenTitle title="Cartões de pagamento salvos" />
             <Button mode="contained" onPress={() => navigation.navigate("setup:cards:form")} style={{ alignSelf: "center" }}>
                 Adicionar cartão
@@ -56,6 +56,6 @@ export const SavedCards: React.FC<SavedCardsProps> = ({ navigation }) => {
                 refreshing={loading}
                 onRefresh={refreshData}
             />
-        </Surface>
+        </View>
     ) : null
 }

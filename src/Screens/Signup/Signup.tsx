@@ -45,6 +45,7 @@ export const Signup: React.FC<SignupProps> = ({}) => {
 
     return (
         <ScrollView
+            showsVerticalScrollIndicator={false}
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="handled"
             style={{ flex: 1, padding: 20, paddingTop: 60, paddingBottom: 0 }}

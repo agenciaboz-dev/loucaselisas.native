@@ -209,6 +209,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
 
     return (
         <ScrollView
+            showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 20, gap: 10 }}

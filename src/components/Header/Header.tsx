@@ -1,9 +1,8 @@
 import React, { useState } from "react"
-import { Avatar, IconButton, Menu, Surface, Text, useTheme } from "react-native-paper"
+import { Avatar, IconButton, Menu, Text } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
 import { Pressable, View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import { colors } from "../../style/colors"
 import { NotificationItem } from "./NotificationItem"
 import placeholders from "../../tools/placeholders"
 import { TrianguloMiseravel } from "../TrianguloMiseravel"
@@ -13,11 +12,8 @@ interface HeaderProps {}
 export const Header: React.FC<HeaderProps> = ({}) => {
     const navigation = useNavigation<any>()
     const { user } = useUser()
-    const theme = useTheme()
 
     const [showNotifications, setShowNotifications] = useState(false)
-
-    // const menu_item_style =
 
     return user ? (
         <View
@@ -44,7 +40,6 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 contentStyle={{ width: "100%" }}
                 style={{ width: "93%" }}
             >
-                {/* triangulo miseravel */}
                 <TrianguloMiseravel />
                 <NotificationItem />
                 <NotificationItem />

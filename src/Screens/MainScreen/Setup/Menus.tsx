@@ -1,6 +1,6 @@
 import { NavigationProp } from "@react-navigation/native"
 import React from "react"
-import { TouchableOpacity, ViewStyle } from "react-native"
+import { TouchableOpacity, View, ViewStyle } from "react-native"
 import { Icon, Surface, Text, TouchableRipple } from "react-native-paper"
 import { SetupMenu } from "../../../types/SetupMenu"
 import { useUser } from "../../../hooks/useUser"
@@ -49,7 +49,7 @@ export const Menus: React.FC<MenusProps> = ({ navigation }) => {
     }
 
     return (
-        <Surface style={{ flex: 1, padding: 20, gap: 20 }}>
+        <View style={{ flex: 1, padding: 20, gap: 20 }}>
             <Surface style={wrapper_style}>
                 {account_menus.map((menu) => (
                     <TouchableRipple key={menu.route} style={touchable_style} onPress={() => onMenuPress(menu)}>
@@ -71,6 +71,6 @@ export const Menus: React.FC<MenusProps> = ({ navigation }) => {
                     </TouchableRipple>
                 ))}
             </Surface>
-        </Surface>
+        </View>
     )
 }

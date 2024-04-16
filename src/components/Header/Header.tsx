@@ -1,22 +1,19 @@
 import React, { useState } from "react"
-import { Avatar, IconButton, Menu, Surface, Text, useTheme } from "react-native-paper"
+import { Avatar, IconButton, Menu, Text } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
 import { Pressable, View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import { colors } from "../../style/colors"
-import { avatar_placeholder } from "../../tools/placeholders"
 import { NotificationItem } from "./NotificationItem"
+import placeholders from "../../tools/placeholders"
+import { TrianguloMiseravel } from "../TrianguloMiseravel"
 
 interface HeaderProps {}
 
 export const Header: React.FC<HeaderProps> = ({}) => {
     const navigation = useNavigation<any>()
     const { user } = useUser()
-    const theme = useTheme()
 
     const [showNotifications, setShowNotifications] = useState(false)
-
-    // const menu_item_style =
 
     return user ? (
         <View
@@ -31,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
         >
             <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
                 <Pressable onPress={() => navigation.navigate("setup")}>
-                    <Avatar.Image size={50} source={{ uri: user.image || avatar_placeholder }} />
+                    <Avatar.Image size={50} source={user.image ? { uri: user.image } : placeholders.avatar} />
                 </Pressable>
                 <Text variant="titleLarge">{user.name}</Text>
             </View>
@@ -43,23 +40,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 contentStyle={{ width: "100%" }}
                 style={{ width: "93%" }}
             >
-                {/* triangulo miseravel */}
-                <View
-                    style={{
-                        borderTopWidth: 0,
-                        width: 0,
-                        height: 0,
-                        position: "absolute",
-                        right: 15,
-                        top: -11,
-                        borderBottomColor: theme.colors.elevation.level2,
-                        borderLeftColor: "transparent",
-                        borderRightColor: "transparent",
-                        borderBottomWidth: 10,
-                        borderRightWidth: 10,
-                        borderLeftWidth: 10,
-                    }}
-                ></View>
+                <TrianguloMiseravel />
                 <NotificationItem />
                 <NotificationItem />
                 <NotificationItem />

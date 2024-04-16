@@ -20,7 +20,7 @@ interface CardFormProps {
 }
 
 export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
-    const { user, setUser } = useUser()
+    const { user } = useUser()
     const { snackbar } = useSnackbar()
     const route = useRoute<any>()
     const card = route.params?.card as PaymentCard | undefined
@@ -56,6 +56,7 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
             validity: "",
             bank: null,
             flag: null,
+            user_id: user!.id,
         },
         validateOnChange: false,
         validateOnMount: false,
@@ -65,19 +66,14 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
             if (!user || loading) return
             setLoading(true)
 
-            const data: { user_id: string; card: PaymentCardForm } = {
-                user_id: user.id,
-                card: {
-                    ...values,
-                    number: unmask(values.number),
-                },
+            const data: PaymentCardForm = {
+                ...values,
+                number: unmask(values.number),
             }
 
             try {
-                const response = card ? await api.patch("user/card", data) : await api.post("/user/card", data)
-                const updated_user = response.data
+                const response = card ? await api.patch("/card", data) : await api.post("/card", data)
                 snackbar("Cartão salvo")
-                setUser(updated_user)
                 navigation.goBack()
             } catch (error) {
                 console.log(error)
@@ -103,9 +99,8 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
                 onPress: async () => {
                     setLoading(true)
                     try {
-                        const response = await api.delete("/user/card", { data: { card_id: card?.id } })
+                        const response = await api.delete("/card", { data: { card_id: card?.id } })
                         snackbar("Cartão deletado")
-                        setUser(response.data)
                         navigation.goBack()
                     } catch (error) {
                         console.log(error)
@@ -133,8 +128,25 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
     )
 
     return (
-        <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1, padding: 20 }} contentContainerStyle={{ gap: 10 }}>
+        <ScrollView
+            keyboardShouldPersistTaps="handled"
+            style={{ flex: 1, padding: 20 }}
+            contentContainerStyle={{ gap: 10 }}
+            showsVerticalScrollIndicator={false}
+        >
             <ScreenTitle title={card ? "Atualizar cartão" : "Novo cartão"} />
+            <RadioButton.Group value={formik.values.type} onValueChange={(value) => formik.setFieldValue("type", value)}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+                        <RadioButton value={"CREDIT"} />
+                        <Text>Crédito</Text>
+                    </View>
+                    <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+                        <RadioButton value={"DEBIT"} />
+                        <Text>Débito</Text>
+                    </View>
+                </View>
+            </RadioButton.Group>
             <FormText
                 ref={input_refs[0]}
                 name="number"
@@ -177,25 +189,13 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
                 />
             </View>
 
-            <RadioButton.Group value={formik.values.type} onValueChange={(value) => formik.setFieldValue("type", value)}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-                        <RadioButton value={"CREDIT"} />
-                        <Text>Crédito</Text>
-                    </View>
-                    <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-                        <RadioButton value={"DEBIT"} />
-                        <Text>Débito</Text>
-                    </View>
-                </View>
-            </RadioButton.Group>
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-around", marginTop: 10 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 10, marginTop: 10 }}>
                 {card && (
-                    <Button mode="outlined" rippleColor={theme.colors.error} onPress={onDelete} disabled={loading}>
+                    <Button mode="outlined" rippleColor={theme.colors.error} onPress={onDelete} disabled={loading} style={{ flex: 1 }}>
                         Deletar
                     </Button>
                 )}
-                <Button loading={loading} onPress={() => formik.handleSubmit()} mode="contained" style={{}}>
+                <Button loading={loading} onPress={() => formik.handleSubmit()} mode="contained" style={{ flex: 1 }}>
                     Salvar cartão
                 </Button>
             </View>

@@ -1,6 +1,7 @@
 import { NavigationProp } from "@react-navigation/native"
 import React from "react"
-import { Surface, Text } from "react-native-paper"
+import { View } from "react-native"
+import { Text } from "react-native-paper"
 
 interface SearchProps {
     navigation: NavigationProp<any, any>
@@ -8,8 +9,8 @@ interface SearchProps {
 
 export const Search: React.FC<SearchProps> = ({ navigation }) => {
     return (
-        <Surface style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <Text>buscar</Text>
-        </Surface>
+        </View>
     )
 }

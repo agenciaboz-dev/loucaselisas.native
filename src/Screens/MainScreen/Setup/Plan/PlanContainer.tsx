@@ -50,7 +50,13 @@ export const PlanContainer: React.FC<PlanContainerProps> = ({ plan }) => {
             <Text variant="bodyLarge">{plan.name}</Text>
             <Text variant="bodyLarge">{currencyMask(plan.price)}</Text>
 
-            <Button loading={loading} mode="contained" style={{ alignSelf: "center", marginTop: 10 }} disabled={is_current_plan} onPress={onPurchase}>
+            <Button
+                loading={loading}
+                mode="contained"
+                style={{ alignSelf: "flex-end", marginTop: 10 }}
+                disabled={is_current_plan}
+                onPress={onPurchase}
+            >
                 Adquirir {plan.name}
             </Button>
 

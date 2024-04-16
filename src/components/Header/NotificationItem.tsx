@@ -1,14 +1,14 @@
 import React from "react"
 import { View } from "react-native"
 import { Avatar, IconButton, Menu, Surface, Text } from "react-native-paper"
-import { avatar_placeholder } from "../../tools/placeholders"
+import placeholders from "../../tools/placeholders"
 
 interface NotificationItemProps {}
 
 export const NotificationItem: React.FC<NotificationItemProps> = ({}) => {
     return (
         <View style={{ flex: 1, flexDirection: "row", gap: 30, paddingHorizontal: 15, paddingVertical: 5, alignItems: "center" }}>
-            <Avatar.Image size={50} source={{ uri: avatar_placeholder }} />
+            <Avatar.Image size={50} source={placeholders.avatar} />
             <View style={{ gap: 5, flex: 1 }}>
                 <Text variant="bodyLarge" style={{ fontWeight: "bold" }}>
                     Nome do curso

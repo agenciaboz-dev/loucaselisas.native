@@ -6,6 +6,7 @@ import { Resume } from "./Resume/Resume"
 import { CommentsTab } from "./CommentsTab/CommentsTab"
 import { Statistics } from "./Statistics/Statistics"
 import { colors } from "../../../style/colors"
+import { View } from "react-native"
 
 interface CreatorHomeProps {
     navigation: NavigationProp<any, any>
@@ -24,7 +25,7 @@ export const CreatorHome: React.FC<CreatorHomeProps> = ({ navigation }) => {
     ])
 
     return (
-        <Surface style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <TabView
                 navigationState={{ index, routes }}
                 onIndexChange={setIndex}
@@ -44,6 +45,6 @@ export const CreatorHome: React.FC<CreatorHomeProps> = ({ navigation }) => {
                     />
                 )}
             />
-        </Surface>
+        </View>
     )
 }

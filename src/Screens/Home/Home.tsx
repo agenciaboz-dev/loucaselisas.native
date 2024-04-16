@@ -28,8 +28,10 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
         }, [])
     )
 
+
     return (
         <ScrollView
+            showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={"handled"}
             style={{ backgroundColor: colors.primary }}
             contentContainerStyle={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 20, paddingHorizontal: 60 }}
@@ -42,6 +44,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                 shouldPlay
                 resizeMode={ResizeMode.COVER}
                 isLooping
+                onLoad={() => setStatusBarStyle("light")}
             />
             <Logo invert />
             {!form && (

@@ -1,10 +1,9 @@
 import { NavigationProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useState } from "react"
-import { Surface } from "react-native-paper"
 import { ScreenTitle } from "../../../../components/ScreenTItle"
 import { Plan } from "../../../../types/server/class/Plan"
 import { api } from "../../../../backend/api"
-import { FlatList } from "react-native"
+import { FlatList, View } from "react-native"
 import { PlanContainer } from "./PlanContainer"
 
 interface ManagePlanProps {
@@ -35,7 +34,7 @@ export const ManagePlan: React.FC<ManagePlanProps> = ({ navigation }) => {
     )
 
     return (
-        <Surface style={{ flex: 1, padding: 20 }}>
+        <View style={{ flex: 1, padding: 20 }}>
             <ScreenTitle title="Gerenciar seu plano" />
             <FlatList
                 data={plans}
@@ -47,6 +46,6 @@ export const ManagePlan: React.FC<ManagePlanProps> = ({ navigation }) => {
                 onRefresh={refreshPlans}
                 refreshing={loading}
             />
-        </Surface>
+        </View>
     )
 }

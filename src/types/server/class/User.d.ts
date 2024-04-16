@@ -58,12 +58,7 @@ export declare const user_include: {
         };
     };
     favorite_courses: true;
-    favorite_creators: {
-        include: {
-            categories: true;
-            favorited_by: true;
-        };
-    };
+    favorite_creators: true;
     payment_cards: true;
     role: {
         include: {
@@ -116,7 +111,7 @@ export declare class User {
     bio: string | null;
     google_id: string | null;
     google_token: string | null;
-    favorite_creators: Creator[];
+    favorite_creators: string[];
     favorite_courses: Course[];
     payment_cards: PaymentCard[];
     creator: Creator | null;

@@ -1,5 +1,5 @@
 import { Image } from "expo-image"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { FlatList, Pressable, ScrollView, View } from "react-native"
 import { Avatar, Icon, IconButton, Surface, Text, TextInput } from "react-native-paper"
 import { useUser } from "../../../../hooks/useUser"
@@ -26,6 +26,8 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
     const [editingDescription, setEditingDescription] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
     const [ownedCourses, setOwnedCourses] = useState<Course[]>([])
+    const [filteredCourses, setFilteredCourses] = useState(ownedCourses)
+    const [filterCourseName, setFilterCourseName] = useState("")
 
     const pickImage = async (aspect: [number, number]) => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -64,6 +66,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
     }
 
     const refreshCourses = async () => {
+        console.log("refreshing owned courses")
         setRefreshing(true)
         try {
             const response = await api.get("/course/owner", { params: { owner_id: creator?.id } })
@@ -76,6 +79,18 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         setRefreshing(false)
     }
 
+    const filterCourses = () => {
+        setFilteredCourses(ownedCourses.filter((item) => item.name.toLocaleLowerCase().includes(filterCourseName.toLocaleLowerCase())))
+    }
+
+    useEffect(() => {
+        filterCourses()
+    }, [ownedCourses])
+
+    useEffect(() => {
+        filterCourses()
+    }, [filterCourseName])
+
     useFocusEffect(
         useCallback(() => {
             refreshCourses()
@@ -86,11 +101,12 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         <ScrollView
             keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}
         >
             <View style={{ position: "relative", height: 200, justifyContent: "space-between", alignItems: "flex-end", flexDirection: "row" }}>
                 <Image
-                    source={creator.cover || placeholders.cover_placeholder}
+                    source={creator.cover || placeholders.cover}
                     style={{ width: "100%", height: 150, borderRadius: 15, position: "absolute", top: 0, left: 0, objectFit: "contain" }}
                 />
                 <IconButton
@@ -102,7 +118,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 />
                 <Icon size={30} source={"instagram"} />
                 <View style={{ position: "relative" }}>
-                    <Avatar.Image size={100} source={{ uri: creator.image || placeholders.avatar_placeholder }} />
+                    <Avatar.Image size={100} source={creator.image ? { uri: creator.image } : placeholders.avatar} />
                     <IconButton
                         size={20}
                         icon={"pencil-outline"}
@@ -129,6 +145,8 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
             <TextInput
                 label={"Pesquisar Cursos"}
                 mode="outlined"
+                value={filterCourseName}
+                onChangeText={setFilterCourseName}
                 style={{ backgroundColor: colors.grey }}
                 outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
                 left={<TextInput.Icon icon={"menu"} />}
@@ -136,28 +154,22 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
             />
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                 <Text variant="bodyLarge">Seus Cursos</Text>
-                <IconButton icon={"apps"} />
             </View>
+            <Button mode="outlined" icon={"plus-circle"} style={{ borderStyle: "dashed" }} onPress={() => navigation.navigate("creator:course:form")}>
+                Novo curso
+            </Button>
             <FlatList
-                data={ownedCourses}
+                data={filteredCourses}
                 renderItem={({ item }) => <CourseContainer course={item} />}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
                 style={{ marginHorizontal: -20 }}
-                contentContainerStyle={{ gap: 20, flex: 1, paddingHorizontal: 20 }}
+                contentContainerStyle={{ gap: 10, paddingHorizontal: 20 }}
                 ListEmptyComponent={<Text style={{ flex: 1, textAlign: "center" }}>Você ainda não possui nenhum curso</Text>}
                 refreshing={refreshing}
                 onRefresh={refreshCourses}
             />
-            <Button
-                mode="contained"
-                icon={"plus-circle"}
-                style={{ alignSelf: "center", marginTop: 10 }}
-                onPress={() => navigation.navigate("creator:course:form")}
-            >
-                Novo curso
-            </Button>
         </ScrollView>
     ) : null
 }

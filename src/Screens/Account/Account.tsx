@@ -59,10 +59,10 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
     }
 
     return user ? (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 10 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 10 }} showsVerticalScrollIndicator={false}>
             <View style={{ position: "relative", height: 200, justifyContent: "space-between", alignItems: "flex-end", flexDirection: "row" }}>
                 <Image
-                    source={user.cover || placeholders.cover_placeholder}
+                    source={user.cover || placeholders.cover}
                     style={{ width: "100%", height: 150, borderRadius: 15, position: "absolute", top: 0, left: 0, objectFit: "contain" }}
                 />
                 <IconButton
@@ -74,7 +74,7 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
                 />
                 <Icon size={30} source={"instagram"} />
                 <View style={{ position: "relative" }}>
-                    <Avatar.Image size={100} source={{ uri: user.image || placeholders.avatar_placeholder }} />
+                    <Avatar.Image size={100} source={user.image ? { uri: user.image } : placeholders.avatar} />
                     <IconButton
                         size={20}
                         icon={"pencil-outline"}

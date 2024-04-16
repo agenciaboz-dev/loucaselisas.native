@@ -45,9 +45,14 @@ export declare const course_include: {
 export type CoursePrisma = Prisma.CourseGetPayload<{
     include: typeof course_include;
 }>;
-export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published"> & {
+export type CoverForm = {
+    file: FileUpload;
+    type: "image" | "video";
+    url?: string;
+};
+export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published"> & {
     lessons: LessonForm[];
-    cover?: FileUpload;
+    cover?: CoverForm;
     gallery: GalleryForm;
     categories: {
         id: string;
@@ -56,11 +61,13 @@ export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | 
         id: string;
     }[];
     owner_id: string;
+    id?: string;
 };
 export declare class Course {
     id: string;
     name: string;
     cover: string;
+    cover_type: "image" | "video";
     published: string;
     description: string;
     language: string;
@@ -76,4 +83,6 @@ export declare class Course {
     chat: Chat | null;
     constructor(data: CoursePrisma);
     static new(data: CourseForm, socket?: Socket): Promise<Course | undefined>;
+    load(data: CoursePrisma): void;
+    updateCover(cover: CoverForm): Promise<void>;
 }

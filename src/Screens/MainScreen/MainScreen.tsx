@@ -2,6 +2,7 @@ import React from "react"
 import { Icon, Surface, Text } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
 import { BottomTabs } from "../../components/BottomTabs"
+import { View } from "react-native"
 
 interface MainScreenProps {}
 
@@ -9,8 +10,8 @@ export const MainScreen: React.FC<MainScreenProps> = ({}) => {
     const { user } = useUser()
 
     return user ? (
-        <Surface style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <BottomTabs />
-        </Surface>
+        </View>
     ) : null
 }

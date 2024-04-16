@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react"
 import { Surface } from "react-native-paper"
 import { ScreenTitle } from "../../../../components/ScreenTItle"
 import { ContractLog } from "../../../../types/server/class/Plan"
-import { FlatList } from "react-native"
+import { FlatList, View } from "react-native"
 import { HistoryContainer } from "./HistoryContainer"
 import { api } from "../../../../backend/api"
 import { useUser } from "../../../../hooks/useUser"
@@ -43,7 +43,7 @@ export const PlanHistory: React.FC<PlanHistoryProps> = ({ navigation }) => {
     }, [logs])
 
     return (
-        <Surface style={{ flex: 1, padding: 20 }}>
+        <View style={{ flex: 1, padding: 20, paddingBottom: 0 }}>
             <ScreenTitle title="Histórico de pedidos" />
             <FlatList
                 data={logs.reverse()}
@@ -55,6 +55,6 @@ export const PlanHistory: React.FC<PlanHistoryProps> = ({ navigation }) => {
                 onRefresh={refreshLogs}
                 refreshing={loading}
             />
-        </Surface>
+        </View>
     )
 }

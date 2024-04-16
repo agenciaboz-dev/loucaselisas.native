@@ -264,12 +264,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                 </View>
             </Surface>
 
-            <Button
-                mode="contained"
-                onPress={() => formik.handleSubmit()}
-                style={{ width: 200, alignSelf: "center", marginBottom: 30 }}
-                loading={loading}
-            >
+            <Button mode="contained" onPress={() => formik.handleSubmit()} style={{ marginBottom: 30 }} loading={loading}>
                 {submitLabel}
             </Button>
 

@@ -42,6 +42,11 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
         }
     }
 
+    const onDelete = () => {
+        setShowMenu(false)
+        navigation.navigate("creator:course:delete", { course })
+    }
+
     useFocusEffect(
         useCallback(() => {
             refreshCourse()
@@ -68,10 +73,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                             >
                                 <Text>Editar curso</Text>
                             </TouchableRipple>
-                            <TouchableRipple
-                                style={{ paddingHorizontal: 20, paddingVertical: 10 }}
-                                onPress={() => onMenuItemPress("creator:course:delete")}
-                            >
+                            <TouchableRipple style={{ paddingHorizontal: 20, paddingVertical: 10 }} onPress={onDelete}>
                                 <Text>Deletar</Text>
                             </TouchableRipple>
                         </View>

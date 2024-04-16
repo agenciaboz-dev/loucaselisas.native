@@ -28,6 +28,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
         }, [])
     )
 
+
     return (
         <ScrollView
             keyboardShouldPersistTaps={"handled"}
@@ -42,6 +43,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                 shouldPlay
                 resizeMode={ResizeMode.COVER}
                 isLooping
+                onLoad={() => setStatusBarStyle("light")}
             />
             <Logo invert />
             {!form && (

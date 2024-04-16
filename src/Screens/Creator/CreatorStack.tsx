@@ -5,6 +5,7 @@ import { View } from "react-native"
 import { default_navigator_options } from "../../tools/default_navigator_options"
 import { CreatorHome } from "./CreatorHome/CreatorHome"
 import { CourseFormComponent } from "../Course/CourseFormComponent"
+import { ManageCourse } from "./ManageCourse/ManageCourse"
 
 interface CreatorStackProps {
     navigation: NavigationProp<any, any>
@@ -17,6 +18,7 @@ export const CreatorStack: React.FC<CreatorStackProps> = ({ navigation }) => {
         <Stack.Navigator screenOptions={default_navigator_options}>
             <Stack.Screen name="creator:home" component={CreatorHome} />
             <Stack.Screen name="creator:course:form" component={CourseFormComponent} />
+            <Stack.Screen name="creator:course:manage" component={ManageCourse} />
         </Stack.Navigator>
     )
 }

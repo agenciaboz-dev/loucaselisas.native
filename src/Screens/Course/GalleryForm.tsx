@@ -8,12 +8,14 @@ import { FileUpload } from "../../types/server/class/helpers"
 import { colors } from "../../style/colors"
 import { GalleryForm } from "../../types/server/class/Gallery/Gallery"
 import { ResizeMode, Video } from "expo-av"
+import { CourseForm, CoverForm } from "../../types/server/class/Course"
+import { FormikErrors, FormikTouched } from "formik"
 
 interface GalleryFormProps {
     gallery: GalleryForm
     setGallery: React.Dispatch<React.SetStateAction<GalleryForm>>
-    cover: { file: FileUpload; type: "image" | "video" } | undefined
-    setCover: React.Dispatch<React.SetStateAction<{ file: FileUpload; type: "image" | "video" } | undefined>>
+    cover: CoverForm | undefined
+    setCover: React.Dispatch<React.SetStateAction<CoverForm | undefined>>
 }
 
 export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setGallery, cover, setCover }) => {
@@ -92,12 +94,12 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
                             <View style={{ position: "relative" }}>
                                 {cover.type == "image" ? (
                                     <Image
-                                        source={{ uri: "data:image/png;base64," + cover.file.base64 }}
+                                        source={{ uri: cover.url || "data:image/png;base64," + cover.file.base64 }}
                                         style={{ width: button_size, height: button_size, borderRadius: 15 }}
                                     />
                                 ) : (
                                     <Video
-                                        source={{ uri: "data:video/mp4;base64," + cover.file.base64 }}
+                                        source={{ uri: cover.url || "data:video/mp4;base64," + cover.file.base64 }}
                                         style={{ width: button_size, height: button_size, borderRadius: 15 }}
                                         resizeMode={ResizeMode.COVER}
                                         shouldPlay
@@ -129,13 +131,13 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
                     <View style={{ position: "relative" }} key={item.name}>
                         {item.type == "IMAGE" ? (
                             <Image
-                                source={{ uri: "data:image/png;base64," + item.base64 }}
+                                source={{ uri: item.url || "data:image/png;base64," + item.base64 }}
                                 style={{ width: button_size, height: button_size, borderRadius: 15 }}
                                 contentFit="cover"
                             />
                         ) : (
                             <Video
-                                source={{ uri: "data:video/mp4;base64," + item.base64 }}
+                                source={{ uri: item.url || "data:video/mp4;base64," + item.base64 }}
                                 style={{ width: button_size, height: button_size, borderRadius: 15 }}
                                 resizeMode={ResizeMode.COVER}
                                 shouldPlay

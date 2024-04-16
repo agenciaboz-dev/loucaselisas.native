@@ -9,5 +9,6 @@ export type MediaForm = FileUpload & {
 export declare class Media {
     id: string;
     url: string;
+    type: "IMAGE" | "VIDEO";
     constructor(data: MediaPrisma);
 }

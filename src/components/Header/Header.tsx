@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native"
 import { colors } from "../../style/colors"
 import { NotificationItem } from "./NotificationItem"
 import placeholders from "../../tools/placeholders"
+import { TrianguloMiseravel } from "../TrianguloMiseravel"
 
 interface HeaderProps {}
 
@@ -44,22 +45,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 style={{ width: "93%" }}
             >
                 {/* triangulo miseravel */}
-                <View
-                    style={{
-                        borderTopWidth: 0,
-                        width: 0,
-                        height: 0,
-                        position: "absolute",
-                        right: 15,
-                        top: -11,
-                        borderBottomColor: theme.colors.elevation.level2,
-                        borderLeftColor: "transparent",
-                        borderRightColor: "transparent",
-                        borderBottomWidth: 10,
-                        borderRightWidth: 10,
-                        borderLeftWidth: 10,
-                    }}
-                ></View>
+                <TrianguloMiseravel />
                 <NotificationItem />
                 <NotificationItem />
                 <NotificationItem />

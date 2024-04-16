@@ -4,6 +4,7 @@ import { Course } from "../../../../types/server/class/Course"
 import { Image } from "expo-image"
 import placeholders from "../../../../tools/placeholders"
 import { TouchableOpacity, View } from "react-native"
+import { NavigationProp, useNavigation } from "@react-navigation/native"
 
 interface CourseContainerProps {
     course: Course
@@ -11,8 +12,10 @@ interface CourseContainerProps {
 
 export const CourseContainer: React.FC<CourseContainerProps> = ({ course }) => {
     const theme = useTheme()
+    const navigation = useNavigation<NavigationProp<any, any>>()
+
     const onCoursePress = () => {
-        console.log("a")
+        navigation.navigate("creator:course:manage", { course })
     }
 
     return (

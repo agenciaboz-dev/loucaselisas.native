@@ -1,9 +1,9 @@
-import { NavigationProp, useFocusEffect } from "@react-navigation/native"
+import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { ScrollView, TextInput, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { useFormik } from "formik"
-import { CourseForm } from "../../types/server/class/Course"
+import { Course, CourseForm, CoverForm } from "../../types/server/class/Course"
 import { useUser } from "../../hooks/useUser"
 import * as Yup from "yup"
 import { FormText } from "../../components/FormText"
@@ -23,16 +23,19 @@ import { GalleryFormComponent } from "./GalleryForm"
 import { ImagePickerAsset } from "expo-image-picker"
 import { FileUpload } from "../../types/server/class/helpers"
 import { GalleryForm } from "../../types/server/class/Gallery/Gallery"
+import unmask from "../../tools/unmask"
 
 interface CourseFormProps {
     navigation: NavigationProp<any, any>
+    route: RouteProp<any, any>
 }
 
-export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) => {
+export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, route }) => {
     const theme = useTheme()
-    const { user, setUser } = useUser()
+    const { user } = useUser()
     const creator = user?.creator!
     const { snackbar } = useSnackbar()
+    const course = (route.params?.course as Course) || undefined
 
     const [loading, setLoading] = useState(false)
     const [availableCreators, setAvailableCreators] = useState<Creator[]>([])
@@ -43,16 +46,16 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
 
     const [categories, setCategories] = useState<Category[]>([])
     const [gallery, setGallery] = useState<GalleryForm>({ media: [], name: "" })
-    const [cover, setCover] = useState<{ file: FileUpload; type: "image" | "video" }>()
+    const [cover, setCover] = useState<CoverForm>()
 
     const required_field_message = "Campo obrigatório."
 
     const courseSchema = Yup.object().shape({
         description: Yup.string().required(required_field_message),
         name: Yup.string().required(required_field_message),
-        price: Yup.number()
-            .moreThan(0, required_field_message)
+        price: Yup.string()
             .required(required_field_message)
+            .test("exists", required_field_message, (value) => !!Number(unmask(value)))
             .test("is-decimal", "Preço inválido. Permitido apenas números e até 2 casas decimais.", (value) => {
                 // Replace comma with dot to validate as a number
                 const numberValue = value.toString().replace(",", ".")
@@ -63,6 +66,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
 
     const formik = useFormik<CourseForm>({
         initialValues: {
+            id: undefined,
             categories: [],
             creators: [],
             description: "",
@@ -82,19 +86,18 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
                 categories: categories.map((item) => ({ id: item.id })),
                 creators: participants.map((item) => ({ id: item.id })),
                 recorder: participantsText,
-                price: unmaskCurrency(values.price),
                 cover,
                 gallery: { ...gallery, name: gallery.name || "Galeria 1" },
+                price: unmaskCurrency(values.price),
             }
             console.log(data)
             try {
-                const response = await api.post("/course", data)
-                setUser(response.data)
-                snackbar("curso criado com sucesso")
+                const response = course ? await api.patch("/course", data) : await api.post("/course", data)
+                snackbar("solicitação enviada com sucesso")
                 navigation.goBack()
             } catch (error) {
                 console.log(error)
-                snackbar("erro ao criar curso")
+                snackbar("erro ao processar curso")
             } finally {
                 setLoading(false)
             }
@@ -189,6 +192,18 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
     useFocusEffect(
         useCallback(() => {
             fetchData()
+
+            if (course) {
+                formik.setFieldValue("id", course.id)
+                formik.setFieldValue("name", course.name)
+                formik.setFieldValue("price", course.price.toString())
+                formik.setFieldValue("language", course.language)
+                formik.setFieldValue("description", course.description)
+                setParticipantsText(course.recorder || "")
+                setGallery({ ...course.gallery, media: course.gallery.media.map((item) => ({ ...item, name: item.url })) })
+                setCover({ file: { name: course.cover }, type: course.cover_type, url: course.cover })
+                setCategories(course.categories)
+            }
         }, [])
     )
 
@@ -198,7 +213,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
             style={{ flex: 1 }}
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 20, gap: 10 }}
         >
-            <ScreenTitle title="Novo Curso" />
+            <ScreenTitle title={course ? course.name : "Novo Curso"} />
 
             <FormText formik={formik} name="name" label={"Nome do curso"} ref={input_refs[0]} onSubmitEditing={() => focusInput(1)} transparent />
             <MentionInput

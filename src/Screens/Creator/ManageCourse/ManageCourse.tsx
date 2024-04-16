@@ -11,6 +11,8 @@ import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import { currencyMask } from "../../../tools/currencyMask"
 import { TrianguloMiseravel } from "../../../components/TrianguloMiseravel"
 import { api } from "../../../backend/api"
+import { Button } from "../../../components/Button"
+import { MiniStatistics } from "./MiniStatistics"
 
 interface ManageCourseProps {
     navigation: NavigationProp<any, any>
@@ -21,6 +23,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
     const theme = useTheme()
     const [showMenu, setShowMenu] = useState(false)
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
+    const [extendedDescription, setExtendedDescription] = useState(false)
 
     const onMenuItemPress = (route: string) => {
         setShowMenu(false)
@@ -93,11 +96,17 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                     resizeMode={ResizeMode.COVER}
                     style={{ width: "100%", aspectRatio: "16/9", borderRadius: 15 }}
                     useNativeControls
+                    shouldPlay
                 />
             )}
             {/* </SkeletonPlaceholder> */}
             <Text variant="bodyLarge">Valor: {currencyMask(course.price)}</Text>
-            <Text>{course.description}</Text>
+            <Text numberOfLines={extendedDescription ? 0 : 3}>{course.description}</Text>
+            <TouchableRipple onPress={() => setExtendedDescription((value) => !value)} style={{ alignSelf: "flex-end" }}>
+                <Text>ler {extendedDescription ? "menos" : "mais"}...</Text>
+            </TouchableRipple>
+
+            <MiniStatistics course={course} />
         </Surface>
     ) : null
 }

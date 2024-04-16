@@ -1,6 +1,6 @@
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { ScrollView, TextInput, View } from "react-native"
+import { ScrollView, TextInput, View, ViewStyle } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { useFormik } from "formik"
 import { Course, CourseForm, CoverForm } from "../../types/server/class/Course"
@@ -10,7 +10,7 @@ import { FormText } from "../../components/FormText"
 import { MentionInput, MentionSuggestionsProps, Suggestion } from "react-native-controlled-mentions"
 import { Creator } from "../../types/server/class"
 import { api } from "../../backend/api"
-import { Checkbox, Surface, Text, TouchableRipple, useTheme, TextInput as PaperInput } from "react-native-paper"
+import { Checkbox, Surface, Text, TouchableRipple, useTheme, TextInput as PaperInput, IconButton } from "react-native-paper"
 import { dropdown_style } from "../../style/dropdown_style"
 import { Dropdown, IDropdownRef } from "react-native-element-dropdown"
 import { Category } from "../../types/server/class/Category"
@@ -24,6 +24,12 @@ import { ImagePickerAsset } from "expo-image-picker"
 import { FileUpload } from "../../types/server/class/helpers"
 import { GalleryForm } from "../../types/server/class/Gallery/Gallery"
 import unmask from "../../tools/unmask"
+import { Image, ImageStyle } from "expo-image"
+import { ResizeMode, Video } from "expo-av"
+import { colors } from "../../style/colors"
+import * as ImagePicker from "expo-image-picker"
+import * as FileSystem from "expo-file-system"
+import { pickMedia } from "../../tools/pickMedia"
 
 interface CourseFormProps {
     navigation: NavigationProp<any, any>
@@ -36,6 +42,8 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
     const creator = user?.creator!
     const { snackbar } = useSnackbar()
     const course = (route.params?.course as Course) || undefined
+    const add_media_button_style: ViewStyle = { borderStyle: "dashed", justifyContent: "center", alignItems: "center" }
+    const image_style: ImageStyle = { width: "100%", aspectRatio: "16/9", borderRadius: 15 }
 
     const [loading, setLoading] = useState(false)
     const [availableCreators, setAvailableCreators] = useState<Creator[]>([])
@@ -176,6 +184,22 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
         setAvailableCategories(await fetchLists.categories())
     }
 
+    const pickCover = async () => {
+        const result = await pickMedia([16, 9])
+        if (result) {
+            const media = result[0]
+            const filename = media?.uri.substring(media?.uri.lastIndexOf("/") + 1, media?.uri.length) || "cover"
+            if (media?.base64) {
+                setCover({ type: "image", file: { name: filename, base64: media.base64 } })
+            } else if (media?.type == "video") {
+                const base64video = await FileSystem.readAsStringAsync(media.uri, {
+                    encoding: "base64",
+                })
+                setCover({ type: "video", file: { name: filename, base64: base64video } })
+            }
+        }
+    }
+
     useEffect(() => {
         console.log(availableCategories)
     }, [availableCategories])
@@ -215,7 +239,34 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 20, gap: 10 }}
         >
             <ScreenTitle title={course ? course.name : "Novo Curso"} />
-
+            {cover ? (
+                <View style={{ position: "relative" }}>
+                    {cover.type == "image" ? (
+                        <Image source={{ uri: cover.url || "data:image/png;base64," + cover.file.base64 }} style={image_style} />
+                    ) : (
+                        <Video
+                            source={{ uri: cover.url || "data:video/mp4;base64," + cover.file.base64 }}
+                            style={image_style}
+                            resizeMode={ResizeMode.COVER}
+                            shouldPlay
+                            isLooping
+                            useNativeControls={false}
+                            isMuted
+                        />
+                    )}
+                    <IconButton
+                        icon={"image-edit"}
+                        style={{ position: "absolute", right: 0, top: 0, backgroundColor: colors.secondary }}
+                        iconColor={colors.primary}
+                        onPress={pickCover}
+                    />
+                </View>
+            ) : (
+                <Button mode="outlined" style={add_media_button_style} contentStyle={image_style} onPress={pickCover}>
+                    Capa
+                </Button>
+            )}
+            <GalleryFormComponent gallery={gallery} setGallery={setGallery} cover={cover} setCover={setCover} />
             <FormText formik={formik} name="name" label={"Nome do curso"} ref={input_refs[0]} onSubmitEditing={() => focusInput(1)} transparent />
             <MentionInput
                 inputRef={input_refs[1]}
@@ -299,7 +350,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                 numberOfLines={5}
                 transparent
             />
-            <GalleryFormComponent gallery={gallery} setGallery={setGallery} cover={cover} setCover={setCover} />
+
             <Button mode="contained" style={{}} loading={loading} onPress={() => formik.handleSubmit()}>
                 Enviar para análise
             </Button>

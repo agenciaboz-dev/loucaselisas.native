@@ -12,3 +12,5 @@ export const pickMedia = async (aspect?: [number, number], multiple?: boolean) =
 
     return result.assets ? result.assets : null
 }
+
+export const getFilename = (media: ImagePicker.ImagePickerAsset) => media?.uri.substring(media?.uri.lastIndexOf("/") + 1, media?.uri.length) || ""

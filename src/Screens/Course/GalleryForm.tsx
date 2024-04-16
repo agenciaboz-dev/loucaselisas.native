@@ -9,7 +9,7 @@ import { GalleryForm } from "../../types/server/class/Gallery/Gallery"
 import { ResizeMode, Video } from "expo-av"
 import { CourseForm, CoverForm } from "../../types/server/class/Course"
 import { FormikErrors, FormikTouched } from "formik"
-import { pickMedia } from "../../tools/pickMedia"
+import { getFilename, pickMedia } from "../../tools/pickMedia"
 
 interface GalleryFormProps {
     gallery: GalleryForm
@@ -28,7 +28,7 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
         if (result) {
             const updated_gallery = { ...gallery }
             result.forEach(async (media) => {
-                const filename = media?.uri.substring(media?.uri.lastIndexOf("/") + 1, media?.uri.length) || ""
+                const filename = getFilename(media)
                 console.log({ ...media, base64: media?.base64 ? true : false })
                 if (media?.base64) {
                     const updated_gallery = { ...gallery }

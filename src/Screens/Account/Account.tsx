@@ -5,12 +5,13 @@ import { Avatar, Button, Icon, IconButton, Surface, Text } from "react-native-pa
 import { useUser } from "../../hooks/useUser"
 import placeholders from "../../tools/placeholders"
 import { Image } from "expo-image"
-import { EditBio } from "./EditBio"
 import * as ImagePicker from "expo-image-picker"
 import { api } from "../../backend/api"
-import { UserImageForm } from "../../types/server/class/User"
+import { PartialUser, UserImageForm } from "../../types/server/class/User"
 import { MenuGroup } from "./MenuGroup"
 import images from "../../tools/images"
+import { ManageProfileCard } from "../../components/ManageProfileCard"
+import { getFilename } from "../../tools/pickMedia"
 
 interface AccountProps {
     navigation: NavigationProp<any, any>
@@ -20,84 +21,43 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
     const { user, setUser } = useUser()
 
     const [edittingBio, setEdittingBio] = useState(false)
-    const [uploading, setUploading] = useState<"cover" | "profile">()
 
-    const pickImage = async (aspect: [number, number]) => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect,
-            quality: 1,
-            base64: true,
-        })
+    const uploadImage = async (type: "cover" | "profile", image: ImagePicker.ImagePickerAsset) => {
+        if (!user) return
 
-        return result.assets ? result.assets[0] : null
-    }
-
-    const uploadImage = async (type: "cover" | "profile") => {
-        if (!user || uploading) return
-
-        const image = await pickImage(type == "cover" ? [5, 2] : [1, 1])
-        const filename = image?.uri.substring(image?.uri.lastIndexOf("/") + 1, image?.uri.length) || "cover.png"
-        if (image?.base64) {
-            setUploading(type)
+        if (image.base64) {
+            const filename = getFilename(image)
             const data: UserImageForm = {
                 id: user.id,
                 cover: type == "cover" ? { name: filename, base64: image.base64 } : undefined,
                 image: type == "profile" ? { name: filename, base64: image.base64 } : undefined,
             }
-            try {
-                const response = await api.patch("/user/image", data)
-                const updated_user = response.data
-                setUser(updated_user)
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setUploading(undefined)
-            }
+            const response = await api.patch("/user/image", data)
+            const updated_user = response.data
+            setUser(updated_user)
         }
+    }
+
+    const onUpdateBio = async (text: string) => {
+        if (!user) return
+
+        const data: PartialUser = { id: user.id, bio: text }
+        const response = await api.patch("/user", data)
+        const updated_user = response.data
+        setUser(updated_user)
     }
 
     return user ? (
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 10 }} showsVerticalScrollIndicator={false}>
-            <View style={{ position: "relative", height: 200, justifyContent: "space-between", alignItems: "flex-end", flexDirection: "row" }}>
-                <Image
-                    source={user.cover || placeholders.cover}
-                    style={{ width: "100%", height: 150, borderRadius: 15, position: "absolute", top: 0, left: 0, objectFit: "contain" }}
-                />
-                <IconButton
-                    icon={"pencil-outline"}
-                    style={{ position: "absolute", top: 0, right: 0 }}
-                    loading={uploading == "cover"}
-                    onPress={() => uploadImage("cover")}
-                    mode="contained"
-                />
-                <Icon size={30} source={"instagram"} />
-                <View style={{ position: "relative" }}>
-                    <Avatar.Image size={100} source={user.image ? { uri: user.image } : placeholders.avatar} />
-                    <IconButton
-                        size={20}
-                        icon={"pencil-outline"}
-                        style={{ position: "absolute", top: -10, right: -10 }}
-                        loading={uploading == "profile"}
-                        onPress={() => uploadImage("profile")}
-                        mode="contained"
-                    />
-                </View>
-                <Image source={images.tiktok_icon} style={{ height: 30, aspectRatio: "1/1" }} contentFit="contain" />
-            </View>
-            <Text style={{ alignSelf: "center" }} variant="bodyLarge">
-                {user.name}
-            </Text>
-            {edittingBio ? (
-                <EditBio user={user} onDone={() => setEdittingBio(false)} />
-            ) : (
-                <Pressable onPress={() => setEdittingBio(true)}>
-                    <Text numberOfLines={3} style={{ position: "relative" }}>
-                        {user.bio || <Button labelStyle={{ textDecorationLine: "underline" }}>Inserir uma bio</Button>}
-                    </Text>
-                </Pressable>
-            )}
+            <ManageProfileCard
+                cover={user.cover}
+                picture={user.image}
+                name={user.name}
+                description={user.bio || ""}
+                onUpdateCover={(image) => uploadImage("cover", image)}
+                onUpdatePicture={(image) => uploadImage("profile", image)}
+                onUpdateDescription={onUpdateBio}
+            />
             <MenuGroup
                 title="Conta"
                 menuItems={[

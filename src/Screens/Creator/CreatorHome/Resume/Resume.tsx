@@ -152,17 +152,12 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 left={<TextInput.Icon icon={"menu"} />}
                 right={<TextInput.Icon icon="magnify" />}
             />
-            <View style={{ flexDirection: "row", gap: 0, alignItems: "center" }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                 <Text variant="bodyLarge">Seus Cursos</Text>
-                <IconButton
-                    mode="contained"
-                    icon={"plus-circle"}
-                    containerColor="transparent"
-                    iconColor="black"
-                    style={{ alignSelf: "center", margin: 0, padding: 0 }}
-                    onPress={() => navigation.navigate("creator:course:form")}
-                ></IconButton>
             </View>
+            <Button mode="outlined" icon={"plus-circle"} style={{ borderStyle: "dashed" }} onPress={() => navigation.navigate("creator:course:form")}>
+                Novo curso
+            </Button>
             <FlatList
                 data={filteredCourses}
                 renderItem={({ item }) => <CourseContainer course={item} />}

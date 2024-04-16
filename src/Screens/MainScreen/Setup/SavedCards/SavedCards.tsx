@@ -43,7 +43,7 @@ export const SavedCards: React.FC<SavedCardsProps> = ({ navigation }) => {
     return user ? (
         <View style={{ flex: 1, padding: 20, gap: 10, paddingBottom: 0 }}>
             <ScreenTitle title="Cartões de pagamento salvos" />
-            <Button mode="contained" onPress={() => navigation.navigate("setup:cards:form")} style={{ alignSelf: "center" }}>
+            <Button icon={"plus-circle"} mode="outlined" onPress={() => navigation.navigate("setup:cards:form")} style={{ borderStyle: "dashed" }}>
                 Adicionar cartão
             </Button>
             <FlatList

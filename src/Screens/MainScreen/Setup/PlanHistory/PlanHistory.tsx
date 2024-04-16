@@ -43,7 +43,7 @@ export const PlanHistory: React.FC<PlanHistoryProps> = ({ navigation }) => {
     }, [logs])
 
     return (
-        <View style={{ flex: 1, padding: 20 }}>
+        <View style={{ flex: 1, padding: 20, paddingBottom: 0 }}>
             <ScreenTitle title="Histórico de pedidos" />
             <FlatList
                 data={logs.reverse()}

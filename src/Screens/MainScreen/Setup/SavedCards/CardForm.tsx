@@ -135,6 +135,18 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
         >
             <ScreenTitle title={card ? "Atualizar cartão" : "Novo cartão"} />
+            <RadioButton.Group value={formik.values.type} onValueChange={(value) => formik.setFieldValue("type", value)}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+                        <RadioButton value={"CREDIT"} />
+                        <Text>Crédito</Text>
+                    </View>
+                    <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+                        <RadioButton value={"DEBIT"} />
+                        <Text>Débito</Text>
+                    </View>
+                </View>
+            </RadioButton.Group>
             <FormText
                 ref={input_refs[0]}
                 name="number"
@@ -177,25 +189,13 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
                 />
             </View>
 
-            <RadioButton.Group value={formik.values.type} onValueChange={(value) => formik.setFieldValue("type", value)}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-                        <RadioButton value={"CREDIT"} />
-                        <Text>Crédito</Text>
-                    </View>
-                    <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-                        <RadioButton value={"DEBIT"} />
-                        <Text>Débito</Text>
-                    </View>
-                </View>
-            </RadioButton.Group>
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-around", marginTop: 10 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 10, marginTop: 10 }}>
                 {card && (
-                    <Button mode="outlined" rippleColor={theme.colors.error} onPress={onDelete} disabled={loading}>
+                    <Button mode="outlined" rippleColor={theme.colors.error} onPress={onDelete} disabled={loading} style={{ flex: 1 }}>
                         Deletar
                     </Button>
                 )}
-                <Button loading={loading} onPress={() => formik.handleSubmit()} mode="contained" style={{}}>
+                <Button loading={loading} onPress={() => formik.handleSubmit()} mode="contained" style={{ flex: 1 }}>
                     Salvar cartão
                 </Button>
             </View>

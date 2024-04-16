@@ -300,7 +300,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                 transparent
             />
             <GalleryFormComponent gallery={gallery} setGallery={setGallery} cover={cover} setCover={setCover} />
-            <Button mode="contained" style={{ alignSelf: "center" }} loading={loading} onPress={() => formik.handleSubmit()}>
+            <Button mode="contained" style={{}} loading={loading} onPress={() => formik.handleSubmit()}>
                 Enviar para análise
             </Button>
         </ScrollView>

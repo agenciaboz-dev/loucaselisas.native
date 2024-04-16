@@ -43,7 +43,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
 
     const [categories, setCategories] = useState<Category[]>([])
     const [gallery, setGallery] = useState<GalleryForm>({ media: [], name: "" })
-    const [cover, setCover] = useState<FileUpload>()
+    const [cover, setCover] = useState<{ file: FileUpload; type: "image" | "video" }>()
 
     const required_field_message = "Campo obrigatório."
 

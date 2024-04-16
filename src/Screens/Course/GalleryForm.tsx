@@ -12,8 +12,8 @@ import { ResizeMode, Video } from "expo-av"
 interface GalleryFormProps {
     gallery: GalleryForm
     setGallery: React.Dispatch<React.SetStateAction<GalleryForm>>
-    cover: FileUpload | undefined
-    setCover: React.Dispatch<React.SetStateAction<FileUpload | undefined>>
+    cover: { file: FileUpload; type: "image" | "video" } | undefined
+    setCover: React.Dispatch<React.SetStateAction<{ file: FileUpload; type: "image" | "video" } | undefined>>
 }
 
 export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setGallery, cover, setCover }) => {
@@ -38,7 +38,12 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
         const media = await pickMedia([16, 9])
         const filename = media?.uri.substring(media?.uri.lastIndexOf("/") + 1, media?.uri.length) || "cover"
         if (media?.base64) {
-            setCover({ name: filename, base64: media.base64 })
+            setCover({ type: "image", file: { name: filename, base64: media.base64 } })
+        } else if (media?.type == "video") {
+            const base64video = await FileSystem.readAsStringAsync(media.uri, {
+                encoding: "base64",
+            })
+            setCover({ type: "video", file: { name: filename, base64: base64video } })
         }
     }
 
@@ -85,10 +90,22 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
                     <>
                         {cover ? (
                             <View style={{ position: "relative" }}>
-                                <Image
-                                    source={{ uri: "data:image/png;base64," + cover.base64 }}
-                                    style={{ width: button_size, height: button_size, borderRadius: 15 }}
-                                />
+                                {cover.type == "image" ? (
+                                    <Image
+                                        source={{ uri: "data:image/png;base64," + cover.file.base64 }}
+                                        style={{ width: button_size, height: button_size, borderRadius: 15 }}
+                                    />
+                                ) : (
+                                    <Video
+                                        source={{ uri: "data:video/mp4;base64," + cover.file.base64 }}
+                                        style={{ width: button_size, height: button_size, borderRadius: 15 }}
+                                        resizeMode={ResizeMode.COVER}
+                                        shouldPlay
+                                        isLooping
+                                        useNativeControls={false}
+                                        isMuted
+                                    />
+                                )}
                                 <IconButton
                                     icon={"image-edit"}
                                     style={{ position: "absolute", right: 0, top: 0, backgroundColor: colors.secondary }}

@@ -152,9 +152,16 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 left={<TextInput.Icon icon={"menu"} />}
                 right={<TextInput.Icon icon="magnify" />}
             />
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+            <View style={{ flexDirection: "row", gap: 0, alignItems: "center" }}>
                 <Text variant="bodyLarge">Seus Cursos</Text>
-                <IconButton icon={"apps"} />
+                <IconButton
+                    mode="contained"
+                    icon={"plus-circle"}
+                    containerColor="transparent"
+                    iconColor="black"
+                    style={{ alignSelf: "center", margin: 0, padding: 0 }}
+                    onPress={() => navigation.navigate("creator:course:form")}
+                ></IconButton>
             </View>
             <FlatList
                 data={filteredCourses}
@@ -168,14 +175,6 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 refreshing={refreshing}
                 onRefresh={refreshCourses}
             />
-            <Button
-                mode="contained"
-                icon={"plus-circle"}
-                style={{ alignSelf: "center", marginTop: 10 }}
-                onPress={() => navigation.navigate("creator:course:form")}
-            >
-                Novo curso
-            </Button>
         </ScrollView>
     ) : null
 }

@@ -1,25 +1,28 @@
-import React from "react"
+import React, { useRef } from "react"
 import { Button, IconButton, Surface, TextInput } from "react-native-paper"
-import { ScrollView, View, ViewStyle } from "react-native"
+import { FlatList, ScrollView, View, ViewStyle } from "react-native"
 import * as ImagePicker from "expo-image-picker"
+import * as FileSystem from "expo-file-system"
 import { Image } from "expo-image"
 import { FileUpload } from "../../types/server/class/helpers"
 import { colors } from "../../style/colors"
 import { GalleryForm } from "../../types/server/class/Gallery/Gallery"
+import { ResizeMode, Video } from "expo-av"
 
 interface GalleryFormProps {
     gallery: GalleryForm
     setGallery: React.Dispatch<React.SetStateAction<GalleryForm>>
-    cover: FileUpload | null
-    setCover: React.Dispatch<React.SetStateAction<FileUpload | null>>
+    cover: FileUpload | undefined
+    setCover: React.Dispatch<React.SetStateAction<FileUpload | undefined>>
 }
 
 export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setGallery, cover, setCover }) => {
     const button_size = 150
     const add_media_button_style: ViewStyle = { borderStyle: "dashed", justifyContent: "center", alignItems: "center" }
     const image_style: ViewStyle = { height: "100%", width: button_size }
+    const gallery_ref = useRef<FlatList>(null)
 
-    const pickMedia = async (aspect: [number, number]) => {
+    const pickMedia = async (aspect?: [number, number]) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
@@ -40,13 +43,26 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
     }
 
     const addMedia = async () => {
-        const media = await pickMedia([16, 9])
+        const media = await pickMedia()
         const filename = media?.uri.substring(media?.uri.lastIndexOf("/") + 1, media?.uri.length) || ""
+        console.log({ ...media, base64: media?.base64 ? true : false })
         if (media?.base64) {
             const updated_gallery = { ...gallery }
-            updated_gallery.media.push({ name: filename, base64: media.base64 })
+            updated_gallery.media.push({ name: filename, base64: media.base64, type: "IMAGE" })
+            setGallery(updated_gallery)
+        } else if (media?.type == "video") {
+            const base64video = await FileSystem.readAsStringAsync(media.uri, {
+                encoding: "base64",
+            })
+            const updated_gallery = { ...gallery }
+            updated_gallery.media.push({ name: filename, base64: base64video, type: "VIDEO" })
             setGallery(updated_gallery)
         }
+        gallery_ref.current?.scrollToEnd()
+    }
+
+    const deleteMedia = (filename: string) => {
+        setGallery((gallery) => ({ ...gallery, media: gallery.media.filter((item) => item.name != filename) }))
     }
 
     return (
@@ -58,47 +74,68 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
                 mode="flat"
                 style={{ backgroundColor: "transparent" }}
             />
-            <ScrollView
+            <FlatList
+                ref={gallery_ref}
+                data={gallery.media}
                 horizontal
-                style={{ flexDirection: "row", height: 150, marginHorizontal: -20 }}
-                contentContainerStyle={{ gap: 10, flex: 1, paddingHorizontal: 20 }}
-            >
-                {cover ? (
-                    <View style={{ position: "relative" }}>
-                        <Image
-                            source={{ uri: "data:image/png;base64," + cover.base64 }}
-                            style={{ width: button_size, height: button_size, borderRadius: 15 }}
-                        />
-                        <IconButton
-                            icon={"image-edit"}
-                            style={{ position: "absolute", right: 0, bottom: 0, backgroundColor: colors.secondary }}
-                            iconColor={colors.primary}
-                            onPress={pickCover}
-                        />
-                    </View>
-                ) : (
-                    <Button mode="outlined" style={add_media_button_style} contentStyle={image_style} onPress={pickCover}>
-                        Capa
+                style={{ height: 150, marginHorizontal: -20 }}
+                contentContainerStyle={{ gap: 10, paddingHorizontal: 20 }}
+                showsHorizontalScrollIndicator={false}
+                ListHeaderComponent={
+                    <>
+                        {cover ? (
+                            <View style={{ position: "relative" }}>
+                                <Image
+                                    source={{ uri: "data:image/png;base64," + cover.base64 }}
+                                    style={{ width: button_size, height: button_size, borderRadius: 15 }}
+                                />
+                                <IconButton
+                                    icon={"image-edit"}
+                                    style={{ position: "absolute", right: 0, top: 0, backgroundColor: colors.secondary }}
+                                    iconColor={colors.primary}
+                                    onPress={pickCover}
+                                />
+                            </View>
+                        ) : (
+                            <Button mode="outlined" style={add_media_button_style} contentStyle={image_style} onPress={pickCover}>
+                                Capa
+                            </Button>
+                        )}
+                    </>
+                }
+                ListFooterComponent={
+                    <Button mode="outlined" style={add_media_button_style} contentStyle={{ height: "100%", width: button_size }} onPress={addMedia}>
+                        Adicionar mídia
                     </Button>
-                )}
-                <Button mode="outlined" style={add_media_button_style} contentStyle={{ height: "100%", width: button_size }} onPress={addMedia}>
-                    Adicionar mídia
-                </Button>
-                {gallery.media.map((media, index) => (
-                    <View style={{ position: "relative" }} key={media.name + index.toString()}>
-                        <Image
-                            source={{ uri: "data:image/png;base64," + media.base64 }}
-                            style={{ width: button_size, height: button_size, borderRadius: 15 }}
-                        />
+                }
+                renderItem={({ item }) => (
+                    <View style={{ position: "relative" }} key={item.name}>
+                        {item.type == "IMAGE" ? (
+                            <Image
+                                source={{ uri: "data:image/png;base64," + item.base64 }}
+                                style={{ width: button_size, height: button_size, borderRadius: 15 }}
+                                contentFit="cover"
+                            />
+                        ) : (
+                            <Video
+                                source={{ uri: "data:video/mp4;base64," + item.base64 }}
+                                style={{ width: button_size, height: button_size, borderRadius: 15 }}
+                                resizeMode={ResizeMode.COVER}
+                                shouldPlay
+                                isLooping
+                                useNativeControls={false}
+                                isMuted
+                            />
+                        )}
                         <IconButton
                             icon={"delete-circle"}
-                            style={{ position: "absolute", right: 0, bottom: 0, backgroundColor: colors.secondary }}
+                            style={{ position: "absolute", right: 0, top: 0, backgroundColor: colors.secondary }}
                             iconColor={colors.primary}
-                            // onPress={pickCover}
+                            onPress={() => deleteMedia(item.name)}
                         />
                     </View>
-                ))}
-            </ScrollView>
+                )}
+            />
         </View>
     )
 }

@@ -43,7 +43,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
 
     const [categories, setCategories] = useState<Category[]>([])
     const [gallery, setGallery] = useState<GalleryForm>({ media: [], name: "" })
-    const [cover, setCover] = useState<FileUpload | null>(null)
+    const [cover, setCover] = useState<FileUpload>()
 
     const required_field_message = "Campo obrigatório."
 
@@ -75,7 +75,6 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
             price: 0,
         },
         async onSubmit(values, formikHelpers) {
-            console.log("asdoais")
             if (loading) return
             setLoading(true)
             const data: CourseForm = {
@@ -84,6 +83,8 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
                 creators: participants.map((item) => ({ id: item.id })),
                 recorder: participantsText,
                 price: unmaskCurrency(values.price),
+                cover,
+                gallery: { ...gallery, name: gallery.name || "Galeria 1" },
             }
             console.log(data)
             try {
@@ -218,6 +219,8 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation }) =
                         isInsertSpaceAfterMention: true,
                     },
                 ]}
+                onSubmitEditing={() => focusInput(2)}
+                returnKeyType={"next"}
             />
             <View style={{ flexDirection: "row", gap: 10 }}>
                 <FormText

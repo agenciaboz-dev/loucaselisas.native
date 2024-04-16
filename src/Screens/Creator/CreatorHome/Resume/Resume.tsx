@@ -1,5 +1,5 @@
 import { Image } from "expo-image"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { FlatList, Pressable, ScrollView, View } from "react-native"
 import { Avatar, Icon, IconButton, Surface, Text, TextInput } from "react-native-paper"
 import { useUser } from "../../../../hooks/useUser"
@@ -26,6 +26,8 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
     const [editingDescription, setEditingDescription] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
     const [ownedCourses, setOwnedCourses] = useState<Course[]>([])
+    const [filteredCourses, setFilteredCourses] = useState(ownedCourses)
+    const [filterCourseName, setFilterCourseName] = useState("")
 
     const pickImage = async (aspect: [number, number]) => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -64,6 +66,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
     }
 
     const refreshCourses = async () => {
+        console.log("refreshing owned courses")
         setRefreshing(true)
         try {
             const response = await api.get("/course/owner", { params: { owner_id: creator?.id } })
@@ -75,6 +78,18 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
 
         setRefreshing(false)
     }
+
+    const filterCourses = () => {
+        setFilteredCourses(ownedCourses.filter((item) => item.name.toLocaleLowerCase().includes(filterCourseName.toLocaleLowerCase())))
+    }
+
+    useEffect(() => {
+        filterCourses()
+    }, [ownedCourses])
+
+    useEffect(() => {
+        filterCourses()
+    }, [filterCourseName])
 
     useFocusEffect(
         useCallback(() => {
@@ -129,6 +144,8 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
             <TextInput
                 label={"Pesquisar Cursos"}
                 mode="outlined"
+                value={filterCourseName}
+                onChangeText={setFilterCourseName}
                 style={{ backgroundColor: colors.grey }}
                 outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
                 left={<TextInput.Icon icon={"menu"} />}
@@ -139,13 +156,13 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 <IconButton icon={"apps"} />
             </View>
             <FlatList
-                data={ownedCourses}
+                data={filteredCourses}
                 renderItem={({ item }) => <CourseContainer course={item} />}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
                 style={{ marginHorizontal: -20 }}
-                contentContainerStyle={{ gap: 20, flex: 1, paddingHorizontal: 20 }}
+                contentContainerStyle={{ gap: 10, flex: 1, paddingHorizontal: 20 }}
                 ListEmptyComponent={<Text style={{ flex: 1, textAlign: "center" }}>Você ainda não possui nenhum curso</Text>}
                 refreshing={refreshing}
                 onRefresh={refreshCourses}

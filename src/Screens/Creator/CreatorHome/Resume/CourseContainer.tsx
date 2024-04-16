@@ -16,8 +16,12 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course }) => {
     }
 
     return (
-        <TouchableOpacity style={{ flex: 1, position: "relative" }} onPress={onCoursePress}>
-            <Image source={placeholders.image_placeholder} style={{ borderRadius: 10, width: 150, aspectRatio: "1/1" }} contentFit="cover" />
+        <TouchableOpacity style={{ position: "relative" }} onPress={onCoursePress}>
+            <Image
+                source={course.cover || placeholders.image_placeholder}
+                style={{ borderRadius: 10, width: 150, aspectRatio: "1/1" }}
+                contentFit="cover"
+            />
             <View style={{ position: "absolute", padding: 10, justifyContent: "flex-end", height: "100%", gap: 5 }}>
                 <Text style={{ backgroundColor: theme.colors.background, padding: 5, borderRadius: 5, alignSelf: "flex-start" }}>{course.name}</Text>
                 <TouchableRipple

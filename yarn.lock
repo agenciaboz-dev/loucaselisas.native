@@ -3661,7 +3661,7 @@ expo-dev-menu@4.5.8:
     expo-dev-menu-interface "1.7.2"
     semver "^7.5.3"
 
-expo-file-system@~16.0.0, expo-file-system@~16.0.8:
+expo-file-system@^16.0.8, expo-file-system@~16.0.0, expo-file-system@~16.0.8:
   version "16.0.8"
   resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-16.0.8.tgz#13c79a8e06e42a8e76e9297df6920597a011d989"
   integrity sha512-yDbVT0TUKd7ewQjaY5THum2VRFx2n/biskGhkUmLh3ai21xjIVtaeIzHXyv9ir537eVgt4ReqDNWi7jcXjdUcA==

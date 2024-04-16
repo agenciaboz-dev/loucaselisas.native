@@ -3,8 +3,8 @@ import React, { useCallback, useState } from "react"
 import { IconButton, Menu, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Course } from "../../../types/server/class/Course"
 import { ScreenTitle } from "../../../components/ScreenTItle"
-import { View } from "react-native"
-import { Image } from "expo-image"
+import { Dimensions, FlatList, View } from "react-native"
+import { Image, ImageStyle } from "expo-image"
 import { ResizeMode, Video } from "expo-av"
 import placeholders from "../../../tools/placeholders"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
@@ -21,6 +21,9 @@ interface ManageCourseProps {
 
 export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route }) => {
     const theme = useTheme()
+    const image_width = Dimensions.get("screen").width * 0.9
+    const media_style: ImageStyle = { width: image_width, aspectRatio: "16/9", borderRadius: 15 }
+
     const [showMenu, setShowMenu] = useState(false)
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
     const [extendedDescription, setExtendedDescription] = useState(false)
@@ -77,28 +80,34 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
             />
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                 <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
-                    {course.name}
+                    {course.owner.nickname}
                 </Text>
                 <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
                     {course.lessons.length} lições
                 </Text>
             </View>
             {/* <SkeletonPlaceholder> */}
-            {course.cover_type == "image" ? (
-                <Image
-                    source={course.cover || placeholders.cover}
-                    contentFit="cover"
-                    style={{ width: "100%", aspectRatio: "16/9", borderRadius: 15 }}
-                />
-            ) : (
-                <Video
-                    source={{ uri: course.cover }}
-                    resizeMode={ResizeMode.COVER}
-                    style={{ width: "100%", aspectRatio: "16/9", borderRadius: 15 }}
-                    useNativeControls
-                    shouldPlay
-                />
-            )}
+            <FlatList
+                data={course.gallery.media}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ marginHorizontal: -20, flexGrow: 0 }}
+                contentContainerStyle={{ paddingHorizontal: 20, gap: 10 }}
+                ListHeaderComponent={
+                    course.cover_type == "image" ? (
+                        <Image source={course.cover || placeholders.cover} contentFit="cover" style={media_style} />
+                    ) : (
+                        <Video source={{ uri: course.cover }} resizeMode={ResizeMode.COVER} style={media_style} useNativeControls shouldPlay />
+                    )
+                }
+                renderItem={({ item }) =>
+                    item.type == "IMAGE" ? (
+                        <Image source={item.url || placeholders.cover} contentFit="cover" style={media_style} />
+                    ) : (
+                        <Video source={{ uri: item.url }} resizeMode={ResizeMode.COVER} style={media_style} useNativeControls shouldPlay />
+                    )
+                }
+            />
             {/* </SkeletonPlaceholder> */}
             <Text variant="bodyLarge">Valor: {currencyMask(course.price)}</Text>
             <Text numberOfLines={extendedDescription ? 0 : 3}>{course.description}</Text>

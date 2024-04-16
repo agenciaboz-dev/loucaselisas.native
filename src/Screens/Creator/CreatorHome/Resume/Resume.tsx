@@ -105,7 +105,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         >
             <View style={{ position: "relative", height: 200, justifyContent: "space-between", alignItems: "flex-end", flexDirection: "row" }}>
                 <Image
-                    source={creator.cover || placeholders.cover_placeholder}
+                    source={creator.cover || placeholders.cover}
                     style={{ width: "100%", height: 150, borderRadius: 15, position: "absolute", top: 0, left: 0, objectFit: "contain" }}
                 />
                 <IconButton
@@ -117,7 +117,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 />
                 <Icon size={30} source={"instagram"} />
                 <View style={{ position: "relative" }}>
-                    <Avatar.Image size={100} source={{ uri: creator.image || placeholders.avatar_placeholder }} />
+                    <Avatar.Image size={100} source={creator.image ? { uri: creator.image } : placeholders.avatar} />
                     <IconButton
                         size={20}
                         icon={"pencil-outline"}

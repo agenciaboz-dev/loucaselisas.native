@@ -17,9 +17,9 @@ import { api } from "../../backend/api"
 import { useUser } from "../../hooks/useUser"
 import { AxiosError } from "axios"
 import { useSnackbar } from "../../hooks/useSnackbar"
-import { avatar_placeholder } from "../../tools/placeholders"
 import { UserFormComponent } from "../../components/UserForm"
 import { ScreenTitle } from "../../components/ScreenTItle"
+import placeholders from "../../tools/placeholders"
 
 interface SignupProps {}
 
@@ -53,7 +53,7 @@ export const Signup: React.FC<SignupProps> = ({}) => {
             <ScreenTitle title="Cadastre-se" />
 
             <View style={{ alignItems: "center", gap: 10 }}>
-                <Avatar.Image size={150} source={{ uri: image?.uri || avatar_placeholder }} />
+                <Avatar.Image size={150} source={image ? { uri: image.uri } : placeholders.avatar} />
                 <Button mode="contained" style={{ width: 150 }} onPress={() => pickImage()}>
                     Inserir foto
                 </Button>

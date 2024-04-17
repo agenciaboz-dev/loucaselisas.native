@@ -22,7 +22,8 @@ export const CardContainer: React.FC<CardContainer> = ({ card }) => {
     return (
         <Surface style={{ flex: 1, borderRadius: 20, backgroundColor: bank_data?.color || "#212426" }}>
             <TouchableRipple
-                style={{ flex: 1, padding: 30, gap: 40, position: "relative" }}
+                borderless
+                style={{ borderRadius: 20, flex: 1, padding: 30, gap: 40, position: "relative" }}
                 onPress={() => navigation.navigate("setup:cards:form", { card })}
             >
                 <>

@@ -19,28 +19,38 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course }) => {
     }
 
     return (
-        <TouchableOpacity style={{ position: "relative" }} onPress={onCoursePress}>
-            <Image source={course.cover || placeholders.square} style={{ borderRadius: 10, width: 175, aspectRatio: "1/1" }} contentFit="cover" />
-            <View style={{ position: "absolute", padding: 10, justifyContent: "flex-end", height: "100%", gap: 5 }}>
-                <Text style={{ backgroundColor: theme.colors.background, padding: 5, borderRadius: 5, alignSelf: "flex-start" }}>{course.name}</Text>
-                <TouchableRipple
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        backgroundColor: theme.colors.background,
-                        padding: 5,
-                        borderRadius: 5,
-                        gap: 5,
-                    }}
-                    // pointerEvents="none"
-                    onPress={() => console.log("comments")}
-                >
-                    <>
-                        <Text variant="labelSmall">{course.lessons.length} lições</Text>
-                        <Icon size={15} source={"comment-text-outline"} />
-                    </>
-                </TouchableRipple>
-            </View>
-        </TouchableOpacity>
+        <Surface elevation={1} style={{ borderRadius: 10 }}>
+            <TouchableRipple borderless style={{ position: "relative", borderRadius: 10 }} onPress={onCoursePress}>
+                <>
+                    <Image
+                        source={course.cover || placeholders.square}
+                        style={{ borderRadius: 10, width: 175, aspectRatio: "1/1" }}
+                        contentFit="cover"
+                    />
+                    <View style={{ position: "absolute", padding: 10, justifyContent: "flex-end", height: "100%", gap: 5 }}>
+                        <Text style={{ backgroundColor: theme.colors.background, padding: 5, borderRadius: 5, alignSelf: "flex-start" }}>
+                            {course.name}
+                        </Text>
+                        <TouchableRipple
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                backgroundColor: theme.colors.background,
+                                padding: 5,
+                                borderRadius: 5,
+                                gap: 5,
+                            }}
+                            // pointerEvents="none"
+                            onPress={() => console.log("comments")}
+                        >
+                            <>
+                                <Text variant="labelSmall">{course.lessons.length} lições</Text>
+                                <Icon size={15} source={"comment-text-outline"} />
+                            </>
+                        </TouchableRipple>
+                    </View>
+                </>
+            </TouchableRipple>
+        </Surface>
     )
 }

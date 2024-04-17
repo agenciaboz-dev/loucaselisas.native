@@ -123,7 +123,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
                 style={{ marginHorizontal: -20 }}
-                contentContainerStyle={{ gap: 10, paddingHorizontal: 20 }}
+                contentContainerStyle={{ gap: 10, paddingHorizontal: 20, paddingBottom: 20 }}
                 ListEmptyComponent={<Text style={{ flex: 1, textAlign: "center" }}>Você ainda não possui nenhum curso</Text>}
                 refreshing={refreshing}
                 onRefresh={refreshCourses}

@@ -116,14 +116,14 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                 }
                 renderItem={({ item, index }) =>
                     item.type == "IMAGE" ? (
-                        <TouchableOpacity onPress={() => setViewingMedia(index)}>
+                        <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => setViewingMedia(index)}>
                             <Image
                                 source={item.url}
                                 placeholder={placeholders.square}
                                 contentFit="contain"
                                 style={[media_style, { aspectRatio: item.width / item.height, width: undefined }]}
                             />
-                        </TouchableOpacity>
+                        </TouchableRipple>
                     ) : (
                         <Video source={{ uri: item.url }} resizeMode={ResizeMode.COVER} style={media_style} useNativeControls />
                     )

@@ -17,7 +17,11 @@ export const MenuItem: React.FC<MenuItemType> = ({ icon, title, route }) => {
     }
     return (
         <Surface style={{ flexDirection: "row", borderRadius: 10 }}>
-            <TouchableRipple onPress={onPress} style={{ flex: 1, flexDirection: "row", gap: 5, padding: 5, alignItems: "center" }}>
+            <TouchableRipple
+                borderless
+                onPress={onPress}
+                style={{ flex: 1, flexDirection: "row", gap: 5, padding: 5, alignItems: "center", borderRadius: 10 }}
+            >
                 <>
                     <Icon size={24} source={icon} />
                     <Text>{title}</Text>

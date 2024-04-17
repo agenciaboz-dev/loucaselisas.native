@@ -16,6 +16,7 @@ import { estados } from "../tools/estadosBrasil"
 import { Button } from "./Button"
 import DatePicker from "react-native-date-picker"
 import { mask } from "react-native-mask-text"
+import { LabeledComponent } from "./LabeledComponent"
 
 interface UserFormProps {
     user?: User
@@ -184,24 +185,24 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                     onSubmitEditing={() => focusInput(5)}
                 />
                 <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
-                    <View style={{ flex: 1 }}>
-                        <Text variant="bodySmall" style={{ marginLeft: 5 }}>
-                            Pronome
-                        </Text>
-                        <Dropdown
-                            ref={dropdown_refs[5]}
-                            data={[
-                                { label: "Ele/dele", value: "him" },
-                                { label: "Ela/dela", value: "her" },
-                            ]}
-                            labelField="label"
-                            onChange={(item) => formik.setFieldValue("pronoun", item.value)}
-                            valueField="value"
-                            value={formik.values.pronoun}
-                            style={dropdown_style}
-                            placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
-                        />
-                    </View>
+                    <LabeledComponent
+                        label="Pronome"
+                        Component={
+                            <Dropdown
+                                ref={dropdown_refs[5]}
+                                data={[
+                                    { label: "Ele/dele", value: "him" },
+                                    { label: "Ela/dela", value: "her" },
+                                ]}
+                                labelField="label"
+                                onChange={(item) => formik.setFieldValue("pronoun", item.value)}
+                                valueField="value"
+                                value={formik.values.pronoun}
+                                style={dropdown_style}
+                                placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
+                            />
+                        }
+                    />
                     <Pressable onPress={() => setSelectDate(true)} style={{ flex: 1.28 }}>
                         <FormText
                             ref={input_refs[6]}
@@ -229,22 +230,22 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                         maxLength={16}
                         mask={"(99) 9 9999-9999"}
                     />
-                    <View style={{ flex: 1 }}>
-                        <Text variant="bodySmall" style={{ marginLeft: 5 }}>
-                            Estado
-                        </Text>
-                        <Dropdown
-                            ref={dropdown_refs[9]}
-                            data={estados.reverse()}
-                            labelField="label"
-                            onChange={(item) => formik.setFieldValue("uf", item.value)}
-                            valueField="value"
-                            value={formik.values.uf}
-                            style={[dropdown_style]}
-                            dropdownPosition="top"
-                            placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
-                        />
-                    </View>
+                    <LabeledComponent
+                        label="Estado"
+                        Component={
+                            <Dropdown
+                                ref={dropdown_refs[9]}
+                                data={estados.reverse()}
+                                labelField="label"
+                                onChange={(item) => formik.setFieldValue("uf", item.value)}
+                                valueField="value"
+                                value={formik.values.uf}
+                                style={[dropdown_style]}
+                                dropdownPosition="top"
+                                placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
+                            />
+                        }
+                    />
                 </View>
                 <View style={{ flexDirection: "row", gap: 10 }}>
                     <FormText

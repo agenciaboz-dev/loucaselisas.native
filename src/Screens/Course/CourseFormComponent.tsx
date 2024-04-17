@@ -31,6 +31,7 @@ import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
 import { pickMedia } from "../../tools/pickMedia"
 import placeholders from "../../tools/placeholders"
+import { LabeledComponent } from "../../components/LabeledComponent"
 
 interface CourseFormProps {
     navigation: NavigationProp<any, any>
@@ -280,26 +281,31 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
             )}
             <GalleryFormComponent gallery={gallery} setGallery={setGallery} cover={cover} setCover={setCover} />
             <FormText formik={formik} name="name" label={"Nome do curso"} ref={input_refs[0]} onSubmitEditing={() => focusInput(1)} transparent />
-            <MentionInput
-                inputRef={input_refs[1]}
-                placeholder="Participantes"
-                placeholderTextColor={theme.colors.primary}
-                value={participantsText}
-                onChange={setParticipantsText}
-                multiline={false}
-                style={[dropdown_style, { flex: 0 }]}
-                keyboardType="email-address"
-                partTypes={[
-                    {
-                        trigger: "@",
-                        renderSuggestions,
-                        textStyle: { fontWeight: "bold", color: theme.colors.tertiary },
-                        isBottomMentionSuggestionsRender: true,
-                        isInsertSpaceAfterMention: true,
-                    },
-                ]}
-                onSubmitEditing={() => focusInput(2)}
-                returnKeyType={"next"}
+            <LabeledComponent
+                label={"Participantes"}
+                Component={
+                    <MentionInput
+                        inputRef={input_refs[1]}
+                        placeholder="Participantes"
+                        placeholderTextColor={theme.colors.primary}
+                        value={participantsText}
+                        onChange={setParticipantsText}
+                        multiline={false}
+                        style={[dropdown_style, { flex: 0 }]}
+                        keyboardType="email-address"
+                        partTypes={[
+                            {
+                                trigger: "@",
+                                renderSuggestions,
+                                textStyle: { fontWeight: "bold", color: theme.colors.tertiary },
+                                isBottomMentionSuggestionsRender: true,
+                                isInsertSpaceAfterMention: true,
+                            },
+                        ]}
+                        onSubmitEditing={() => focusInput(2)}
+                        returnKeyType={"next"}
+                    />
+                }
             />
             <View style={{ flexDirection: "row", gap: 10 }}>
                 <FormText
@@ -313,44 +319,53 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                     style={{ minWidth: 170 }}
                     transparent
                 />
-                <Dropdown
-                    data={[
-                        { label: "Português", value: "pt-br" },
-                        { label: "Inglês", value: "en-us" },
-                    ]}
-                    labelField="label"
-                    onChange={(item) => formik.setFieldValue("language", item.value)}
-                    valueField="value"
-                    value={formik.values.language}
-                    style={dropdown_style}
-                    placeholder="Idioma"
-                    placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
+                <LabeledComponent
+                    label="Idioma"
+                    Component={
+                        <Dropdown
+                            data={[
+                                { label: "Português", value: "pt-br" },
+                                { label: "Inglês", value: "en-us" },
+                            ]}
+                            labelField="label"
+                            onChange={(item) => formik.setFieldValue("language", item.value)}
+                            valueField="value"
+                            value={formik.values.language}
+                            style={dropdown_style}
+                            placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
+                        />
+                    }
                 />
             </View>
-            <Dropdown
-                data={availableCategories}
-                labelField="name"
-                onChange={(item) => handleCategoryPress(item)}
-                valueField="id"
-                value={categories.map((item) => item.name).join(", ")}
-                style={[dropdown_style]}
-                placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
-                containerStyle={{ paddingVertical: 10 }}
-                placeholder="Categorias"
-                renderItem={(category, selected) => (
-                    <TouchableRipple
-                        style={{ flex: 1, paddingHorizontal: 10, paddingVertical: 10, flexDirection: "row", alignItems: "center", gap: 5 }}
-                        onPress={(ev) => {
-                            ev.preventDefault()
-                            handleCategoryPress(category)
-                        }}
-                    >
-                        <>
-                            <Checkbox status={categories.find((item) => item.id == category.id) ? "checked" : "unchecked"} />
-                            <Text style={{}}>{category.name}</Text>
-                        </>
-                    </TouchableRipple>
-                )}
+            <LabeledComponent
+                label="Categorias"
+                Component={
+                    <Dropdown
+                        data={availableCategories}
+                        labelField="name"
+                        onChange={(item) => handleCategoryPress(item)}
+                        valueField="id"
+                        value={categories.map((item) => item.name).join(", ")}
+                        style={[dropdown_style]}
+                        placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
+                        containerStyle={{ paddingVertical: 10 }}
+                        placeholder=""
+                        renderItem={(category, selected) => (
+                            <TouchableRipple
+                                style={{ flex: 1, paddingHorizontal: 10, paddingVertical: 10, flexDirection: "row", alignItems: "center", gap: 5 }}
+                                onPress={(ev) => {
+                                    ev.preventDefault()
+                                    handleCategoryPress(category)
+                                }}
+                            >
+                                <>
+                                    <Checkbox status={categories.find((item) => item.id == category.id) ? "checked" : "unchecked"} />
+                                    <Text style={{}}>{category.name}</Text>
+                                </>
+                            </TouchableRipple>
+                        )}
+                    />
+                }
             />
             <FormText
                 formik={formik}

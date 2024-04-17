@@ -29,9 +29,19 @@ export const FormText = React.forwardRef<React.ElementRef<typeof OriginalInput>,
     const error_text = props.formik.errors[props.name] as string
     return (
         <View style={{ width: props.width, flex: props.flex }}>
+            <Text
+                variant="bodySmall"
+                style={{
+                    marginBottom: 5,
+                    paddingLeft: 5,
+                }}
+            >
+                {props.label}
+            </Text>
             <TextInput
                 ref={ref}
                 {...props}
+                label={undefined}
                 mode="outlined"
                 style={[{ backgroundColor: props.transparent ? "transparent" : colors.box, flexShrink: 0 }, props.style]}
                 outlineStyle={{

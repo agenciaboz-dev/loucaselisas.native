@@ -81,6 +81,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
 
     useFocusEffect(
         useCallback(() => {
+            console.log({ creator })
             refreshCourses()
         }, [])
     )
@@ -134,5 +135,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 onRefresh={refreshCourses}
             />
         </ScrollView>
-    ) : null
+    ) : (
+        <Text>no creator</Text>
+    )
 }

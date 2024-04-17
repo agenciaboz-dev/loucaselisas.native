@@ -37,7 +37,6 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
             return () => {
                 setStatusBarStyle("dark")
                 backHandler.remove()
-                setForm(undefined)
             }
         }, [])
     )

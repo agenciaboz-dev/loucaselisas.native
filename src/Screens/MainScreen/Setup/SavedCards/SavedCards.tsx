@@ -2,7 +2,7 @@ import { NavigationProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useState } from "react"
 import { Surface } from "react-native-paper"
 import { ScreenTitle } from "../../../../components/ScreenTItle"
-import { FlatList, View } from "react-native"
+import { FlatList, LayoutAnimation, View } from "react-native"
 import { useUser } from "../../../../hooks/useUser"
 import { CardContainer } from "./CardContainer"
 import { Button } from "../../../../components/Button"
@@ -25,6 +25,7 @@ export const SavedCards: React.FC<SavedCardsProps> = ({ navigation }) => {
         setLoading(true)
         try {
             const response = await api.get("/card", { params: { user_id: user?.id } })
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
             setCards(response.data)
         } catch (error) {
             console.log(error)

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react"
 import { ScreenTitle } from "../../../../components/ScreenTItle"
 import { Plan } from "../../../../types/server/class/Plan"
 import { api } from "../../../../backend/api"
-import { FlatList, View } from "react-native"
+import { FlatList, LayoutAnimation, View } from "react-native"
 import { PlanContainer } from "./PlanContainer"
 
 interface ManagePlanProps {
@@ -19,6 +19,7 @@ export const ManagePlan: React.FC<ManagePlanProps> = ({ navigation }) => {
         try {
             const response = await api.get("/plan")
             const plans = response.data
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
             setPlans(plans)
         } catch (error) {
             console.log(error)

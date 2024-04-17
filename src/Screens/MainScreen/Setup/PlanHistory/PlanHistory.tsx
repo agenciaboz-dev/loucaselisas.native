@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react"
 import { Surface } from "react-native-paper"
 import { ScreenTitle } from "../../../../components/ScreenTItle"
 import { ContractLog } from "../../../../types/server/class/Plan"
-import { FlatList, View } from "react-native"
+import { FlatList, LayoutAnimation, View } from "react-native"
 import { HistoryContainer } from "./HistoryContainer"
 import { api } from "../../../../backend/api"
 import { useUser } from "../../../../hooks/useUser"
@@ -24,6 +24,7 @@ export const PlanHistory: React.FC<PlanHistoryProps> = ({ navigation }) => {
         try {
             const response = await api.get("/user/plan_logs", { params: { user_id: user.id } })
             const logs = response.data
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             setLogs(logs)
         } catch (error) {
             console.log(error)

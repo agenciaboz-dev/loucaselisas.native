@@ -1,7 +1,7 @@
 import { Image } from "expo-image"
 import { ImagePickerAsset } from "expo-image-picker"
-import React, { useEffect, useState } from "react"
-import { View } from "react-native"
+import React, { useEffect, useLayoutEffect, useState } from "react"
+import { LayoutAnimation, View } from "react-native"
 import placeholders from "../tools/placeholders"
 import { Avatar, IconButton, Text, TextInput } from "react-native-paper"
 import { pickMedia } from "../tools/pickMedia"
@@ -32,6 +32,10 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
     const [savingDescription, setSavingDescription] = useState(false)
     const [editing, setEditing] = useState(false)
     const [descriptionState, setDescriptionState] = useState(description)
+
+    const toggleEditing = () => {
+        setEditing((value) => !value)
+    }
 
     const onEditImage = async (type: "cover" | "profile") => {
         if (uploadingPicuture == type) return
@@ -71,6 +75,10 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
         if (!editing && descriptionState != description) {
             onEditDescription()
         }
+    }, [editing])
+
+    useLayoutEffect(() => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     }, [editing])
 
     return (
@@ -133,7 +141,7 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                             icon={"pencil"}
                             iconColor={editing ? colors.secondary : colors.primary}
                             containerColor={editing ? colors.primary : colors.secondary}
-                            onPress={() => setEditing((value) => !value)}
+                            onPress={toggleEditing}
                             loading={savingDescription}
                         />
                     </View>
@@ -147,15 +155,14 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                 <TextInput
                     mode="outlined"
                     multiline
-                    label={"Descrição"}
                     value={descriptionState}
                     onChangeText={setDescriptionState}
                     numberOfLines={5}
-                    style={{ backgroundColor: "transparent" }}
+                    style={{ backgroundColor: "transparent", paddingVertical: 10, marginTop: 10 }}
                     disabled={savingDescription}
                 />
             ) : (
-                <Text numberOfLines={3} style={{ position: "relative" }}>
+                <Text numberOfLines={3} style={{ position: "relative", marginTop: 10 }}>
                     {description || <Button labelStyle={{ textDecorationLine: "underline" }}>Inserir uma descrição</Button>}
                 </Text>
             )}

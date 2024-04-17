@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { FlatList, ScrollView, View } from "react-native"
+import { FlatList, LayoutAnimation, ScrollView, View } from "react-native"
 import { Text, TextInput, useTheme } from "react-native-paper"
 import { useUser } from "../../../../hooks/useUser"
 import { Button } from "../../../../components/Button"
@@ -58,6 +58,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         try {
             const response = await api.get("/course/owner", { params: { owner_id: creator?.id } })
             console.log(response.data)
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
             setOwnedCourses(response.data)
         } catch (error) {
             console.log(error)

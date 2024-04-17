@@ -1,14 +1,12 @@
 import React, { useRef } from "react"
-import { Button, IconButton, Surface, TextInput } from "react-native-paper"
-import { FlatList, ScrollView, View, ViewStyle } from "react-native"
+import { Button, IconButton, TextInput } from "react-native-paper"
+import { FlatList, LayoutAnimation, View, ViewStyle } from "react-native"
 import * as FileSystem from "expo-file-system"
 import { Image } from "expo-image"
-import { FileUpload } from "../../types/server/class/helpers"
 import { colors } from "../../style/colors"
 import { GalleryForm } from "../../types/server/class/Gallery/Gallery"
 import { ResizeMode, Video } from "expo-av"
-import { CourseForm, CoverForm } from "../../types/server/class/Course"
-import { FormikErrors, FormikTouched } from "formik"
+import { CoverForm } from "../../types/server/class/Course"
 import { getFilename, pickMedia } from "../../tools/pickMedia"
 
 interface GalleryFormProps {
@@ -55,12 +53,14 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
                     })
                 }
             })
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
             setGallery(updated_gallery)
         }
         setTimeout(() => gallery_ref.current?.scrollToIndex({ index: gallery.media.length - 1, viewPosition: 1, viewOffset: -20 }), 500)
     }
 
     const deleteMedia = (filename: string) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)
         setGallery((gallery) => ({ ...gallery, media: gallery.media.filter((item) => item.name != filename) }))
     }
 

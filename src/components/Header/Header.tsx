@@ -1,11 +1,12 @@
 import React, { useState } from "react"
-import { Avatar, IconButton, Menu, Text } from "react-native-paper"
+import { IconButton, Menu, Text } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
 import { Pressable, View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { NotificationItem } from "./NotificationItem"
 import placeholders from "../../tools/placeholders"
 import { TrianguloMiseravel } from "../TrianguloMiseravel"
+import { Image } from "expo-image"
 
 interface HeaderProps {}
 
@@ -28,7 +29,12 @@ export const Header: React.FC<HeaderProps> = ({}) => {
         >
             <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
                 <Pressable onPress={() => navigation.navigate("setup")}>
-                    <Avatar.Image size={50} source={user.image ? { uri: user.image } : placeholders.avatar} />
+                    <Image
+                        source={user.image}
+                        placeholder={placeholders.avatar}
+                        contentFit="cover"
+                        style={{ width: 50, aspectRatio: "1/1", borderRadius: 100 }}
+                    />
                 </Pressable>
                 <Text variant="titleLarge">{user.name}</Text>
             </View>

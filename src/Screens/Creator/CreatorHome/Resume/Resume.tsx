@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { FlatList, LayoutAnimation, ScrollView, View } from "react-native"
+import { FlatList, KeyboardAvoidingView, LayoutAnimation, Platform, ScrollView, View } from "react-native"
 import { Text, TextInput, useTheme } from "react-native-paper"
 import { useUser } from "../../../../hooks/useUser"
 import { Button } from "../../../../components/Button"
@@ -12,6 +12,8 @@ import { CourseContainer } from "./CourseContainer"
 import { ManageProfileCard } from "../../../../components/ManageProfileCard"
 import { getFilename } from "../../../../tools/pickMedia"
 import { PartialCreator } from "../../../../types/server/class/Creator"
+import { IosAvoidKeyboard } from "../../../../components/IosAvoidKeyboard"
+import { debounce } from "lodash"
 
 interface ResumeProps {}
 
@@ -53,23 +55,25 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
     }
 
     const refreshCourses = async () => {
-        console.log("refreshing owned courses")
         setRefreshing(true)
-        try {
-            const response = await api.get("/course/owner", { params: { owner_id: creator?.id } })
-            console.log(response.data)
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
-            setOwnedCourses(response.data)
-        } catch (error) {
-            console.log(error)
-        }
-
-        setRefreshing(false)
+        setTimeout(async () => {
+            try {
+                const response = await api.get("/course/owner", { params: { owner_id: creator?.id } })
+                console.log(response.data)
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
+                setOwnedCourses(response.data)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setRefreshing(false)
+            }
+        }, 500)
     }
 
-    const filterCourses = () => {
+    const filterCourses = debounce(() => {
         setFilteredCourses(ownedCourses.filter((item) => item.name.toLocaleLowerCase().includes(filterCourseName.toLocaleLowerCase())))
-    }
+        screenRef.current?.scrollToEnd()
+    }, 500)
 
     useEffect(() => {
         filterCourses()
@@ -83,6 +87,8 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         useCallback(() => {
             console.log({ creator })
             refreshCourses()
+
+            return () => setOwnedCourses([])
         }, [])
     )
 
@@ -92,48 +98,55 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
             keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}
+            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10 }}
         >
-            <ManageProfileCard
-                cover={creator.cover}
-                picture={creator.image}
-                name={creator.nickname}
-                description={creator.description}
-                instagram={user.instagram}
-                tiktok={user.tiktok}
-                onUpdateCover={(image) => uploadImage("cover", image)}
-                onUpdatePicture={(image) => uploadImage("profile", image)}
-                onUpdateDescription={onUpdateDescription}
-            />
-            <TextInput
-                label={"Pesquisar Cursos"}
-                mode="outlined"
-                value={filterCourseName}
-                onChangeText={setFilterCourseName}
-                style={{ backgroundColor: theme.colors.surfaceDisabled }}
-                outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
-                left={<TextInput.Icon icon={"menu"} />}
-                right={<TextInput.Icon icon="magnify" />}
-                onFocus={() => setTimeout(() => screenRef.current?.scrollToEnd(), 500)}
-            />
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                <Text variant="bodyLarge">Seus Cursos</Text>
-            </View>
-            <Button mode="outlined" icon={"plus-circle"} style={{ borderStyle: "dashed" }} onPress={() => navigation.navigate("creator:course:form")}>
-                Novo curso
-            </Button>
-            <FlatList
-                data={filteredCourses.sort((a, b) => Number(b.published) - Number(a.published))}
-                renderItem={({ item }) => <CourseContainer course={item} />}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item.id}
-                style={{ marginHorizontal: -20 }}
-                contentContainerStyle={{ gap: 10, paddingHorizontal: 20, paddingBottom: 20 }}
-                ListEmptyComponent={<Text style={{ flex: 1, textAlign: "center" }}>Você ainda não possui nenhum curso</Text>}
-                refreshing={refreshing}
-                onRefresh={refreshCourses}
-            />
+            <IosAvoidKeyboard style={{ gap: 10 }}>
+                <ManageProfileCard
+                    cover={creator.cover}
+                    picture={creator.image}
+                    name={creator.nickname}
+                    description={creator.description}
+                    instagram={user.instagram}
+                    tiktok={user.tiktok}
+                    onUpdateCover={(image) => uploadImage("cover", image)}
+                    onUpdatePicture={(image) => uploadImage("profile", image)}
+                    onUpdateDescription={onUpdateDescription}
+                />
+                <TextInput
+                    placeholder={"Pesquisar Cursos"}
+                    mode="outlined"
+                    value={filterCourseName}
+                    onChangeText={setFilterCourseName}
+                    style={{ backgroundColor: theme.colors.surfaceDisabled }}
+                    outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
+                    left={<TextInput.Icon icon={"menu"} />}
+                    right={<TextInput.Icon icon="magnify" />}
+                    onFocus={() => setTimeout(() => Platform.OS == "android" && screenRef.current?.scrollToEnd(), 500)}
+                />
+                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <Text variant="bodyLarge">Seus Cursos</Text>
+                </View>
+                <Button
+                    mode="outlined"
+                    icon={"plus-circle"}
+                    style={{ borderStyle: "dashed" }}
+                    onPress={() => navigation.navigate("creator:course:form")}
+                >
+                    Novo curso
+                </Button>
+                <FlatList
+                    data={filteredCourses.sort((a, b) => Number(b.published) - Number(a.published))}
+                    renderItem={({ item }) => <CourseContainer course={item} />}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item) => item.id}
+                    style={{ marginHorizontal: -20, minHeight: 75 }}
+                    contentContainerStyle={{ gap: 10, paddingHorizontal: 20, paddingBottom: 10 }}
+                    ListEmptyComponent={!refreshing ? <Text style={{ flex: 1, textAlign: "center" }}>Nenhum curso encontrado</Text> : null}
+                    refreshing={refreshing}
+                    onRefresh={refreshCourses}
+                />
+            </IosAvoidKeyboard>
         </ScrollView>
     ) : (
         <Text>no creator</Text>

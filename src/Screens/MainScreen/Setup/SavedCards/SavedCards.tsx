@@ -44,9 +44,7 @@ export const SavedCards: React.FC<SavedCardsProps> = ({ navigation }) => {
     return user ? (
         <View style={{ flex: 1, padding: 20, gap: 10, paddingBottom: 0 }}>
             <ScreenTitle title="Cartões de pagamento salvos" />
-            <Button icon={"plus-circle"} mode="outlined" onPress={() => navigation.navigate("setup:cards:form")} style={{ borderStyle: "dashed" }}>
-                Adicionar cartão
-            </Button>
+
             <FlatList
                 data={cards.sort((a, b) => b.id - a.id)}
                 renderItem={({ item }) => <CardContainer card={item} />}
@@ -56,6 +54,16 @@ export const SavedCards: React.FC<SavedCardsProps> = ({ navigation }) => {
                 contentContainerStyle={{ gap: 20, paddingVertical: 20, paddingHorizontal: 5 }}
                 refreshing={loading}
                 onRefresh={refreshData}
+                ListHeaderComponent={
+                    <Button
+                        icon={"plus-circle"}
+                        mode="outlined"
+                        onPress={() => navigation.navigate("setup:cards:form")}
+                        style={{ borderStyle: "dashed" }}
+                    >
+                        Adicionar cartão
+                    </Button>
+                }
             />
         </View>
     ) : null

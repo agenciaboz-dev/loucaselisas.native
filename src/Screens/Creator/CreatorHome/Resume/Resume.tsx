@@ -70,10 +70,10 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         }, 500)
     }
 
-    const filterCourses = debounce(() => {
+    const filterCourses = () => {
         setFilteredCourses(ownedCourses.filter((item) => item.name.toLocaleLowerCase().includes(filterCourseName.toLocaleLowerCase())))
         screenRef.current?.scrollToEnd()
-    }, 500)
+    }
 
     useEffect(() => {
         filterCourses()
@@ -85,7 +85,6 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
 
     useFocusEffect(
         useCallback(() => {
-            console.log({ creator })
             refreshCourses()
 
             return () => setOwnedCourses([])

@@ -1,8 +1,12 @@
 import * as ImagePicker from "expo-image-picker"
 
-export const pickMedia = async (aspect?: [number, number], multiple?: boolean) => {
+export const pickMedia = async (
+    aspect?: [number, number],
+    multiple?: boolean,
+    mediaTypes: ImagePicker.MediaTypeOptions = ImagePicker.MediaTypeOptions.All
+) => {
     let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: mediaTypes,
         allowsEditing: !multiple,
         aspect,
         quality: 1,

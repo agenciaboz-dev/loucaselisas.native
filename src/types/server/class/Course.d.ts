@@ -3,7 +3,7 @@ import { Category } from "./Category";
 import { Prisma } from "@prisma/client";
 import { Gallery, GalleryForm } from "./Gallery/Gallery";
 import { Chat } from "./Chat/Chat";
-import { Lesson, LessonForm } from "./Course/Lesson";
+import { LessonForm } from "./Course/Lesson";
 import { FileUpload, WithoutFunctions } from "./helpers";
 import { Socket } from "socket.io";
 export declare const course_include: {
@@ -37,8 +37,7 @@ export declare const course_include: {
     favorited_by: true;
     lessons: {
         include: {
-            image: true;
-            video: true;
+            _count: true;
         };
     };
 };
@@ -82,7 +81,7 @@ export declare class Course {
     recorder: string | null;
     favorited_by: number;
     price: number;
-    lessons: Lesson[];
+    lessons: number;
     owner: Partial<Creator>;
     owner_id: string;
     gallery: Gallery;

@@ -1,10 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { FileUpload, WithoutFunctions } from "../helpers";
 export type MediaPrisma = Prisma.MediaGetPayload<{}>;
-export type MediaForm = FileUpload & Omit<WithoutFunctions<Partial<Media>>, "position" | "height" | "width"> & {
+export type MediaForm = FileUpload & Omit<WithoutFunctions<Partial<Media>>, "position" | "height" | "width" | "type"> & {
     position: number;
     width: number;
     height: number;
+    type: "IMAGE" | "VIDEO";
 };
 export declare class Media {
     id: string;
@@ -13,5 +14,6 @@ export declare class Media {
     position: number;
     width: number;
     height: number;
+    static new(data: MediaForm, pathdir: string): Promise<Media>;
     constructor(data: MediaPrisma);
 }

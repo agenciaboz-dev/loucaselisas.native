@@ -14,6 +14,7 @@ import { api } from "../../../backend/api"
 import { MiniStatistics } from "./MiniStatistics"
 import ImageView from "react-native-image-viewing"
 import { Button } from "../../../components/Button"
+import { Lesson } from "../../../types/server/class/Course/Lesson"
 
 interface ManageCourseProps {
     navigation: NavigationProp<any, any>
@@ -30,6 +31,8 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
     const [extendedDescription, setExtendedDescription] = useState(false)
     const [viewingMedia, setViewingMedia] = useState<number | null>(null)
+    const [lessons, setLessons] = useState<Lesson[]>([])
+    const [loadingLessons, setLoadingLessons] = useState(false)
 
     const onMenuItemPress = (route: string) => {
         setShowMenu(false)
@@ -45,6 +48,19 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
         }
     }
 
+    const refreshLessons = async () => {
+        setLoadingLessons(true)
+        try {
+            const response = await api.get("/lesson", { params: { course_id: course?.id } })
+            setLessons(response.data)
+            console.log(response.data)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoadingLessons(false)
+        }
+    }
+
     const onDelete = () => {
         setShowMenu(false)
         navigation.navigate("creator:course:delete", { course })
@@ -52,12 +68,13 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
 
     useFocusEffect(
         useCallback(() => {
+            refreshLessons()
             refreshCourse()
         }, [])
     )
 
     return course ? (
-        <View style={{ flex: 1, padding: 20, gap: 10 }}>
+        <View style={{ flex: 1, padding: 20, gap: 10, paddingBottom: 0 }}>
             <ScreenTitle
                 title={course.name}
                 right={
@@ -88,7 +105,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                     {course.owner.nickname}
                 </Text>
                 <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
-                    {course.lessons.length} lições
+                    {999} lições
                 </Text>
             </View>
             {/* <SkeletonPlaceholder> */}
@@ -148,10 +165,12 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                 icon={"plus-circle"}
                 mode="outlined"
                 style={{ borderStyle: "dashed", marginTop: 10 }}
-                onPress={() => navigation.navigate("creator:course:lesson:form")}
+                onPress={() => navigation.navigate("creator:course:lesson:form", { course })}
             >
                 Nova lição
             </Button>
+
+            <FlatList data={lessons} renderItem={({ item }) => <Text>{item.name}</Text>} refreshing={loadingLessons} onRefresh={refreshLessons} />
         </View>
     ) : null
 }

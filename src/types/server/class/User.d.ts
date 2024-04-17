@@ -49,8 +49,7 @@ export declare const user_include: {
                     favorited_by: true;
                     lessons: {
                         include: {
-                            image: true;
-                            video: true;
+                            _count: true;
                         };
                     };
                 };

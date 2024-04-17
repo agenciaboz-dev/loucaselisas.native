@@ -33,8 +33,7 @@ export declare const student_include: {
             favorited_by: true;
             lessons: {
                 include: {
-                    image: true;
-                    video: true;
+                    _count: true;
                 };
             };
         };

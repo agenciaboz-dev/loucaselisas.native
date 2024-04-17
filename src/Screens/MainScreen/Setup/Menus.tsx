@@ -25,14 +25,14 @@ export const Menus: React.FC<MenusProps> = ({ navigation }) => {
         { icon: "wifi", label: "Termos", route: "terms" },
     ]
 
-    const wrapper_style: ViewStyle = { borderRadius: 15, paddingVertical: 10 }
+    const wrapper_style: ViewStyle = { borderRadius: 15 }
 
     const touchable_style: ViewStyle = {
         flexDirection: "row",
         width: "100%",
         alignItems: "center",
-        gap: 20,
-        paddingVertical: 10,
+        gap: 10,
+        paddingVertical: 12,
         paddingHorizontal: 20,
     }
 
@@ -51,8 +51,20 @@ export const Menus: React.FC<MenusProps> = ({ navigation }) => {
     return (
         <View style={{ flex: 1, padding: 20, gap: 20 }}>
             <Surface style={wrapper_style}>
-                {account_menus.map((menu) => (
-                    <TouchableRipple borderless key={menu.route} style={touchable_style} onPress={() => onMenuPress(menu)}>
+                {account_menus.map((menu, index) => (
+                    <TouchableRipple
+                        borderless
+                        key={menu.route}
+                        style={[
+                            touchable_style,
+                            index == 0
+                                ? { borderTopLeftRadius: 15, borderTopRightRadius: 15 }
+                                : index == account_menus.length - 1
+                                ? { borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }
+                                : undefined,
+                        ]}
+                        onPress={() => onMenuPress(menu)}
+                    >
                         <>
                             <Icon size={24} source={menu.icon} />
                             <Text>{menu.label}</Text>
@@ -62,8 +74,20 @@ export const Menus: React.FC<MenusProps> = ({ navigation }) => {
             </Surface>
 
             <Surface style={wrapper_style}>
-                {other_menus.map((menu) => (
-                    <TouchableRipple borderless key={menu.route} style={touchable_style} onPress={() => onMenuPress(menu)}>
+                {other_menus.map((menu, index) => (
+                    <TouchableRipple
+                        borderless
+                        key={menu.route}
+                        style={[
+                            touchable_style,
+                            index == 0
+                                ? { borderTopLeftRadius: 15, borderTopRightRadius: 15 }
+                                : index == other_menus.length - 1
+                                ? { borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }
+                                : undefined,
+                        ]}
+                        onPress={() => onMenuPress(menu)}
+                    >
                         <>
                             <Icon size={24} source={menu.icon} />
                             <Text>{menu.label}</Text>

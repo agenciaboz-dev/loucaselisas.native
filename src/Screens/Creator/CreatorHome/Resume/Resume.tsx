@@ -70,18 +70,19 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         }, 500)
     }
 
-    const filterCourses = () => {
+    const filterCourses = (scroll = true) => {
         setFilteredCourses(ownedCourses.filter((item) => item.name.toLocaleLowerCase().includes(filterCourseName.toLocaleLowerCase())))
-        screenRef.current?.scrollToEnd()
+        if (scroll) screenRef.current?.scrollToEnd()
     }
 
     useEffect(() => {
-        filterCourses()
+        filterCourses(false)
     }, [ownedCourses])
 
-    useEffect(() => {
+    const handleSearchCourse = (text: string) => {
+        setFilterCourseName(text)
         filterCourses()
-    }, [filterCourseName])
+    }
 
     useFocusEffect(
         useCallback(() => {
@@ -115,7 +116,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                     placeholder={"Pesquisar Cursos"}
                     mode="outlined"
                     value={filterCourseName}
-                    onChangeText={setFilterCourseName}
+                    onChangeText={handleSearchCourse}
                     style={{ backgroundColor: theme.colors.surfaceDisabled }}
                     outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
                     left={<TextInput.Icon icon={"menu"} />}

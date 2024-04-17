@@ -13,6 +13,7 @@ import { TrianguloMiseravel } from "../../../components/TrianguloMiseravel"
 import { api } from "../../../backend/api"
 import { MiniStatistics } from "./MiniStatistics"
 import ImageView from "react-native-image-viewing"
+import { Button } from "../../../components/Button"
 
 interface ManageCourseProps {
     navigation: NavigationProp<any, any>
@@ -143,6 +144,14 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                 animationType="slide"
             />
             <MiniStatistics course={course} />
+            <Button
+                icon={"plus-circle"}
+                mode="outlined"
+                style={{ borderStyle: "dashed", marginTop: 10 }}
+                onPress={() => navigation.navigate("creator:course:lesson:form")}
+            >
+                Nova lição
+            </Button>
         </View>
     ) : null
 }

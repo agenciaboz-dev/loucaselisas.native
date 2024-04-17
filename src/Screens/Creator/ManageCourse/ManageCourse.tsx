@@ -108,7 +108,6 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                     {999} lições
                 </Text>
             </View>
-            {/* <SkeletonPlaceholder> */}
             <FlatList
                 data={course.gallery.media.sort((a, b) => a.position - b.position)}
                 horizontal
@@ -146,7 +145,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                     )
                 }
             />
-            {/* </SkeletonPlaceholder> */}
+
             <Text variant="bodyLarge">Valor: {currencyMask(course.price)}</Text>
             <Text numberOfLines={extendedDescription ? 0 : 3}>{course.description}</Text>
             <TouchableRipple onPress={() => setExtendedDescription((value) => !value)} style={{ alignSelf: "flex-end" }}>

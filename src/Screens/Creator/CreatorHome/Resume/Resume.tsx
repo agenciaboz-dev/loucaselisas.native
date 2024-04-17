@@ -14,6 +14,7 @@ import { getFilename } from "../../../../tools/pickMedia"
 import { PartialCreator } from "../../../../types/server/class/Creator"
 import { IosAvoidKeyboard } from "../../../../components/IosAvoidKeyboard"
 import { debounce } from "lodash"
+import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 
 interface ResumeProps {}
 
@@ -142,7 +143,19 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                     keyExtractor={(item) => item.id}
                     style={{ marginHorizontal: -20, minHeight: 75 }}
                     contentContainerStyle={{ gap: 10, paddingHorizontal: 20, paddingBottom: 10 }}
-                    ListEmptyComponent={!refreshing ? <Text style={{ flex: 1, textAlign: "center" }}>Nenhum curso encontrado</Text> : null}
+                    ListEmptyComponent={
+                        refreshing ? (
+                            <SkeletonPlaceholder borderRadius={15} highlightColor="#00000022" backgroundColor="#e1e1e1">
+                                <SkeletonPlaceholder.Item flexDirection="row" gap={10}>
+                                    <SkeletonPlaceholder.Item width={175} height={175} />
+                                    <SkeletonPlaceholder.Item width={175} height={175} />
+                                    <SkeletonPlaceholder.Item width={175} height={175} />
+                                </SkeletonPlaceholder.Item>
+                            </SkeletonPlaceholder>
+                        ) : (
+                            <Text style={{ flex: 1, textAlign: "center" }}>Nenhum curso encontrado</Text>
+                        )
+                    }
                     refreshing={refreshing}
                     onRefresh={refreshCourses}
                 />

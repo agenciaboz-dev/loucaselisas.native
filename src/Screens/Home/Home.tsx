@@ -4,7 +4,7 @@ import { Surface, Text } from "react-native-paper"
 import { colors } from "../../style/colors"
 import { Logo } from "../../components/Logo"
 import { Button } from "./Button"
-import { Dimensions, Pressable, ScrollView, TouchableOpacity } from "react-native"
+import { BackHandler, Dimensions, LayoutAnimation, Pressable, ScrollView, TouchableOpacity } from "react-native"
 import { Login } from "./Login"
 import { ResizeMode, Video } from "expo-av"
 import { setStatusBarStyle } from "expo-status-bar"
@@ -18,16 +18,29 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
     const { width, height } = Dimensions.get("screen")
     const [form, setForm] = useState<"login" | "signup">()
 
+    const onLoginPress = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setForm("login")
+    }
+
     useFocusEffect(
         useCallback(() => {
             setStatusBarStyle("light")
 
+            const onBackPress = () => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+                setForm(undefined)
+                return true
+            }
+            const backHandler = BackHandler.addEventListener("hardwareBackPress", onBackPress)
+
             return () => {
                 setStatusBarStyle("dark")
+                backHandler.remove()
+                setForm(undefined)
             }
         }, [])
     )
-
 
     return (
         <ScrollView
@@ -49,7 +62,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
             <Logo invert />
             {!form && (
                 <Surface style={{ gap: 10, backgroundColor: "transparent", alignItems: "center" }}>
-                    <Button onPress={() => setForm("login")} icon={"account-outline"}>
+                    <Button onPress={onLoginPress} icon={"account-outline"}>
                         Login
                     </Button>
                 </Surface>

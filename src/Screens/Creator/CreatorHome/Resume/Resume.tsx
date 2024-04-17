@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { FlatList, ScrollView, View } from "react-native"
-import { Text, TextInput } from "react-native-paper"
+import { Text, TextInput, useTheme } from "react-native-paper"
 import { useUser } from "../../../../hooks/useUser"
 import { Button } from "../../../../components/Button"
 import * as ImagePicker from "expo-image-picker"
 import { UserImageForm } from "../../../../types/server/class/User"
 import { api } from "../../../../backend/api"
-import { colors } from "../../../../style/colors"
 import { NavigationProp, useFocusEffect, useNavigation } from "@react-navigation/native"
 import { Course } from "../../../../types/server/class/Course"
 import { CourseContainer } from "./CourseContainer"
@@ -17,11 +16,12 @@ import { PartialCreator } from "../../../../types/server/class/Creator"
 interface ResumeProps {}
 
 export const Resume: React.FC<ResumeProps> = ({}) => {
+    const theme = useTheme()
     const navigation = useNavigation<NavigationProp<any, any>>()
-    const { user, setUser, refresh } = useUser()
+    const { user, setUser } = useUser()
     const creator = user?.creator
+    const screenRef = useRef<ScrollView>(null)
 
-    const [editingDescription, setEditingDescription] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
     const [ownedCourses, setOwnedCourses] = useState<Course[]>([])
     const [filteredCourses, setFilteredCourses] = useState(ownedCourses)
@@ -86,6 +86,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
 
     return creator ? (
         <ScrollView
+            ref={screenRef}
             keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
             showsVerticalScrollIndicator={false}
@@ -105,10 +106,11 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 mode="outlined"
                 value={filterCourseName}
                 onChangeText={setFilterCourseName}
-                style={{ backgroundColor: colors.grey }}
+                style={{ backgroundColor: theme.colors.surfaceDisabled }}
                 outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
                 left={<TextInput.Icon icon={"menu"} />}
                 right={<TextInput.Icon icon="magnify" />}
+                onFocus={() => setTimeout(() => screenRef.current?.scrollToEnd(), 500)}
             />
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                 <Text variant="bodyLarge">Seus Cursos</Text>

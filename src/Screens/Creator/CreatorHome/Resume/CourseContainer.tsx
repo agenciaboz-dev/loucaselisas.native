@@ -1,10 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import { Icon, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Course } from "../../../../types/server/class/Course"
 import { Image } from "expo-image"
 import placeholders from "../../../../tools/placeholders"
-import { TouchableOpacity, View } from "react-native"
+import { View } from "react-native"
 import { NavigationProp, useNavigation } from "@react-navigation/native"
+import * as VideoThumbnails from "expo-video-thumbnails"
 
 interface CourseContainerProps {
     course: Course
@@ -13,6 +14,20 @@ interface CourseContainerProps {
 export const CourseContainer: React.FC<CourseContainerProps> = ({ course }) => {
     const theme = useTheme()
     const navigation = useNavigation<NavigationProp<any, any>>()
+
+    const [coverSource, setCoverSource] = useState(course.cover)
+
+    const onThumbError = async (error: string) => {
+        if (error == "Downloaded image decode failed") {
+            try {
+                //TODO: need to build
+                // const { uri } = await VideoThumbnails.getThumbnailAsync(course.cover, { time: 0 })
+                // setCoverSource(uri)
+            } catch (error) {
+                // console.log(error)
+            }
+        }
+    }
 
     const onCoursePress = () => {
         navigation.navigate("creator:course:manage", { course })
@@ -23,9 +38,12 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course }) => {
             <TouchableRipple borderless style={{ position: "relative", borderRadius: 10 }} onPress={onCoursePress}>
                 <>
                     <Image
-                        source={course.cover || placeholders.square}
+                        source={coverSource}
+                        placeholder={placeholders.square}
+                        placeholderContentFit="contain"
                         style={{ borderRadius: 10, width: 175, aspectRatio: "1/1" }}
                         contentFit="cover"
+                        onError={(ev) => onThumbError(ev.error)}
                     />
                     <View style={{ position: "absolute", padding: 10, justifyContent: "flex-end", height: "100%", gap: 5 }}>
                         <Text style={{ backgroundColor: theme.colors.background, padding: 5, borderRadius: 5, alignSelf: "flex-start" }}>

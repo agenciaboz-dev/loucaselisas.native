@@ -98,6 +98,8 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 picture={creator.image}
                 name={creator.nickname}
                 description={creator.description}
+                instagram={user.instagram}
+                tiktok={user.tiktok}
                 onUpdateCover={(image) => uploadImage("cover", image)}
                 onUpdatePicture={(image) => uploadImage("profile", image)}
                 onUpdateDescription={onUpdateDescription}

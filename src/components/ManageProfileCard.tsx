@@ -3,11 +3,12 @@ import { ImagePickerAsset } from "expo-image-picker"
 import React, { useEffect, useLayoutEffect, useState } from "react"
 import { LayoutAnimation, View } from "react-native"
 import placeholders from "../tools/placeholders"
-import { Avatar, IconButton, Text, TextInput } from "react-native-paper"
+import { Avatar, IconButton, Text, TextInput, TouchableRipple } from "react-native-paper"
 import { pickMedia } from "../tools/pickMedia"
 import images from "../tools/images"
 import { colors } from "../style/colors"
 import { Button } from "./Button"
+import { SocialMediaIcon } from "./SocialMediaIcon"
 
 interface ManageProfileCardProps {
     cover: string | null
@@ -17,6 +18,8 @@ interface ManageProfileCardProps {
     name: string
     description: string
     onUpdateDescription: (text: string) => Promise<void>
+    instagram: string | null
+    tiktok: string | null
 }
 
 export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
@@ -27,6 +30,8 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
     name,
     description,
     onUpdateDescription,
+    instagram,
+    tiktok,
 }) => {
     const [uploadingPicuture, setUploadingPicuture] = useState<"cover" | "profile">()
     const [savingDescription, setSavingDescription] = useState(false)
@@ -120,8 +125,16 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                     }}
                 >
                     <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 10 }}>
-                        <Image source={images.instagram_icon} style={{ height: 30, aspectRatio: "1/1" }} contentFit="contain" />
-                        <Image source={images.tiktok_icon} style={{ height: 30, aspectRatio: "1/1" }} contentFit="contain" />
+                        <SocialMediaIcon
+                            source={images.instagram_icon}
+                            deep_link={`instagram://user?username=${instagram}`}
+                            web_url={`https://instagram.com/${instagram}`}
+                        />
+                        <SocialMediaIcon
+                            source={images.tiktok_icon}
+                            deep_link={`https://tiktok.com/@${tiktok}`}
+                            web_url={`https://tiktok.com/@${tiktok}`}
+                        />
                     </View>
                     <View style={{ flex: 1, position: "relative", justifyContent: "center", alignItems: "center" }}>
                         <Avatar.Image size={120} source={picture ? { uri: picture } : placeholders.avatar} />

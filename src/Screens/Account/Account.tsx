@@ -54,6 +54,8 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
                 picture={user.image}
                 name={user.name}
                 description={user.bio || ""}
+                instagram={user.instagram}
+                tiktok={user.tiktok}
                 onUpdateCover={(image) => uploadImage("cover", image)}
                 onUpdatePicture={(image) => uploadImage("profile", image)}
                 onUpdateDescription={onUpdateBio}

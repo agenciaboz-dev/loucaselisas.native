@@ -30,6 +30,7 @@ import { colors } from "../../style/colors"
 import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
 import { pickMedia } from "../../tools/pickMedia"
+import placeholders from "../../tools/placeholders"
 
 interface CourseFormProps {
     navigation: NavigationProp<any, any>
@@ -171,8 +172,19 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                     .filter((item) => !participants.find((creat) => creat.id == item.id))
                     .filter((item) => item.nickname.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()))
                     .map((item) => (
-                        <TouchableRipple key={item.id} onPress={() => onCreatorPress(item)} style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
-                            <Text>{item.nickname}</Text>
+                        <TouchableRipple
+                            key={item.id}
+                            onPress={() => onCreatorPress(item)}
+                            style={{ paddingHorizontal: 10, paddingVertical: 5, flexDirection: "row", gap: 10, alignItems: "center" }}
+                        >
+                            <>
+                                <Image
+                                    source={item.image || placeholders.avatar}
+                                    contentFit="cover"
+                                    style={{ borderRadius: 100, width: 40, aspectRatio: "1/1" }}
+                                />
+                                <Text>{item.nickname}</Text>
+                            </>
                         </TouchableRipple>
                     ))}
             </Surface>

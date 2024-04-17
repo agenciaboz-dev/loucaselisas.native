@@ -81,7 +81,7 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
     return (
         <KeyboardAvoidingView style={{ backgroundColor: "transparent", gap: 10, width: "100%" }} behavior="padding">
             <TextInput
-                label={"Digite seu e-mail ou nome de usuário"}
+                label={"E-mail ou nome de usuário"}
                 value={formik.values.login}
                 onChangeText={formik.handleChange("login")}
                 keyboardType="email-address"
@@ -92,7 +92,7 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
             />
             <TextInput
                 ref={password_ref}
-                label={"Digite sua senha"}
+                label={"Senha"}
                 value={formik.values.password}
                 onChangeText={formik.handleChange("password")}
                 secureTextEntry

@@ -50,6 +50,14 @@ export type CoverForm = {
     type: "image" | "video";
     url?: string;
 };
+export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by" | "cover" | "cover_type" | "owner" | "gallery" | "creators" | "chat" | "published">> & {
+    id: string;
+    cover?: CoverForm;
+    gallery: GalleryForm;
+    creators: {
+        id: string;
+    }[];
+};
 export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published"> & {
     lessons: LessonForm[];
     cover?: CoverForm;
@@ -81,8 +89,10 @@ export declare class Course {
     categories: Category[];
     creators: Partial<Creator>[];
     chat: Chat | null;
-    constructor(data: CoursePrisma);
+    constructor(id: string, data?: CoursePrisma);
     static new(data: CourseForm, socket?: Socket): Promise<Course | undefined>;
+    init(): Promise<void>;
     load(data: CoursePrisma): void;
     updateCover(cover: CoverForm): Promise<void>;
+    update(data: PartialCourse): Promise<void>;
 }

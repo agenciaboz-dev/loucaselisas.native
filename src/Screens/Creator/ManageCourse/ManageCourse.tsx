@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react"
 import { IconButton, Menu, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Course } from "../../../types/server/class/Course"
 import { ScreenTitle } from "../../../components/ScreenTItle"
-import { Dimensions, FlatList, View } from "react-native"
+import { Dimensions, FlatList, Pressable, TouchableOpacity, View } from "react-native"
 import { Image, ImageStyle } from "expo-image"
 import { ResizeMode, Video } from "expo-av"
 import placeholders from "../../../tools/placeholders"
@@ -11,8 +11,8 @@ import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import { currencyMask } from "../../../tools/currencyMask"
 import { TrianguloMiseravel } from "../../../components/TrianguloMiseravel"
 import { api } from "../../../backend/api"
-import { Button } from "../../../components/Button"
 import { MiniStatistics } from "./MiniStatistics"
+import ImageView from "react-native-image-viewing"
 
 interface ManageCourseProps {
     navigation: NavigationProp<any, any>
@@ -22,11 +22,13 @@ interface ManageCourseProps {
 export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route }) => {
     const theme = useTheme()
     const image_width = Dimensions.get("screen").width * 0.9
-    const media_style: ImageStyle = { width: image_width, aspectRatio: "16/9", borderRadius: 15 }
+    const max_image_height = (image_width / 16) * 9
+    const media_style: ImageStyle = { width: image_width, height: max_image_height, borderRadius: 15 }
 
     const [showMenu, setShowMenu] = useState(false)
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
     const [extendedDescription, setExtendedDescription] = useState(false)
+    const [viewingMedia, setViewingMedia] = useState<number | null>(null)
 
     const onMenuItemPress = (route: string) => {
         setShowMenu(false)
@@ -90,23 +92,39 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
             </View>
             {/* <SkeletonPlaceholder> */}
             <FlatList
-                data={course.gallery.media}
+                data={course.gallery.media.sort((a, b) => a.position - b.position)}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 style={{ marginHorizontal: -20, flexGrow: 0 }}
                 contentContainerStyle={{ paddingHorizontal: 20, gap: 10 }}
+                // initialNumToRender={3}
+                // maxToRenderPerBatch={0}
                 ListHeaderComponent={
                     course.cover_type == "image" ? (
-                        <Image source={course.cover || placeholders.cover} contentFit="cover" style={media_style} />
+                        <Image
+                            source={course.cover}
+                            transition={1000}
+                            priority={"high"}
+                            placeholder={placeholders.video}
+                            contentFit="cover"
+                            style={media_style}
+                        />
                     ) : (
                         <Video source={{ uri: course.cover }} resizeMode={ResizeMode.COVER} style={media_style} useNativeControls shouldPlay />
                     )
                 }
-                renderItem={({ item }) =>
+                renderItem={({ item, index }) =>
                     item.type == "IMAGE" ? (
-                        <Image source={item.url || placeholders.cover} contentFit="cover" style={media_style} />
+                        <TouchableOpacity onPress={() => setViewingMedia(index)}>
+                            <Image
+                                source={item.url}
+                                placeholder={placeholders.square}
+                                contentFit="contain"
+                                style={[media_style, { aspectRatio: item.width / item.height, width: undefined }]}
+                            />
+                        </TouchableOpacity>
                     ) : (
-                        <Video source={{ uri: item.url }} resizeMode={ResizeMode.COVER} style={media_style} useNativeControls shouldPlay />
+                        <Video source={{ uri: item.url }} resizeMode={ResizeMode.COVER} style={media_style} useNativeControls />
                     )
                 }
             />
@@ -117,6 +135,13 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                 <Text>ler {extendedDescription ? "menos" : "mais"}...</Text>
             </TouchableRipple>
 
+            <ImageView
+                images={course.gallery.media.map((item) => ({ uri: item.url }))}
+                imageIndex={viewingMedia ?? 0}
+                visible={viewingMedia !== null}
+                onRequestClose={() => setViewingMedia(null)}
+                animationType="slide"
+            />
             <MiniStatistics course={course} />
         </View>
     ) : null

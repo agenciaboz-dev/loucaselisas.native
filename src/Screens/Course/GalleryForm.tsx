@@ -27,22 +27,37 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
         const result = await pickMedia(undefined, true)
         if (result) {
             const updated_gallery = { ...gallery }
+            let position = updated_gallery.media.length
             result.forEach(async (media) => {
                 const filename = getFilename(media)
-                console.log({ ...media, base64: media?.base64 ? true : false })
+                position += 1
                 if (media?.base64) {
                     const updated_gallery = { ...gallery }
-                    updated_gallery.media.push({ name: filename, base64: media.base64, type: "IMAGE" })
+                    updated_gallery.media.push({
+                        name: filename,
+                        base64: media.base64,
+                        type: "IMAGE",
+                        position,
+                        width: media.width,
+                        height: media.height,
+                    })
                 } else if (media?.type == "video") {
                     const base64video = await FileSystem.readAsStringAsync(media.uri, {
                         encoding: "base64",
                     })
-                    updated_gallery.media.push({ name: filename, base64: base64video, type: "VIDEO" })
+                    updated_gallery.media.push({
+                        name: filename,
+                        base64: base64video,
+                        type: "VIDEO",
+                        position,
+                        width: media.width,
+                        height: media.height,
+                    })
                 }
             })
             setGallery(updated_gallery)
         }
-        gallery_ref.current?.scrollToEnd()
+        setTimeout(() => gallery_ref.current?.scrollToIndex({ index: gallery.media.length - 1, viewPosition: 1, viewOffset: -20 }), 500)
     }
 
     const deleteMedia = (filename: string) => {

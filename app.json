@@ -38,6 +38,19 @@
               {
                   "photosPermission": "The app accesses your photos to let you upload it in your profile."
               }
+          ],
+          [
+              "expo-font",
+              {
+                  "fonts": [
+                      "assets/fonts/custom/FoundersGroteskBOZ-Regular.otf",
+                      "assets/fonts/custom/FoundersGroteskBOZ-Bold.otf",
+                      "assets/fonts/custom/FoundersGroteskXCondBOZ-Bold.otf",
+                      "assets/fonts/FoundersGrotesk-Regular.otf",
+                      "assets/fonts/FoundersGrotesk-Bold.otf",
+                      "assets/fonts/FoundersGroteskXCond-Bold.otf"
+                  ]
+              }
           ]
       ],
       "extra": {

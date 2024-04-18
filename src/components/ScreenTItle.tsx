@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native"
+import { NavigationProp, useNavigation } from "@react-navigation/native"
 import React from "react"
 import { View } from "react-native"
 import { IconButton, Surface, Text } from "react-native-paper"
@@ -10,11 +10,14 @@ interface ScreenTitleProps {
 }
 
 export const ScreenTitle: React.FC<ScreenTitleProps> = ({ title, hideBackArrow, right }) => {
-    const navigation = useNavigation<any>()
+    const navigation = useNavigation<NavigationProp<any, any>>()
+
     return (
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                <IconButton icon={"chevron-left"} onPress={() => navigation.goBack()} style={{ margin: 0 }} />
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 10 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                <Surface elevation={2} style={{ borderRadius: 100 }}>
+                    <IconButton icon={"chevron-left"} onPress={() => navigation.goBack()} style={{ margin: 0 }} />
+                </Surface>
                 <Text variant="titleLarge" style={{ alignSelf: "center" }}>
                     {title}
                 </Text>

@@ -17,9 +17,13 @@ export default function App() {
     useKeepAwake()
 
     const [fontsLoaded, fontError] = useFonts({
-        "Founders-Grotesk-Regular": require("./assets/fonts/custom/FoundersGroteskBOZ-Regular.otf"),
-        "Founders-Grotesk-Bold": require("./assets/fonts/custom/FoundersGroteskBOZ-Bold.otf"),
-        "Founders-Grotesk-XCondBold": require("./assets/fonts/custom/FoundersGroteskXCondBOZ-Bold.otf"),
+        "Custom-Founders-Grotesk-Regular": require("./assets/fonts/custom/FoundersGroteskBOZ-Regular.otf"),
+        "Custom-Founders-Grotesk-Bold": require("./assets/fonts/custom/FoundersGroteskBOZ-Bold.otf"),
+        "Custom-Founders-Grotesk-XCondBold": require("./assets/fonts/custom/FoundersGroteskXCondBOZ-Bold.otf"),
+
+        "Founders-Grotesk-Regular": require("./assets/fonts/FoundersGrotesk-Regular.otf"),
+        "Founders-Grotesk-Bold": require("./assets/fonts/FoundersGrotesk-Bold.otf"),
+        "Founders-Grotesk-XCondBold": require("./assets/fonts/FoundersGroteskXCond-Bold.otf"),
     })
 
     const onLayoutRootView = useCallback(async () => {

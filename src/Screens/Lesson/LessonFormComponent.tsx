@@ -1,6 +1,6 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native"
-import React, { useState } from "react"
-import { ScrollView, View } from "react-native"
+import React, { useRef, useState } from "react"
+import { Dimensions, FlatList, ScrollView, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { useFormik } from "formik"
 import { LessonForm } from "../../types/server/class/Course/Lesson"
@@ -17,6 +17,7 @@ import { ResizeMode, Video } from "expo-av"
 import { FormText } from "../../components/FormText"
 import { api } from "../../backend/api"
 import { useSnackbar } from "../../hooks/useSnackbar"
+import { LessonMediaForm } from "./LessonMediaForm"
 
 interface LessonFormComponentProps {
     navigation: NavigationProp<any, any>
@@ -26,7 +27,10 @@ interface LessonFormComponentProps {
 export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ navigation, route }) => {
     const course = route.params?.course as Course
     const theme = useTheme()
-    const media_style: ImageStyle = { width: "100%", aspectRatio: "16/9", borderRadius: 15 }
+    const image_width = Dimensions.get("screen").width * 0.9
+    const max_image_height = (image_width / 16) * 9
+
+    const mediasRef = useRef<FlatList>(null)
 
     const { snackbar } = useSnackbar()
 
@@ -67,42 +71,11 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
         },
     })
 
-    const onUpdateMedia = async () => {
-        const result = await pickMedia([16, 9])
-        if (result) {
-            const media = result[0]
-
-            if (!media.base64) {
-                media.base64 = await FileSystem.readAsStringAsync(media.uri, {
-                    encoding: "base64",
-                })
-            }
-
-            setMedia({
-                height: media.height,
-                name: getFilename(media),
-                position: 1,
-                type: media.type == "image" ? "IMAGE" : "VIDEO",
-                width: media.width,
-                base64: media.base64,
-            })
-        }
-    }
-
-    const onUpdateThumb = async () => {
-        const result = await pickMedia([16, 9], false, MediaTypeOptions.Images)
-        if (result) {
-            const media = result[0]
-
-            setThumb({
-                height: media.height,
-                name: getFilename(media),
-                position: 1,
-                type: "IMAGE",
-                width: media.width,
-                base64: media.base64!,
-            })
-        }
+    const flashMediaScroll = () => {
+        setTimeout(() => {
+            mediasRef.current?.scrollToIndex({ index: 1, viewOffset: image_width * 0.7 })
+            setTimeout(() => mediasRef.current?.scrollToIndex({ index: 0, viewOffset: 20 }), 200)
+        }, 500)
     }
 
     return (
@@ -114,58 +87,19 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
         >
             <ScreenTitle title="Nova lição" />
 
-            {media ? (
-                <View style={{ position: "relative" }}>
-                    {media.type == "IMAGE" ? (
-                        <Image source={{ uri: media.url || "data:image/png;base64," + media.base64 }} style={media_style} contentFit="cover" />
-                    ) : (
-                        <Video
-                            source={{ uri: media.url || "data:video/mp4;base64," + media.base64 }}
-                            style={media_style}
-                            resizeMode={ResizeMode.COVER}
-                            useNativeControls
-                            isLooping
-                            onError={(error) => console.log({ error })}
-                        />
-                    )}
-                    <IconButton
-                        icon={"pencil-outline"}
-                        style={{ position: "absolute", right: 5, top: 5 }}
-                        containerColor={theme.colors.background}
-                        onPress={onUpdateMedia}
-                    />
-                </View>
-            ) : (
-                <Button
-                    mode="outlined"
-                    style={{ borderStyle: "dashed", width: "100%", aspectRatio: "16/9" }}
-                    contentStyle={{ height: "100%" }}
-                    onPress={onUpdateMedia}
-                >
-                    Mídia da lição
-                </Button>
-            )}
-
-            {thumb ? (
-                <View style={{ position: "relative" }}>
-                    <Image source={{ uri: thumb.url || "data:image/png;base64," + thumb.base64 }} style={media_style} contentFit="cover" />
-                    <IconButton
-                        icon={"pencil-outline"}
-                        style={{ position: "absolute", right: 5, top: 5 }}
-                        containerColor={theme.colors.background}
-                        onPress={onUpdateThumb}
-                    />
-                </View>
-            ) : (
-                <Button
-                    mode="outlined"
-                    style={{ borderStyle: "dashed", width: "100%", aspectRatio: "16/9" }}
-                    contentStyle={{ height: "100%" }}
-                    onPress={onUpdateThumb}
-                >
-                    Thumbnail
-                </Button>
-            )}
+            <FlatList
+                ref={mediasRef}
+                horizontal
+                data={[
+                    { media: media, setMedia: setMedia, thumb: false },
+                    { media: thumb, setMedia: setThumb, thumb: true },
+                ]}
+                renderItem={({ item }) => <LessonMediaForm media={item.media} setMedia={item.setMedia} thumb={item.thumb} />}
+                style={{ marginHorizontal: -20 }}
+                contentContainerStyle={{ gap: 10, height: max_image_height, paddingHorizontal: 20 }}
+                showsHorizontalScrollIndicator={false}
+                onLayout={flashMediaScroll}
+            />
 
             <FormText formik={formik} name="name" label={"Título"} />
             <FormText formik={formik} name="info" label={"Descrição"} multiline numberOfLines={5} />

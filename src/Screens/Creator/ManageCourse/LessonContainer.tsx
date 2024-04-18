@@ -20,7 +20,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index 
             <TouchableRipple borderless style={{ flexDirection: "row", borderRadius: 15, padding: 5, gap: 5 }} onPress={() => console.log()}>
                 <>
                     <Image source={lesson.thumb} contentFit="cover" style={{ width: 100, aspectRatio: "1/1", borderRadius: 15 }} />
-                    <View style={{ padding: 5, gap: 2 }}>
+                    <View style={{ padding: 5, gap: 2, paddingRight: 140 }}>
                         <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceDisabled }}>
                             Lição {index + 1}
                         </Text>

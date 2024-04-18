@@ -15,10 +15,10 @@ export const paper_theme: MD3Theme = {
 }
 
 export const navigation_theme = {
-    ...paper_theme,
     ...NavigationTheme,
+    ...paper_theme,
     colors: {
-        ...paper_theme.colors,
         ...NavigationTheme.colors,
+        ...paper_theme.colors,
     },
 }

@@ -4,6 +4,7 @@ import { Lesson } from "../../../types/server/class/Course/Lesson"
 import { IconButton, Menu, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Image } from "expo-image"
 import { TrianguloMiseravel } from "../../../components/TrianguloMiseravel"
+import { NavigationProp, useNavigation } from "@react-navigation/native"
 
 interface LessonContainerProps {
     lesson: Lesson
@@ -12,8 +13,14 @@ interface LessonContainerProps {
 
 export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index }) => {
     const theme = useTheme()
+    const navigation = useNavigation<NavigationProp<any, any>>()
 
     const [showMenu, setShowMenu] = useState(false)
+
+    const onDelete = () => {
+        setShowMenu(false)
+        navigation.navigate("creator:lesson:delete", { lesson })
+    }
 
     return (
         <Surface style={{ flex: 1, backgroundColor: theme.colors.background, borderRadius: 15 }}>
@@ -36,16 +43,16 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index 
                             contentStyle={{ borderRadius: 15 }}
                         >
                             <TrianguloMiseravel color={theme.colors.elevation.level3} top={-9} right={15} />
-                            <View style={{ paddingVertical: 10 }}>
+                            <View style={{ paddingVertical: 5 }}>
                                 <TouchableRipple
                                     style={{ paddingHorizontal: 20, paddingVertical: 10 }}
                                     // onPress={() => onMenuItemPress("creator:course:form")}
                                 >
                                     <Text>Editar curso</Text>
                                 </TouchableRipple>
-                                {/* <TouchableRipple style={{ paddingHorizontal: 20, paddingVertical: 10 }} onPress={onDelete}>
-                                <Text>Deletar</Text>
-                            </TouchableRipple> */}
+                                <TouchableRipple style={{ paddingHorizontal: 20, paddingVertical: 10 }} onPress={onDelete}>
+                                    <Text>Deletar</Text>
+                                </TouchableRipple>
                             </View>
                         </Menu>
                     </View>

@@ -191,7 +191,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                             icon={"plus-circle"}
                             mode="outlined"
                             style={{ borderStyle: "dashed", marginTop: 10 }}
-                            onPress={() => navigation.navigate("creator:course:lesson:form", { course })}
+                            onPress={() => navigation.navigate("creator:lesson:form", { course })}
                         >
                             Nova lição
                         </Button>

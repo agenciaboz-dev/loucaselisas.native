@@ -7,6 +7,7 @@ import { CourseFormComponent } from "../Course/CourseFormComponent"
 import { ManageCourse } from "./ManageCourse/ManageCourse"
 import { DeleteCourseScreen } from "./ManageCourse/DeleteCourseScreen"
 import { LessonFormComponent } from "../Lesson/LessonFormComponent"
+import { DeleteLesson } from "../Lesson/DeleteLesson"
 
 interface CreatorStackProps {
     navigation: NavigationProp<any, any>
@@ -21,7 +22,8 @@ export const CreatorStack: React.FC<CreatorStackProps> = ({ navigation }) => {
             <Stack.Screen name="creator:course:form" component={CourseFormComponent} />
             <Stack.Screen name="creator:course:manage" component={ManageCourse} />
             <Stack.Screen name="creator:course:delete" component={DeleteCourseScreen} />
-            <Stack.Screen name="creator:course:lesson:form" component={LessonFormComponent} />
+            <Stack.Screen name="creator:lesson:form" component={LessonFormComponent} />
+            <Stack.Screen name="creator:lesson:delete" component={DeleteLesson} />
         </Stack.Navigator>
     )
 }

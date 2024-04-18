@@ -44,6 +44,8 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
                     onLogin(user)
                     if (keepSession) {
                         await AsyncStorage.setItem("session", JSON.stringify(user))
+                    } else {
+                        await AsyncStorage.setItem("session", JSON.stringify(null))
                     }
                 } else {
                     snackbar("credenciais inválidas")
@@ -64,17 +66,16 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
 
     useEffect(() => {
         AsyncStorage.getItem("session").then((result) => {
-            if (result) {
-                const user = JSON.parse(result) as User
+            const user = JSON.parse(result || "null") as User | null
+            if (user) {
                 formik.setFieldValue("login", user.email)
                 formik.setFieldValue("password", user.password)
             }
         })
 
         AsyncStorage.getItem("stay_connected").then((result) => {
-            if (!!result) {
-                setKeepSession(!!result)
-            }
+            const value = JSON.parse(result || "null")
+            setKeepSession(value)
         })
     }, [])
 

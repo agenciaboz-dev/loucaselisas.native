@@ -29,11 +29,13 @@ export declare const student_include: {
                     user: true;
                 };
             };
-            students: true;
             favorited_by: true;
-            lessons: {
-                include: {
-                    _count: true;
+            _count: {
+                select: {
+                    lessons: true;
+                    favorited_by: true;
+                    students: true;
+                    views: true;
                 };
             };
         };

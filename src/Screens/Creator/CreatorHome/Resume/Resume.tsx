@@ -89,7 +89,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         useCallback(() => {
             refreshCourses()
 
-            return () => setOwnedCourses([])
+            // return () => setOwnedCourses([])
         }, [])
     )
 

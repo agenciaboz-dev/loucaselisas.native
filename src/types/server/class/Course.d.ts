@@ -33,11 +33,13 @@ export declare const course_include: {
             user: true;
         };
     };
-    students: true;
     favorited_by: true;
-    lessons: {
-        include: {
-            _count: true;
+    _count: {
+        select: {
+            lessons: true;
+            favorited_by: true;
+            students: true;
+            views: true;
         };
     };
 };
@@ -49,7 +51,7 @@ export type CoverForm = {
     type: "image" | "video";
     url?: string;
 };
-export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by" | "cover" | "cover_type" | "owner" | "gallery" | "creators" | "chat" | "published">> & {
+export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by" | "cover" | "cover_type" | "owner" | "gallery" | "creators" | "chat" | "published" | "lessons" | "students" | "views">> & {
     id: string;
     cover?: CoverForm;
     gallery: GalleryForm;
@@ -57,7 +59,7 @@ export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by
         id: string;
     }[];
 };
-export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published"> & {
+export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views"> & {
     lessons: LessonForm[];
     cover?: CoverForm;
     gallery: GalleryForm;
@@ -79,15 +81,17 @@ export declare class Course {
     description: string;
     language: string;
     recorder: string | null;
-    favorited_by: number;
     price: number;
-    lessons: number;
     owner: Partial<Creator>;
     owner_id: string;
     gallery: Gallery;
     categories: Category[];
     creators: Partial<Creator>[];
     chat: Chat | null;
+    favorited_by: number;
+    lessons: number;
+    students: number;
+    views: number;
     constructor(id: string, data?: CoursePrisma);
     static new(data: CourseForm, socket?: Socket): Promise<Course | undefined>;
     init(): Promise<void>;

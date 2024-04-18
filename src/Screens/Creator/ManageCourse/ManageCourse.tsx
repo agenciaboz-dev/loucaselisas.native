@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react"
 import { IconButton, Menu, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Course } from "../../../types/server/class/Course"
 import { ScreenTitle } from "../../../components/ScreenTItle"
-import { Dimensions, FlatList, Pressable, TouchableOpacity, View } from "react-native"
+import { Dimensions, FlatList, LayoutAnimation, Pressable, TouchableOpacity, View } from "react-native"
 import { Image, ImageStyle } from "expo-image"
 import { ResizeMode, Video } from "expo-av"
 import placeholders from "../../../tools/placeholders"
@@ -15,6 +15,7 @@ import { MiniStatistics } from "./MiniStatistics"
 import ImageView from "react-native-image-viewing"
 import { Button } from "../../../components/Button"
 import { Lesson } from "../../../types/server/class/Course/Lesson"
+import { LessonContainer } from "./LessonContainer"
 
 interface ManageCourseProps {
     navigation: NavigationProp<any, any>
@@ -52,6 +53,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
         setLoadingLessons(true)
         try {
             const response = await api.get("/lesson", { params: { course_id: course?.id } })
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             setLessons(response.data)
             console.log(response.data)
         } catch (error) {
@@ -64,6 +66,11 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
     const onDelete = () => {
         setShowMenu(false)
         navigation.navigate("creator:course:delete", { course })
+    }
+
+    const extendDescription = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setExtendedDescription((value) => !value)
     }
 
     useFocusEffect(
@@ -105,34 +112,36 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                     {course.owner.nickname}
                 </Text>
                 <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
-                    {999} lições
+                    {course.lessons} lições
                 </Text>
             </View>
             <FlatList
                 data={course.gallery.media.sort((a, b) => a.position - b.position)}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                style={{ marginHorizontal: -20, flexGrow: 0 }}
+                style={{ marginHorizontal: -20, flexGrow: 0, flexShrink: 0 }}
                 contentContainerStyle={{ paddingHorizontal: 20, gap: 10 }}
                 // initialNumToRender={3}
                 // maxToRenderPerBatch={0}
                 ListHeaderComponent={
                     course.cover_type == "image" ? (
-                        <Image
-                            source={course.cover}
-                            transition={1000}
-                            priority={"high"}
-                            placeholder={placeholders.video}
-                            contentFit="cover"
-                            style={media_style}
-                        />
+                        <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => setViewingMedia(0)}>
+                            <Image
+                                source={course.cover}
+                                transition={1000}
+                                priority={"high"}
+                                placeholder={placeholders.video}
+                                contentFit="cover"
+                                style={media_style}
+                            />
+                        </TouchableRipple>
                     ) : (
                         <Video source={{ uri: course.cover }} resizeMode={ResizeMode.COVER} style={media_style} useNativeControls shouldPlay />
                     )
                 }
                 renderItem={({ item, index }) =>
                     item.type == "IMAGE" ? (
-                        <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => setViewingMedia(index)}>
+                        <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => setViewingMedia(index + 1)}>
                             <Image
                                 source={item.url}
                                 placeholder={placeholders.square}
@@ -147,29 +156,41 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
             />
 
             <Text variant="bodyLarge">Valor: {currencyMask(course.price)}</Text>
-            <Text numberOfLines={extendedDescription ? 0 : 3}>{course.description}</Text>
-            <TouchableRipple onPress={() => setExtendedDescription((value) => !value)} style={{ alignSelf: "flex-end" }}>
-                <Text>ler {extendedDescription ? "menos" : "mais"}...</Text>
+
+            <Text numberOfLines={!extendedDescription ? 2 : 3}>{course.description}</Text>
+            <TouchableRipple onPress={extendDescription} style={{ alignSelf: "flex-end", marginTop: -10 }}>
+                <Text style={{ textDecorationLine: "underline" }}>ler {extendedDescription ? "menos" : "mais"}...</Text>
             </TouchableRipple>
 
             <ImageView
-                images={course.gallery.media.map((item) => ({ uri: item.url }))}
+                images={[{ uri: course.cover }, ...course.gallery.media.map((item) => ({ uri: item.url }))]}
                 imageIndex={viewingMedia ?? 0}
                 visible={viewingMedia !== null}
                 onRequestClose={() => setViewingMedia(null)}
                 animationType="slide"
             />
-            <MiniStatistics course={course} />
-            <Button
-                icon={"plus-circle"}
-                mode="outlined"
-                style={{ borderStyle: "dashed", marginTop: 10 }}
-                onPress={() => navigation.navigate("creator:course:lesson:form", { course })}
-            >
-                Nova lição
-            </Button>
 
-            <FlatList data={lessons} renderItem={({ item }) => <Text>{item.name}</Text>} refreshing={loadingLessons} onRefresh={refreshLessons} />
+            <MiniStatistics course={course} />
+
+            <FlatList
+                data={lessons}
+                renderItem={({ item, index }) => <LessonContainer lesson={item} index={index} />}
+                refreshing={loadingLessons}
+                onRefresh={refreshLessons}
+                style={{ marginHorizontal: -20 }}
+                contentContainerStyle={{ gap: 10, paddingBottom: 10, paddingHorizontal: 20 }}
+                showsVerticalScrollIndicator
+                ListHeaderComponent={
+                    <Button
+                        icon={"plus-circle"}
+                        mode="outlined"
+                        style={{ borderStyle: "dashed", marginTop: 10 }}
+                        onPress={() => navigation.navigate("creator:course:lesson:form", { course })}
+                    >
+                        Nova lição
+                    </Button>
+                }
+            />
         </View>
     ) : null
 }

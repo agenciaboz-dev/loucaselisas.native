@@ -48,8 +48,8 @@ export const Signup: React.FC<SignupProps> = ({}) => {
             showsVerticalScrollIndicator={false}
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="handled"
-            style={{ flex: 1, padding: 20, paddingTop: 60, paddingBottom: 0 }}
-            contentContainerStyle={{ gap: 20 }}
+            style={{ flex: 1, paddingBottom: 0 }}
+            contentContainerStyle={{ gap: 20, padding: 20, paddingTop: 40 }}
         >
             <ScreenTitle title="Cadastre-se" />
 

@@ -133,8 +133,8 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
     }, [])
 
     return (
-        <View style={{ flex: 1, gap: 20, paddingBottom: 60 }}>
-            <Surface style={{ backgroundColor: colors.box, padding: 10, borderRadius: 20, gap: 10 }}>
+        <View style={{ flex: 1, gap: 20, marginHorizontal: -20, paddingHorizontal: 20 }}>
+            <Surface elevation={2} style={{ padding: 10, borderRadius: 20, gap: 10 }}>
                 <FormText
                     ref={input_refs[0]}
                     name="name"

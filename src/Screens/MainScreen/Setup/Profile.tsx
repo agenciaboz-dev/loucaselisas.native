@@ -27,8 +27,8 @@ export const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="handled"
-            style={{ flex: 1, padding: 20, paddingBottom: 0 }}
-            contentContainerStyle={{ gap: 20 }}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ gap: 20, padding: 20 }}
         >
             <ScreenTitle title="Editar perfil" />
 

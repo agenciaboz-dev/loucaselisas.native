@@ -213,10 +213,6 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
     }
 
     useEffect(() => {
-        console.log(availableCategories)
-    }, [availableCategories])
-
-    useEffect(() => {
         // deleting from participants if deleted on textfield
         participants.forEach((item) => {
             if (!participantsText.includes(item.nickname)) {

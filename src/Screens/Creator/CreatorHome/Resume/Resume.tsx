@@ -59,7 +59,6 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
         setTimeout(async () => {
             try {
                 const response = await api.get("/course/owner", { params: { owner_id: creator?.id } })
-                console.log(response.data)
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
                 setOwnedCourses(response.data)
             } catch (error) {

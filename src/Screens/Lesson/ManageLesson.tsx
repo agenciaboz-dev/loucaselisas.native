@@ -41,7 +41,6 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
         setShowMenu(false)
         try {
             const data: PartialLesson = { id: lesson.id, active: !lesson.active }
-            console.log(data)
             const response = await api.patch("/lesson", data)
             navigation.goBack()
         } catch (error) {

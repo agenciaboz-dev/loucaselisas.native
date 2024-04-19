@@ -86,7 +86,6 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
     const preSubmit = () => {
         formik.validateForm()
 
-        console.log({ media, thumb })
         if (!thumb && !media) setMediaError("Insira uma mídia e thumbnail")
         if (!thumb && media) setMediaError("Thumbnail é obrigatória")
         if (thumb && !media) setMediaError("Insira uma mídia")

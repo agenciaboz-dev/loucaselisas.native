@@ -1,6 +1,6 @@
 import { NavigationProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useRef, useState } from "react"
-import { LayoutAnimation, ScrollView, View } from "react-native"
+import { LayoutAnimation, RefreshControl, ScrollView, View } from "react-native"
 import { Course } from "../../../types/server/class/Course"
 import { FilteredCourses } from "./FilteredCourses"
 import { api } from "../../../backend/api"
@@ -36,7 +36,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     )
 
     return (
-        <ScrollView ref={scrollRef} style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 10 }}>
+        <ScrollView
+            ref={scrollRef}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ padding: 20, gap: 10 }}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshCourses} />}
+        >
             <FilteredCourses courses={courses} refreshing={refreshing} />
             <Text variant="titleLarge">Explorar</Text>
             <CourseList courses={courses} scrollRef={scrollRef} />

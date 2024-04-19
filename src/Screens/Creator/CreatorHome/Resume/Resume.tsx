@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { FlatList, KeyboardAvoidingView, LayoutAnimation, Platform, ScrollView, View } from "react-native"
+import { FlatList, LayoutAnimation, Platform, ScrollView, View } from "react-native"
 import { Text, TextInput, useTheme } from "react-native-paper"
 import { useUser } from "../../../../hooks/useUser"
 import { Button } from "../../../../components/Button"
@@ -13,8 +13,7 @@ import { ManageProfileCard } from "../../../../components/ManageProfileCard"
 import { getFilename } from "../../../../tools/pickMedia"
 import { PartialCreator } from "../../../../types/server/class/Creator"
 import { IosAvoidKeyboard } from "../../../../components/IosAvoidKeyboard"
-import { debounce } from "lodash"
-import SkeletonPlaceholder from "react-native-skeleton-placeholder"
+import { CourseSkeletons } from "../../../../components/CourseSkeletons"
 
 interface ResumeProps {}
 
@@ -137,24 +136,14 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 </Button>
                 <FlatList
                     data={filteredCourses.sort((a, b) => Number(b.published) - Number(a.published))}
-                    renderItem={({ item }) => <CourseContainer course={item} />}
+                    renderItem={({ item }) => <CourseContainer course={item} route="creator:course:manage" />}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.id}
                     style={{ marginHorizontal: -20, minHeight: 75 }}
                     contentContainerStyle={{ gap: 10, paddingHorizontal: 20, paddingBottom: 10 }}
                     ListEmptyComponent={
-                        refreshing ? (
-                            <SkeletonPlaceholder borderRadius={15} highlightColor="#00000022" backgroundColor="#e1e1e1">
-                                <SkeletonPlaceholder.Item flexDirection="row" gap={10}>
-                                    <SkeletonPlaceholder.Item width={175} height={175} />
-                                    <SkeletonPlaceholder.Item width={175} height={175} />
-                                    <SkeletonPlaceholder.Item width={175} height={175} />
-                                </SkeletonPlaceholder.Item>
-                            </SkeletonPlaceholder>
-                        ) : (
-                            <Text style={{ flex: 1, textAlign: "center" }}>Nenhum curso encontrado</Text>
-                        )
+                        refreshing ? <CourseSkeletons /> : <Text style={{ flex: 1, textAlign: "center" }}>Nenhum curso encontrado</Text>
                     }
                     refreshing={refreshing}
                     onRefresh={refreshCourses}

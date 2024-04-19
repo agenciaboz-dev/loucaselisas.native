@@ -9,9 +9,10 @@ import * as VideoThumbnails from "expo-video-thumbnails"
 
 interface CourseContainerProps {
     course: Course
+    route: string
 }
 
-export const CourseContainer: React.FC<CourseContainerProps> = ({ course }) => {
+export const CourseContainer: React.FC<CourseContainerProps> = ({ course, route }) => {
     const theme = useTheme()
     const navigation = useNavigation<NavigationProp<any, any>>()
 
@@ -30,7 +31,7 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course }) => {
     }
 
     const onCoursePress = () => {
-        navigation.navigate("creator:course:manage", { course })
+        navigation.navigate(route, { course })
     }
 
     return (
@@ -62,7 +63,7 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course }) => {
                             onPress={() => console.log("comments")}
                         >
                             <>
-                                <Text variant="labelSmall">{course.lessons.length} lições</Text>
+                                <Text variant="labelSmall">{course.lessons} lições</Text>
                                 <Icon size={15} source={"comment-text-outline"} />
                             </>
                         </TouchableRipple>

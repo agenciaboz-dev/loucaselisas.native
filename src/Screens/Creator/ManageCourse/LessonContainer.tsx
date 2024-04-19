@@ -34,6 +34,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
             try {
                 const data: PartialLesson = { id: lesson.id, active: !lesson.active }
                 const response = await api.patch("/lesson", data)
+                // TODO: ACTIVATE ON BUILD
                 // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
                 setLesson(response.data)
                 // refresh(0)

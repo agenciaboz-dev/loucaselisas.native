@@ -61,6 +61,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
             try {
                 const response = await api.get("/lesson", { params: { course_id: course?.id } })
                 console.log(response.data)
+                // TODO: ACTIVATE ON BUILD
                 // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
                 setLessons(response.data)
             } catch (error) {

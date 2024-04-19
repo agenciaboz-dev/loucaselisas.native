@@ -8,6 +8,7 @@ import { BackHandler, Dimensions, LayoutAnimation, Pressable, ScrollView, Toucha
 import { Login } from "./Login"
 import { ResizeMode, Video } from "expo-av"
 import { setStatusBarStyle } from "expo-status-bar"
+import * as SplashScreen from "expo-splash-screen"
 
 interface HomeProps {
     navigation: NavigationProp<any, any>
@@ -41,6 +42,12 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
         }, [])
     )
 
+    const onVideoLoad = async () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        await SplashScreen.hideAsync()
+        setStatusBarStyle("light")
+    }
+
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
@@ -56,7 +63,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                 shouldPlay
                 resizeMode={ResizeMode.COVER}
                 isLooping
-                onLoad={() => setStatusBarStyle("light")}
+                onLoad={onVideoLoad}
             />
             <Logo invert />
             {!form && (

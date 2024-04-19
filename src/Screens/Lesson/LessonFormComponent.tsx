@@ -76,6 +76,7 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
     })
 
     const flashMediaScroll = () => {
+        if (lesson) return
         setTimeout(() => {
             mediasRef.current?.scrollToIndex({ index: 1, viewOffset: image_width * 0.7 })
             setTimeout(() => mediasRef.current?.scrollToIndex({ index: 0, viewOffset: 20 }), 200)

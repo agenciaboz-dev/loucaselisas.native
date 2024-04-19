@@ -4,13 +4,13 @@ import React from "react"
 import { Menus } from "./Menus"
 import { Account } from "../../Account/Account"
 import { default_navigator_options } from "../../../tools/default_navigator_options"
-import { Profile } from "./Profile"
 import { Delete } from "./DeleteAccount"
 import { ManagePlan } from "./Plan/ManagePlan"
 import { ContractDetails } from "./Plan/ContractDetails"
 import { PlanHistory } from "./PlanHistory/PlanHistory"
 import { SavedCards } from "./SavedCards/SavedCards"
 import { CardForm } from "./SavedCards/CardForm"
+import { Profile } from "../../Profile/Profile"
 
 interface SetupProps {
     navigation: NavigationProp<any, any>

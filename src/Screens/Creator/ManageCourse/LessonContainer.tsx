@@ -9,9 +9,10 @@ import { NavigationProp, useNavigation } from "@react-navigation/native"
 interface LessonContainerProps {
     lesson: Lesson
     index: number
+    refresh: () => Promise<void>
 }
 
-export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index }) => {
+export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index, refresh }) => {
     const theme = useTheme()
     const navigation = useNavigation<NavigationProp<any, any>>()
 
@@ -21,6 +22,8 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index 
         setShowMenu(false)
         navigation.navigate("creator:lesson:delete", { lesson })
     }
+
+    const onDisable = () => {}
 
     return (
         <Surface style={{ flex: 1, backgroundColor: theme.colors.background, borderRadius: 15 }}>
@@ -44,11 +47,8 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index 
                         >
                             <TrianguloMiseravel color={theme.colors.elevation.level3} top={-9} right={15} />
                             <View style={{ paddingVertical: 5 }}>
-                                <TouchableRipple
-                                    style={{ paddingHorizontal: 20, paddingVertical: 10 }}
-                                    // onPress={() => onMenuItemPress("creator:course:form")}
-                                >
-                                    <Text>Editar curso</Text>
+                                <TouchableRipple style={{ paddingHorizontal: 20, paddingVertical: 10 }} onPress={onDisable}>
+                                    <Text>Desabilitar</Text>
                                 </TouchableRipple>
                                 <TouchableRipple style={{ paddingHorizontal: 20, paddingVertical: 10 }} onPress={onDelete}>
                                     <Text>Deletar</Text>

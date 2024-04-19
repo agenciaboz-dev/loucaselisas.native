@@ -36,6 +36,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
     const [lessons, setLessons] = useState<Lesson[]>([])
     const [loadingLessons, setLoadingLessons] = useState(true)
     const [skeletons, setSkeletons] = useState<number[]>([])
+    const [render, setRender] = useState(false)
 
     const onMenuItemPress = (route: string) => {
         setShowMenu(false)
@@ -81,8 +82,8 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
             setTimeout(() => {
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
                 setSkeletons([1, 2, 3])
+                refreshLessons()
             }, 200)
-            refreshLessons()
             refreshCourse()
         }, [])
     )
@@ -91,7 +92,8 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
         <View style={{ flex: 1, paddingHorizontal: 20, gap: 10 }}>
             <FlatList
                 data={lessons.sort((a, b) => Number(b.published) - Number(a.published))}
-                renderItem={({ item, index }) => <LessonContainer lesson={item} index={lessons.length - index - 1} />}
+                renderItem={({ item, index }) => <LessonContainer lesson={item} index={lessons.length - index - 1} refresh={refreshLessons} />}
+                keyExtractor={(item) => item.id}
                 refreshing={loadingLessons}
                 onRefresh={refreshLessons}
                 style={{ marginHorizontal: -20, paddingTop: 10 }}

@@ -196,7 +196,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                         <Text variant="bodyLarge">Valor: {currencyMask(course.price)}</Text>
 
                         <Text numberOfLines={!extendedDescription ? 2 : undefined}>{course.description}</Text>
-                        <TouchableRipple onPress={extendDescription} style={{ alignSelf: "flex-end", marginTop: -10 }}>
+                        <TouchableRipple onPress={extendDescription} style={{ alignSelf: "flex-end", marginTop: -5, marginBottom: 5 }}>
                             <Text style={{ textDecorationLine: "underline" }}>ler {extendedDescription ? "menos" : "mais"}...</Text>
                         </TouchableRipple>
 

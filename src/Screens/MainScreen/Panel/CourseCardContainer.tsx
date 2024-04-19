@@ -29,9 +29,11 @@ export const CourseCardContainer: React.FC<CourseCardContainerProps> = ({ course
                         style={{ width: 100, aspectRatio: "1/1", borderRadius: 15 }}
                     />
                     <View style={{ padding: 5, gap: 2, paddingRight: 140 }}>
-                        <Text variant="bodyLarge">{course.name}</Text>
+                        <Text variant="bodyLarge" style={{ fontFamily: "Founders-Grotesk-Bold" }}>
+                            {course.name}
+                        </Text>
                         <Text numberOfLines={3}>{course.description}</Text>
-                        <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceDisabled }}>
+                        <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceDisabled, marginTop: "auto" }}>
                             {course.lessons} lições
                         </Text>
                     </View>

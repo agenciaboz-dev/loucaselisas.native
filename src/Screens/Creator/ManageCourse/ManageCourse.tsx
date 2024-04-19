@@ -106,7 +106,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                 contentContainerStyle={{ gap: 10, paddingBottom: 30, paddingHorizontal: 20 }}
                 showsVerticalScrollIndicator
                 ListEmptyComponent={
-                    loadingLessons ? (
+                    loadingLessons && course.lessons ? (
                         <>
                             {skeletons.map((index) => (
                                 <LessonsSkeletons key={index} />

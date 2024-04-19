@@ -71,6 +71,8 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
     }
 
     const filterCourses = (scroll = true) => {
+        // TODO: ACTIVATE ON BUILD
+        // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         setFilteredCourses(ownedCourses.filter((item) => item.name.toLocaleLowerCase().includes(filterCourseName.toLocaleLowerCase())))
         if (scroll) screenRef.current?.scrollToEnd()
     }

@@ -3,9 +3,8 @@ import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, ScrollView, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { useFormik } from "formik"
-import { LessonForm } from "../../types/server/class/Course/Lesson"
+import { Lesson, LessonForm } from "../../types/server/class/Course/Lesson"
 import { MediaForm } from "../../types/server/class/Gallery/Media"
-import { Course } from "../../types/server/class/Course"
 import { Button } from "../../components/Button"
 import { Text, useTheme } from "react-native-paper"
 import { FormText } from "../../components/FormText"
@@ -21,7 +20,8 @@ interface LessonFormComponentProps {
 }
 
 export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ navigation, route }) => {
-    const course = route.params?.course as Course
+    const lesson = route.params?.lesson as Lesson | undefined
+    const course_id = (route.params?.course?.id as string | undefined) || lesson?.course_id
     const theme = useTheme()
     const image_width = Dimensions.get("screen").width * 0.9
     const max_image_height = (image_width / 16) * 9
@@ -47,7 +47,7 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
             name: "",
             info: "",
             pdf: null,
-            course_id: course.id,
+            course_id: course_id || "",
         },
         async onSubmit(values, formikHelpers) {
             if (loading || !media || !thumb) return
@@ -62,8 +62,8 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
             }
 
             try {
-                const response = await api.post("/lesson", data)
-                snackbar("lição criada com sucesso")
+                const response = lesson ? await api.patch("/lesson", { ...data, id: lesson.id }) : await api.post("/lesson", data)
+                snackbar(`lição ${lesson ? "atualizada" : "criada"} com sucesso`)
                 navigation.goBack()
             } catch (error) {
                 console.log(error)
@@ -98,6 +98,15 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
             setTimeout(() => mediasRef.current?.scrollToIndex({ index: 1, viewOffset: 20 }), 1000)
         }
     }, [media])
+
+    useEffect(() => {
+        if (lesson) {
+            setMedia({ ...lesson.media, name: "" })
+            setThumb({ url: lesson.thumb || undefined, height: 1, name: "", position: 1, type: "IMAGE", width: 1 })
+            formik.setFieldValue("name", lesson.name)
+            formik.setFieldValue("info", lesson.info)
+        }
+    }, [lesson])
 
     return (
         <ScrollView

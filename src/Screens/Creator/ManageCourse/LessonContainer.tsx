@@ -50,7 +50,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
             <TouchableRipple
                 borderless
                 style={{ flexDirection: "row", borderRadius: 15, padding: 5, gap: 5 }}
-                onPress={() => console.log()}
+                onPress={() => navigation.navigate("creator:lesson", { lesson })}
                 disabled={!lesson.active}
             >
                 <>

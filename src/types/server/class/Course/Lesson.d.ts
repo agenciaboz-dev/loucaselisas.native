@@ -3,16 +3,18 @@ import { Media, MediaForm } from "../Gallery/Media";
 import { FileUpload, WithoutFunctions } from "../helpers";
 export declare const lesson_include: {
     media: true;
-    user_downloads: {
-        include: {
-            _count: true;
+    _count: {
+        select: {
+            downloads: true;
+            likes: true;
+            views: true;
         };
     };
 };
 export type LessonPrisma = Prisma.LessonGetPayload<{
     include: typeof lesson_include;
 }>;
-export type LessonForm = Omit<WithoutFunctions<Lesson>, "id" | "published" | "thumb" | "user_views" | "user_likes" | "user_downloads" | "active"> & {
+export type LessonForm = Omit<WithoutFunctions<Lesson>, "id" | "published" | "thumb" | "views" | "likes" | "downloads" | "active"> & {
     thumb: FileUpload;
     media: MediaForm;
 };
@@ -27,9 +29,9 @@ export declare class Lesson {
     info: string;
     active: boolean;
     media: Media;
-    user_views: number;
-    user_likes: number;
-    user_downloads: number;
+    views: number;
+    likes: number;
+    downloads: number;
     course_id: string;
     pdf: string | null;
     static new(data: LessonForm): Promise<Lesson>;

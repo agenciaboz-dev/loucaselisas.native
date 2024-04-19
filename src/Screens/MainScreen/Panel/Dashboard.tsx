@@ -6,6 +6,7 @@ import { FilteredCourses } from "./FilteredCourses"
 import { api } from "../../../backend/api"
 import { Text } from "react-native-paper"
 import { CourseList } from "./CourseList"
+import { useUser } from "../../../hooks/useUser"
 
 interface DashboardProps {
     navigation: NavigationProp<any, any>
@@ -13,13 +14,17 @@ interface DashboardProps {
 
 export const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     const scrollRef = useRef<ScrollView>(null)
+    const { user } = useUser()
+
     const [courses, setCourses] = useState<Course[]>([])
     const [refreshing, setRefreshing] = useState(true)
 
     const refreshCourses = async () => {
+        if (!user) return
+
         setRefreshing(true)
         try {
-            const response = await api.get("/course/all")
+            const response = await api.get("/course/user", { params: { user_id: user.id } })
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             setCourses(response.data)
         } catch (error) {

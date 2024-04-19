@@ -1,11 +1,11 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import React, { useState } from "react"
-import { Dimensions, LayoutAnimation, View } from "react-native"
+import { Dimensions, LayoutAnimation, ScrollView, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { Lesson, PartialLesson } from "../../types/server/class/Course/Lesson"
 import { IconButton, Menu, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Image, ImageStyle } from "expo-image"
-import { Video } from "expo-av"
+import { ResizeMode, Video } from "expo-av"
 import placeholders from "../../tools/placeholders"
 import { MiniStatistics } from "./MiniStatistics"
 import { TrianguloMiseravel } from "../../components/TrianguloMiseravel"
@@ -22,7 +22,7 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
     const theme = useTheme()
     const image_width = Dimensions.get("screen").width * 0.9
     const max_image_height = (image_width / 16) * 9
-    const media_style: ImageStyle = { width: image_width, height: max_image_height, borderRadius: 15 }
+    const media_style: ImageStyle = { width: image_width, borderRadius: 15 }
 
     const [extendedDescription, setExtendedDescription] = useState(false)
     const [showMenu, setShowMenu] = useState(false)
@@ -50,7 +50,7 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
     }
 
     return lesson ? (
-        <View style={{ flex: 1, gap: 10, padding: 20 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 10, padding: 20 }}>
             <ScreenTitle
                 title={lesson.name}
                 right={
@@ -70,13 +70,19 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
             {lesson.media.type == "IMAGE" ? (
                 <Image source={lesson.media.url} style={media_style} placeholder={placeholders.video} />
             ) : (
-                <Video source={{ uri: lesson.media.url }} style={media_style} useNativeControls shouldPlay />
+                <Video
+                    source={{ uri: lesson.media.url }}
+                    style={[media_style, { width: "100%", aspectRatio: lesson.media.width / lesson.media.height }]}
+                    useNativeControls
+                    shouldPlay
+                    resizeMode={ResizeMode.CONTAIN}
+                />
             )}
             <Text numberOfLines={!extendedDescription ? 2 : undefined}>{lesson.info}</Text>
             <TouchableRipple onPress={extendDescription} style={{ alignSelf: "flex-end", marginTop: -10 }}>
                 <Text style={{ textDecorationLine: "underline" }}>ler {extendedDescription ? "menos" : "mais"}...</Text>
             </TouchableRipple>
             <MiniStatistics lesson={lesson} />
-        </View>
+        </ScrollView>
     ) : null
 }

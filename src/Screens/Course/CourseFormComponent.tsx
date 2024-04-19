@@ -32,6 +32,7 @@ import * as FileSystem from "expo-file-system"
 import { pickMedia } from "../../tools/pickMedia"
 import placeholders from "../../tools/placeholders"
 import { LabeledComponent } from "../../components/LabeledComponent"
+import { validationErrors } from "../../tools/validationErrors"
 
 interface CourseFormProps {
     navigation: NavigationProp<any, any>
@@ -58,14 +59,12 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
     const [gallery, setGallery] = useState<GalleryForm>({ media: [], name: "" })
     const [cover, setCover] = useState<CoverForm>()
 
-    const required_field_message = "Campo obrigatório."
-
     const courseSchema = Yup.object().shape({
-        description: Yup.string().required(required_field_message),
-        name: Yup.string().required(required_field_message),
+        description: Yup.string().required(validationErrors.required),
+        name: Yup.string().required(validationErrors.required),
         price: Yup.string()
-            .required(required_field_message)
-            .test("exists", required_field_message, (value) => !!Number(unmask(value)))
+            .required(validationErrors.required)
+            .test("exists", validationErrors.required, (value) => !!Number(unmask(value)))
             .test("is-decimal", "Preço inválido. Permitido apenas números e até 2 casas decimais.", (value) => {
                 // Replace comma with dot to validate as a number
                 const numberValue = value.toString().replace(",", ".")

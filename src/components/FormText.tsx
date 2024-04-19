@@ -39,7 +39,7 @@ export const FormText = React.forwardRef<React.ElementRef<typeof OriginalInput>,
                         {...props}
                         label={undefined}
                         mode="outlined"
-                        style={[{ backgroundColor: props.transparent ? "transparent" : colors.box, flexShrink: 0 }, props.style]}
+                        style={[{ backgroundColor: "transparent", flexShrink: 0 }, props.style]}
                         outlineStyle={{
                             borderRadius: 10,
                             borderColor: error ? colors.error : undefined,

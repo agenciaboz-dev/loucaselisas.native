@@ -14,6 +14,7 @@ import unmask from "../../../../tools/unmask"
 import { api } from "../../../../backend/api"
 import { useSnackbar } from "../../../../hooks/useSnackbar"
 import { mask } from "react-native-mask-text"
+import { validationErrors } from "../../../../tools/validationErrors"
 
 interface CardFormProps {
     navigation: NavigationProp<any, any>
@@ -30,16 +31,16 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
 
     const creditCardSchema = Yup.object().shape({
         number: Yup.string()
-            .required("O número do cartão é obrigatório.")
+            .required(validationErrors.required)
             .matches(/^(?:\d{4} ){3}\d{4}$/, "O número do cartão está em um formato inválido."),
         validity: Yup.string()
             .required("A data de validade é obrigatória.")
             .matches(/^(0[1-9]|1[0-2])\/\d{2}$/, "A data de validade deve estar no formato MM/AA."),
         cvc: Yup.string()
-            .required("O CVC é obrigatório.")
+            .required(validationErrors.required)
             .matches(/^\d{3}$/, "O CVC deve conter 3 dígitos."),
         owner: Yup.string()
-            .required("O nome do titular é obrigatório.")
+            .required(validationErrors.required)
             .matches(/^[a-zA-Z]+(?: [a-zA-Z]+)+$/, "Insira o nome e o sobrenome do titular.")
             .test("two-words", "Insira pelo menos dois nomes.", (value) => {
                 return !!(value && value.trim().split(/\s+/).length >= 2)

@@ -1,23 +1,19 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native"
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, ScrollView, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { useFormik } from "formik"
 import { LessonForm } from "../../types/server/class/Course/Lesson"
-import { FileUpload } from "../../types/server/class/helpers"
-import { Media, MediaForm } from "../../types/server/class/Gallery/Media"
+import { MediaForm } from "../../types/server/class/Gallery/Media"
 import { Course } from "../../types/server/class/Course"
 import { Button } from "../../components/Button"
-import { getFilename, pickMedia } from "../../tools/pickMedia"
-import * as FileSystem from "expo-file-system"
-import { Image, ImageStyle } from "expo-image"
-import { ImagePickerAsset, MediaTypeOptions } from "expo-image-picker"
-import { IconButton, Text, useTheme } from "react-native-paper"
-import { ResizeMode, Video } from "expo-av"
+import { Text, useTheme } from "react-native-paper"
 import { FormText } from "../../components/FormText"
 import { api } from "../../backend/api"
 import { useSnackbar } from "../../hooks/useSnackbar"
 import { LessonMediaForm } from "./LessonMediaForm"
+import * as Yup from "yup"
+import { validationErrors } from "../../tools/validationErrors"
 
 interface LessonFormComponentProps {
     navigation: NavigationProp<any, any>
@@ -37,6 +33,12 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
     const [media, setMedia] = useState<MediaForm | null>(null)
     const [thumb, setThumb] = useState<MediaForm | null>(null)
     const [loading, setLoading] = useState(false)
+    const [mediaError, setMediaError] = useState("")
+
+    const validation_schema = Yup.object({
+        name: Yup.string().required(validationErrors.required),
+        info: Yup.string().required(validationErrors.required),
+    })
 
     const formik = useFormik<LessonForm>({
         initialValues: {
@@ -69,6 +71,8 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
                 setLoading(false)
             }
         },
+        validationSchema: validation_schema,
+        validateOnChange: false,
     })
 
     const flashMediaScroll = () => {
@@ -77,6 +81,23 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
             setTimeout(() => mediasRef.current?.scrollToIndex({ index: 0, viewOffset: 20 }), 200)
         }, 500)
     }
+
+    const preSubmit = () => {
+        formik.validateForm()
+
+        console.log({ media, thumb })
+        if (!thumb && !media) setMediaError("Insira uma mídia e thumbnail")
+        if (!thumb && media) setMediaError("Thumbnail é obrigatória")
+        if (thumb && !media) setMediaError("Insira uma mídia")
+
+        if (thumb && media) formik.handleSubmit()
+    }
+
+    useEffect(() => {
+        if (media) {
+            setTimeout(() => mediasRef.current?.scrollToIndex({ index: 1, viewOffset: 20 }), 1000)
+        }
+    }, [media])
 
     return (
         <ScrollView
@@ -100,10 +121,11 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
                 showsHorizontalScrollIndicator={false}
                 onLayout={flashMediaScroll}
             />
+            {mediaError && <Text style={{ color: "red" }}>{mediaError}</Text>}
 
             <FormText formik={formik} name="name" label={"Título"} />
-            <FormText formik={formik} name="info" label={"Descrição"} multiline numberOfLines={5} />
-            <Button loading={loading} mode="contained" onPress={() => formik.handleSubmit()} disabled={loading}>
+            <FormText formik={formik} name="info" label={"Descrição"} multiline numberOfLines={5} style={{ paddingVertical: 15 }} />
+            <Button loading={loading} mode="contained" onPress={() => preSubmit()} disabled={loading}>
                 Enviar
             </Button>
         </ScrollView>

@@ -1,9 +1,10 @@
 import { useValidateCPF } from "burgos-documents"
 import * as Yup from "yup"
+import { validationErrors } from "../tools/validationErrors"
 export const useSignupSchema = () => {
     const validateCPF = useValidateCPF()
 
-    const required_message = "Campo obrigatório"
+    const required_message = validationErrors.required
 
     return Yup.object().shape({
         bio: Yup.string().max(300, "Bio pode ter no máximo 300 caracteres"),

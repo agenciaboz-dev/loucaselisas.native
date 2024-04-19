@@ -3,47 +3,43 @@ import { ImagePickerAsset } from "expo-image-picker"
 import React, { useEffect, useLayoutEffect, useState } from "react"
 import { LayoutAnimation, View } from "react-native"
 import placeholders from "../tools/placeholders"
-import { Avatar, IconButton, Text, TextInput, TouchableRipple } from "react-native-paper"
+import { Avatar, Surface, Text, TextInput, TouchableRipple, useTheme } from "react-native-paper"
 import { pickMedia } from "../tools/pickMedia"
 import images from "../tools/images"
 import { colors } from "../style/colors"
 import { Button } from "./Button"
 import { SocialMediaIcon } from "./SocialMediaIcon"
+import { IconButton } from "./IconButton"
 
 interface ManageProfileCardProps {
     cover: string | null
     picture: string | null
-    onUpdatePicture: (image: ImagePickerAsset) => Promise<void>
-    onUpdateCover: (image: ImagePickerAsset) => Promise<void>
+    onUpdatePicture?: (image: ImagePickerAsset) => Promise<void>
+    onUpdateCover?: (image: ImagePickerAsset) => Promise<void>
     name: string
     description: string
-    onUpdateDescription: (text: string) => Promise<void>
+    onUpdateDescription?: (text: string) => Promise<void>
     instagram: string | null
     tiktok: string | null
+    readOnly?: boolean
 }
 
-export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
-    cover,
-    picture,
-    onUpdatePicture,
-    onUpdateCover,
-    name,
-    description,
-    onUpdateDescription,
-    instagram,
-    tiktok,
-}) => {
+export const ManageProfileCard: React.FC<ManageProfileCardProps> = (props) => {
+    const { cover, picture, onUpdatePicture, onUpdateCover, name, description, onUpdateDescription, instagram, tiktok, readOnly } = props
+    const theme = useTheme()
+
     const [uploadingPicuture, setUploadingPicuture] = useState<"cover" | "profile">()
     const [savingDescription, setSavingDescription] = useState(false)
     const [editing, setEditing] = useState(false)
     const [descriptionState, setDescriptionState] = useState(description)
+    const [extendedDescription, setExtendedDescription] = useState(false)
 
     const toggleEditing = () => {
         setEditing((value) => !value)
     }
 
     const onEditImage = async (type: "cover" | "profile") => {
-        if (uploadingPicuture == type) return
+        if (uploadingPicuture == type || !onUpdateCover || !onUpdatePicture) return
 
         const result = await pickMedia(type == "cover" ? [16, 9] : [1, 1])
         if (result) {
@@ -64,7 +60,7 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
     }
 
     const onEditDescription = async () => {
-        if (savingDescription) return
+        if (savingDescription || !onUpdateDescription) return
 
         setSavingDescription(true)
         try {
@@ -74,6 +70,11 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
         } finally {
             setSavingDescription(false)
         }
+    }
+
+    const extendDescription = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setExtendedDescription((value) => !value)
     }
 
     useEffect(() => {
@@ -98,15 +99,13 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                     flexDirection: "row",
                 }}
             >
-                <Image
-                    source={cover || placeholders.cover}
-                    style={{ width: "100%", height: "100%", borderRadius: 15, position: "absolute", top: 0, left: 0 }}
-                    contentFit="cover"
-                />
+                <Surface style={{ borderRadius: 15, position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
+                    <Image source={cover || placeholders.cover} style={{ width: "100%", height: "100%", borderRadius: 15 }} contentFit="cover" />
+                </Surface>
                 {editing && (
                     <IconButton
                         icon={"pencil-outline"}
-                        style={{ position: "absolute", top: 0, right: 0 }}
+                        wrapperStyle={{ position: "absolute", top: 10, right: 10 }}
                         loading={uploadingPicuture == "cover"}
                         onPress={() => onEditImage("cover")}
                         mode="contained"
@@ -137,12 +136,14 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                         />
                     </View>
                     <View style={{ flex: 1, position: "relative", justifyContent: "center", alignItems: "center" }}>
-                        <Avatar.Image size={120} source={picture ? { uri: picture } : placeholders.avatar} />
+                        <Surface style={{ borderRadius: 100 }}>
+                            <Avatar.Image size={120} source={picture ? { uri: picture } : placeholders.avatar} />
+                        </Surface>
                         {editing && (
                             <IconButton
                                 size={20}
                                 icon={"pencil-outline"}
-                                style={{ position: "absolute", top: -10, right: -10 }}
+                                wrapperStyle={{ position: "absolute", top: 0, right: 0 }}
                                 loading={uploadingPicuture == "profile"}
                                 onPress={() => onEditImage("profile")}
                                 mode="contained"
@@ -150,13 +151,15 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                         )}
                     </View>
                     <View style={{ flex: 1, alignItems: "flex-end" }}>
-                        <IconButton
-                            icon={"pencil"}
-                            iconColor={editing ? colors.secondary : colors.primary}
-                            containerColor={editing ? colors.primary : colors.secondary}
-                            onPress={toggleEditing}
-                            loading={savingDescription}
-                        />
+                        {!readOnly && (
+                            <IconButton
+                                icon={"pencil"}
+                                iconColor={editing ? theme.colors.background : theme.colors.primary}
+                                containerColor={editing ? theme.colors.primary : theme.colors.background}
+                                onPress={toggleEditing}
+                                loading={savingDescription}
+                            />
+                        )}
                     </View>
                 </View>
                 {/*  */}
@@ -164,6 +167,7 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
             <Text style={{ alignSelf: "center", marginTop: 60 }} variant="bodyLarge">
                 {name}
             </Text>
+
             {editing ? (
                 <TextInput
                     mode="outlined"
@@ -175,9 +179,14 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = ({
                     disabled={savingDescription}
                 />
             ) : (
-                <Text numberOfLines={3} style={{ position: "relative", marginTop: 10 }}>
-                    {description || <Button labelStyle={{ textDecorationLine: "underline" }}>Inserir uma descrição</Button>}
-                </Text>
+                <View style={{ position: "relative", marginBottom: -10 }}>
+                    <Text numberOfLines={!extendedDescription ? 3 : undefined} style={{ position: "relative", marginTop: 10 }}>
+                        {description || <Button labelStyle={{ textDecorationLine: "underline" }}>Inserir uma descrição</Button>}
+                    </Text>
+                    <TouchableRipple onPress={extendDescription} style={{ bottom: -10, right: 0, position: "absolute" }}>
+                        <Text style={{ textDecorationLine: "underline" }}>ler {extendedDescription ? "menos" : "mais"}...</Text>
+                    </TouchableRipple>
+                </View>
             )}
         </View>
     )

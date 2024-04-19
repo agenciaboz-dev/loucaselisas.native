@@ -71,7 +71,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
                             contentStyle={{ borderRadius: 15 }}
                         >
                             <TrianguloMiseravel color={theme.colors.elevation.level3} top={-9} right={15} />
-                            <View style={{ paddingVertical: 5 }}>
+                            <View style={{ paddingVertical: 0 }}>
                                 <TouchableRipple style={{ paddingHorizontal: 20, paddingVertical: 10 }} onPress={onDisable}>
                                     <Text>{lesson.active ? "Desabilitar" : "Habilitar"}</Text>
                                 </TouchableRipple>

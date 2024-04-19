@@ -125,7 +125,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                                     contentStyle={{ borderRadius: 15 }}
                                 >
                                     <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} />
-                                    <View style={{ paddingVertical: 10 }}>
+                                    <View style={{ paddingVertical: 0 }}>
                                         <TouchableRipple
                                             style={{ paddingHorizontal: 20, paddingVertical: 10 }}
                                             onPress={() => onMenuItemPress("creator:course:form")}

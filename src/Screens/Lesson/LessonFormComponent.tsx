@@ -134,7 +134,7 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
             {mediaError && <Text style={{ color: "red" }}>{mediaError}</Text>}
 
             <FormText formik={formik} name="name" label={"Título"} />
-            <FormText formik={formik} name="info" label={"Descrição"} multiline numberOfLines={5} style={{ paddingVertical: 15 }} />
+            <FormText formik={formik} name="info" label={"Descrição"} multiline numberOfLines={5} />
             <Button loading={loading} mode="contained" onPress={() => preSubmit()} disabled={loading}>
                 Enviar
             </Button>

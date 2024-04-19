@@ -45,6 +45,10 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
         }, 1000)
     }
 
+    useEffect(() => {
+        setLesson(current_lesson)
+    }, [current_lesson])
+
     return (
         <Surface style={[{ flex: 1, backgroundColor: theme.colors.background, borderRadius: 15, opacity: lesson.active ? 1 : 0.5 }]}>
             <TouchableRipple

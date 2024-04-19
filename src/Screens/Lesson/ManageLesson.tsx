@@ -2,13 +2,15 @@ import { NavigationProp, RouteProp } from "@react-navigation/native"
 import React, { useState } from "react"
 import { Dimensions, LayoutAnimation, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
-import { Lesson } from "../../types/server/class/Course/Lesson"
+import { Lesson, PartialLesson } from "../../types/server/class/Course/Lesson"
 import { IconButton, Menu, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Image, ImageStyle } from "expo-image"
 import { Video } from "expo-av"
 import placeholders from "../../tools/placeholders"
 import { MiniStatistics } from "./MiniStatistics"
 import { TrianguloMiseravel } from "../../components/TrianguloMiseravel"
+import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
+import { api } from "../../backend/api"
 
 interface ManageLessonProps {
     navigation: NavigationProp<any, any>
@@ -35,34 +37,34 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
         navigation.navigate(route, { lesson })
     }
 
+    const onDisable = async () => {
+        setShowMenu(false)
+        try {
+            const data: PartialLesson = { id: lesson.id, active: !lesson.active }
+            console.log(data)
+            const response = await api.patch("/lesson", data)
+            navigation.goBack()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return lesson ? (
         <View style={{ flex: 1, gap: 10, padding: 20 }}>
             <ScreenTitle
                 title={lesson.name}
                 right={
-                    <Menu
-                        visible={showMenu}
-                        onDismiss={() => setShowMenu(false)}
+                    <OptionsMenu
+                        Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
                         anchorPosition="bottom"
-                        anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
-                        contentStyle={{ borderRadius: 15 }}
-                    >
-                        <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} />
-                        <View style={{ paddingVertical: 0 }}>
-                            <TouchableRipple
-                                style={{ paddingHorizontal: 20, paddingVertical: 10 }}
-                                onPress={() => onMenuItemNavigate("creator:lesson:form")}
-                            >
-                                <Text>Editar lição</Text>
-                            </TouchableRipple>
-                            <TouchableRipple
-                                style={{ paddingHorizontal: 20, paddingVertical: 10 }}
-                                onPress={() => onMenuItemNavigate("creator:lesson:delete")}
-                            >
-                                <Text>Deletar</Text>
-                            </TouchableRipple>
-                        </View>
-                    </Menu>
+                        onDismiss={() => setShowMenu(false)}
+                        visible={showMenu}
+                        options={[
+                            { label: "Editar Lição", onPress: () => onMenuItemNavigate("creator:lesson:form") },
+                            { label: "Desabilitar", onPress: onDisable },
+                            { label: "Deletar", onPress: () => onMenuItemNavigate("creator:lesson:delete") },
+                        ]}
+                    />
                 }
             />
             {lesson.media.type == "IMAGE" ? (

@@ -2712,6 +2712,11 @@ builtins@^1.0.3:
   resolved "https://registry.yarnpkg.com/builtins/-/builtins-1.0.3.tgz#cb94faeb61c8696451db36534e1422f94f0aee88"
   integrity sha512-uYBjakWipfaO/bXI7E8rq6kpwHRZK5cNYrUv2OzZSI/FvmdMyXJ2tG9dKcjEC5YHmHpUAwsargWIZNWdxb/bnQ==
 
+burgos-array@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/burgos-array/-/burgos-array-1.0.2.tgz#c0531601b9d3c2539f45dee58c9656afac4c9ee2"
+  integrity sha512-K7oU+yClg+gcUrfFncdSuZ7TYrk/8buRW1+eWq7rmCNtbXdVwPXHTP9eOb9wlJWFmV1Nt6w19mcxb6bzXIQQtg==
+
 burgos-documents@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/burgos-documents/-/burgos-documents-1.0.2.tgz#22214f185b79876be7a71a0ef41200261addd9e0"

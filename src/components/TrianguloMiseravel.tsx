@@ -2,7 +2,7 @@ import React from "react"
 import { DimensionValue, View } from "react-native"
 import { Surface, useTheme } from "react-native-paper"
 
-interface TrianguloMiseravelProps {
+export interface TrianguloMiseravelProps {
     color?: string
     top?: DimensionValue
     left?: DimensionValue

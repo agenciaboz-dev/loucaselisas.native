@@ -17,6 +17,7 @@
         "@react-navigation/native": "^6.1.17",
         "@react-navigation/native-stack": "^6.9.26",
         "axios": "^1.6.8",
+        "burgos-array": "^1.0.2",
         "burgos-documents": "^1.0.2",
         "burgos-estadosbrasil": "^1.0.1",
         "expo": "~50.0.14",

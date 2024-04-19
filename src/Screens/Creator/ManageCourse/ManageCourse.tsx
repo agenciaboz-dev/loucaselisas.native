@@ -7,7 +7,6 @@ import { Dimensions, FlatList, LayoutAnimation, Pressable, TouchableOpacity, Vie
 import { Image, ImageStyle } from "expo-image"
 import { ResizeMode, Video } from "expo-av"
 import placeholders from "../../../tools/placeholders"
-import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import { currencyMask } from "../../../tools/currencyMask"
 import { TrianguloMiseravel } from "../../../components/TrianguloMiseravel"
 import { api } from "../../../backend/api"
@@ -17,6 +16,8 @@ import { Button } from "../../../components/Button"
 import { Lesson } from "../../../types/server/class/Course/Lesson"
 import { LessonContainer } from "./LessonContainer"
 import { LessonsSkeletons } from "./LessonsSkeletons"
+import { useArray } from "burgos-array"
+import { OptionsMenu } from "../../../components/OptionsMenu/OptionsMenu"
 
 interface ManageCourseProps {
     navigation: NavigationProp<any, any>
@@ -38,6 +39,8 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
     const [skeletons, setSkeletons] = useState<number[]>([])
     const [render, setRender] = useState(false)
 
+    const skeletons_array = useArray().newArray(course?.lessons || 0)
+
     const onMenuItemPress = (route: string) => {
         setShowMenu(false)
         navigation.navigate(route, { course })
@@ -57,6 +60,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
         setTimeout(async () => {
             try {
                 const response = await api.get("/lesson", { params: { course_id: course?.id } })
+                console.log(response.data)
                 // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
                 setLessons(response.data)
             } catch (error) {
@@ -81,7 +85,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
         useCallback(() => {
             setTimeout(() => {
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
-                setSkeletons([1, 2, 3])
+                setSkeletons(skeletons_array)
                 refreshLessons()
             }, 200)
             refreshCourse()
@@ -117,26 +121,15 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                         <ScreenTitle
                             title={course.name}
                             right={
-                                <Menu
-                                    visible={showMenu}
+                                <OptionsMenu
+                                    options={[
+                                        { label: "Editar curso", onPress: () => onMenuItemPress("creator:course:form") },
+                                        { label: "Deletar", onPress: onDelete },
+                                    ]}
+                                    Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
                                     onDismiss={() => setShowMenu(false)}
-                                    anchorPosition="bottom"
-                                    anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
-                                    contentStyle={{ borderRadius: 15 }}
-                                >
-                                    <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} />
-                                    <View style={{ paddingVertical: 0 }}>
-                                        <TouchableRipple
-                                            style={{ paddingHorizontal: 20, paddingVertical: 10 }}
-                                            onPress={() => onMenuItemPress("creator:course:form")}
-                                        >
-                                            <Text>Editar curso</Text>
-                                        </TouchableRipple>
-                                        <TouchableRipple style={{ paddingHorizontal: 20, paddingVertical: 10 }} onPress={onDelete}>
-                                            <Text>Deletar</Text>
-                                        </TouchableRipple>
-                                    </View>
-                                </Menu>
+                                    visible={showMenu}
+                                />
                             }
                         />
                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>

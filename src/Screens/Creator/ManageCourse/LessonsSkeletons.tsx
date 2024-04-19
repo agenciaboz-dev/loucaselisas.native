@@ -14,7 +14,7 @@ export const LessonsSkeletons: React.FC<LessonsSkeletonsProps> = ({}) => {
             <SkeletonPlaceholder backgroundColor={theme.colors.backdrop}>
                 <View style={{ padding: 5, gap: 5, flexDirection: "row", width: "auto" }}>
                     <SkeletonPlaceholder.Item height={100} width={100} borderRadius={15} />
-                    <View style={{ padding: 7, gap: 7 }}>
+                    <View style={{ padding: 7, gap: 5 }}>
                         <SkeletonPlaceholder.Item height={text_height} width={50} borderRadius={5} />
                         <SkeletonPlaceholder.Item height={text_height} width={100} borderRadius={5} />
                         <SkeletonPlaceholder.Item height={text_height * 2} width={200} borderRadius={5} />

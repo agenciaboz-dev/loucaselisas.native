@@ -15,5 +15,6 @@ export declare class Media {
     width: number;
     height: number;
     static new(data: MediaForm, pathdir: string): Promise<Media>;
+    static update(id: string, data: MediaForm, pathdir: string): Promise<Media>;
     constructor(data: MediaPrisma);
 }

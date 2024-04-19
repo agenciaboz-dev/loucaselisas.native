@@ -52,7 +52,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
         }
     }
 
-    const refreshLessons = async () => {
+    const refreshLessons = async (timeout = 1000) => {
         setLoadingLessons(true)
         setTimeout(async () => {
             try {
@@ -64,7 +64,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
             } finally {
                 setLoadingLessons(false)
             }
-        }, 1000)
+        }, timeout)
     }
 
     const onDelete = () => {
@@ -92,7 +92,9 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
         <View style={{ flex: 1, paddingHorizontal: 20, gap: 10 }}>
             <FlatList
                 data={lessons.sort((a, b) => Number(b.published) - Number(a.published))}
-                renderItem={({ item, index }) => <LessonContainer lesson={item} index={lessons.length - index - 1} refresh={refreshLessons} />}
+                renderItem={({ item, index }) => (
+                    <LessonContainer current_lesson={item} index={lessons.length - index - 1} refresh={refreshLessons} />
+                )}
                 keyExtractor={(item) => item.id}
                 refreshing={loadingLessons}
                 onRefresh={refreshLessons}

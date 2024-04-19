@@ -16,6 +16,7 @@ import ImageView from "react-native-image-viewing"
 import { Button } from "../../../components/Button"
 import { Lesson } from "../../../types/server/class/Course/Lesson"
 import { LessonContainer } from "./LessonContainer"
+import { LessonsSkeletons } from "./LessonsSkeletons"
 
 interface ManageCourseProps {
     navigation: NavigationProp<any, any>
@@ -33,7 +34,8 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
     const [extendedDescription, setExtendedDescription] = useState(false)
     const [viewingMedia, setViewingMedia] = useState<number | null>(null)
     const [lessons, setLessons] = useState<Lesson[]>([])
-    const [loadingLessons, setLoadingLessons] = useState(false)
+    const [loadingLessons, setLoadingLessons] = useState(true)
+    const [skeletons, setSkeletons] = useState<number[]>([])
 
     const onMenuItemPress = (route: string) => {
         setShowMenu(false)
@@ -51,17 +53,17 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
 
     const refreshLessons = async () => {
         setLoadingLessons(true)
-        try {
-            const response = await api.get("/lesson", { params: { course_id: course?.id } })
-            setTimeout(() => {
-                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setTimeout(async () => {
+            try {
+                const response = await api.get("/lesson", { params: { course_id: course?.id } })
+                // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
                 setLessons(response.data)
-            }, 500)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoadingLessons(false)
-        }
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoadingLessons(false)
+            }
+        }, 1000)
     }
 
     const onDelete = () => {
@@ -76,6 +78,10 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
 
     useFocusEffect(
         useCallback(() => {
+            setTimeout(() => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
+                setSkeletons([1, 2, 3])
+            }, 200)
             refreshLessons()
             refreshCourse()
         }, [])
@@ -89,8 +95,19 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                 refreshing={loadingLessons}
                 onRefresh={refreshLessons}
                 style={{ marginHorizontal: -20, paddingTop: 10 }}
-                contentContainerStyle={{ gap: 10, paddingBottom: 10, paddingHorizontal: 20 }}
+                contentContainerStyle={{ gap: 10, paddingBottom: 30, paddingHorizontal: 20 }}
                 showsVerticalScrollIndicator
+                ListEmptyComponent={
+                    loadingLessons ? (
+                        <>
+                            {skeletons.map((index) => (
+                                <LessonsSkeletons key={index} />
+                            ))}
+                        </>
+                    ) : (
+                        <Text>Nenhuma lição</Text>
+                    )
+                }
                 ListHeaderComponent={
                     <>
                         <ScreenTitle

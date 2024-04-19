@@ -23,10 +23,10 @@ export const CourseList: React.FC<CourseListProps> = ({ courses, scrollRef }) =>
     }
 
     const onSearchFocus = () => {
-        searchRef.current?.measure((x, y, w, h, px, py) => {
-            console.log({ y, py })
-            scrollRef.current?.scrollTo({ y: py - h * 2 - 20 })
-        })
+        // searchRef.current?.measure((x, y, w, h, px, py) => {
+        //     console.log({ y, py })
+        //     scrollRef.current?.scrollTo({ y: py - h * 2 - 20 })
+        // })
     }
 
     useEffect(() => {

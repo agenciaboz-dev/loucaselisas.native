@@ -33,7 +33,7 @@ export const CreatorHome: React.FC<CreatorHomeProps> = ({ navigation }) => {
                 renderTabBar={(props) => (
                     <TabBar
                         {...props}
-                        style={{ backgroundColor: theme.colors.elevation.level1, elevation: 0, shadowOpacity: 0 }}
+                        style={{ backgroundColor: theme.colors.background, elevation: 0, shadowOpacity: 0 }}
                         labelStyle={{ color: colors.primary, textTransform: "none" }}
                         indicatorStyle={{
                             backgroundColor: "black",
@@ -41,7 +41,7 @@ export const CreatorHome: React.FC<CreatorHomeProps> = ({ navigation }) => {
                             height: 5,
                             width: 50,
                         }}
-                        indicatorContainerStyle={{ marginHorizontal: "10%" }}
+                        indicatorContainerStyle={{ marginHorizontal: "10.7%" }}
                     />
                 )}
             />

@@ -56,6 +56,7 @@ export const CourseList: React.FC<CourseListProps> = ({ courses, scrollRef, refr
                 left={<TextInput.Icon icon={"menu"} />}
                 right={<TextInput.Icon icon="magnify" />}
                 onFocus={onSearchFocus}
+                disabled={refreshing}
             />
 
             {refreshing && !courses.length && skeletons.map((index) => <LessonsSkeletons key={index} />)}

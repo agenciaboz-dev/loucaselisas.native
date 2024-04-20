@@ -3,16 +3,20 @@ import { Dimensions, TextInput as OriginalText, NativeSyntheticEvent, Platform, 
 import { Course } from "../../../types/server/class/Course"
 import { TextInput, useTheme } from "react-native-paper"
 import { CourseCardContainer } from "./CourseCardContainer"
+import { useArray } from "burgos-array"
+import { LessonsSkeletons } from "../../Creator/ManageCourse/LessonsSkeletons"
 
 interface CourseListProps {
     courses: Course[]
     scrollRef: React.RefObject<ScrollView>
+    refreshing: boolean
 }
 const screenHeight = Dimensions.get("window").height
 
-export const CourseList: React.FC<CourseListProps> = ({ courses, scrollRef }) => {
+export const CourseList: React.FC<CourseListProps> = ({ courses, scrollRef, refreshing }) => {
     const theme = useTheme()
     const searchRef = useRef<OriginalText>(null)
+    const skeletons = useArray().newArray(5)
 
     const [searchValue, setSearchValue] = useState("")
     const [courseList, setCourseList] = useState(courses)
@@ -53,6 +57,9 @@ export const CourseList: React.FC<CourseListProps> = ({ courses, scrollRef }) =>
                 right={<TextInput.Icon icon="magnify" />}
                 onFocus={onSearchFocus}
             />
+
+            {refreshing && !courses.length && skeletons.map((index) => <LessonsSkeletons key={index} />)}
+
             {courseList
                 .sort((a, b) => Number(b.published) - Number(a.published))
                 .map((item) => (

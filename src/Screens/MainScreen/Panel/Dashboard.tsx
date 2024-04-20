@@ -49,7 +49,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         >
             <FilteredCourses courses={courses} refreshing={refreshing} />
             <Text variant="titleLarge">Explorar</Text>
-            <CourseList courses={courses} scrollRef={scrollRef} />
+            <CourseList courses={courses} scrollRef={scrollRef} refreshing={refreshing} />
         </ScrollView>
     )
 }

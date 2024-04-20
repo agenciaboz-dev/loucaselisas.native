@@ -41,7 +41,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     > = ({ route }) => {
         switch (route.key) {
             case "lessons":
-                return <LessonsList lessons={lessons} />
+                return <LessonsList lessons={lessons} quantity={course?.lessons || 0} refreshing={loadingLessons} />
             case "downloaded":
                 return <DownloadedList />
             default:
@@ -92,7 +92,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     return course ? (
         <ScrollView
             style={{ flex: 1 }}
-            contentContainerStyle={{ padding: 20, flex: 1 }}
+            contentContainerStyle={{ padding: 20, paddingBottom: 0 }}
             refreshControl={<RefreshControl refreshing={loadingLessons} onRefresh={refreshCourse} />}
         >
             <ScreenTitle title={course.name} />
@@ -100,7 +100,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
             <ExtendableText minLines={3} text={course.description} />
 
             <TabView
-                style={{ marginTop: 15, marginHorizontal: -20 }}
+                style={{ marginTop: 15, marginHorizontal: -20, height: course.lessons * 140 || 90 }}
                 navigationState={{ index: tabIndex, routes: tabStates }}
                 onIndexChange={setTabIndex}
                 renderScene={renderScene}

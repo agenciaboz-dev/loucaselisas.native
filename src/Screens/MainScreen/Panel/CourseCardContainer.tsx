@@ -15,11 +15,11 @@ export const CourseCardContainer: React.FC<CourseCardContainerProps> = ({ course
     const theme = useTheme()
 
     return (
-        <Surface style={{ flex: 1, padding: 5, borderRadius: 15 }}>
+        <Surface style={{ flex: 1, borderRadius: 15 }}>
             <TouchableRipple
                 borderless
                 style={{ flexDirection: "row", borderRadius: 15, padding: 5, gap: 5 }}
-                // onPress={() => navigation.navigate("creator:lesson", { lesson })}
+                onPress={() => navigation.navigate("course:profile", { course })}
             >
                 <>
                     <Image

@@ -25,7 +25,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         setRefreshing(true)
         try {
             const response = await api.get("/course/user", { params: { user_id: user.id } })
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            // TODO: ACTIVATE ON BUILD
+            // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             setCourses(response.data)
         } catch (error) {
             console.log(error)

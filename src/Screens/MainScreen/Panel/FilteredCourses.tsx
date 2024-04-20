@@ -13,24 +13,29 @@ interface FilteredCoursesProps {
 
 export const FilteredCourses: React.FC<FilteredCoursesProps> = ({ courses, refreshing }) => {
     const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses)
+    const [active, setActive] = useState("popular")
 
     const onFilterCourses = (filtered_courses: Course[]) => {
-        console.log(filtered_courses)
+        console.log("PRIMEIRO DA LISTA")
+        console.log(JSON.stringify(filtered_courses[0], null, 4))
+        console.log("PRIMEIRO DA LISTA")
         // TODO: ACTIVATE ON BUILD
-        // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         setFilteredCourses(filtered_courses)
     }
 
     useEffect(() => {
-        setFilteredCourses(courses)
+        const current_filter = active
+        setActive("")
+        setTimeout(() => setActive(current_filter), 100)
     }, [courses])
 
     return (
         <>
-            <Filters onFilter={onFilterCourses} courses={courses} />
+            <Filters onFilter={onFilterCourses} courses={courses} active={active} setActive={setActive} />
             <FlatList
-                data={filteredCourses.sort((a, b) => Number(b.published) - Number(a.published))}
-                renderItem={({ item }) => <CourseContainer course={item} route="" />}
+                data={filteredCourses}
+                renderItem={({ item }) => <CourseContainer course={item} route="course:profile" />}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id}

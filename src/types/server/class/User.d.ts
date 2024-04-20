@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { Socket } from "socket.io";
 import { LoginForm } from "../types/shared/login";
-import { Course } from "./Course";
 import { PaymentCard, PaymentCardForm } from "./PaymentCard";
 import { FileUpload, WithoutFunctions } from "./helpers";
 import { Creator, CreatorForm, Student } from "./index";
@@ -45,7 +44,18 @@ export declare const user_include: {
                             user: true;
                         };
                     };
-                    favorited_by: true;
+                    favorited_by: {
+                        select: {
+                            id: true;
+                        };
+                    };
+                    roles: {
+                        include: {
+                            admin_permissions: true;
+                            general_permissions: true;
+                            profile_permissions: true;
+                        };
+                    };
                     _count: {
                         select: {
                             lessons: true;
@@ -58,7 +68,11 @@ export declare const user_include: {
             };
         };
     };
-    favorite_courses: true;
+    favorite_courses: {
+        select: {
+            id: true;
+        };
+    };
     favorite_creators: true;
     payment_cards: true;
     role: {
@@ -113,7 +127,9 @@ export declare class User {
     google_id: string | null;
     google_token: string | null;
     favorite_creators: string[];
-    favorite_courses: Course[];
+    favorite_courses: {
+        id: string;
+    }[];
     payment_cards: PaymentCard[];
     creator: Creator | null;
     student: Student | null;

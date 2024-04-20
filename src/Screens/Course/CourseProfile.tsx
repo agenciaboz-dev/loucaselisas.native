@@ -4,7 +4,7 @@ import { LayoutAnimation, RefreshControl, ScrollView, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { Course } from "../../types/server/class/Course"
 import { CourseGallery } from "../../components/CourseGallery"
-import { useTheme } from "react-native-paper"
+import { IconButton, useTheme } from "react-native-paper"
 import { ExtendableText } from "../../components/ExtendableText"
 import { api } from "../../backend/api"
 import { Lesson } from "../../types/server/class/Course/Lesson"
@@ -12,6 +12,7 @@ import { SceneMap, SceneRendererProps, TabBar, TabView } from "react-native-tab-
 import { LessonsList } from "./LessonsList"
 import { DownloadedList } from "./DownloadedList"
 import { useUser } from "../../hooks/useUser"
+import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
 
 interface CourseProfileProps {
     navigation: NavigationProp<any, any>
@@ -23,9 +24,12 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     const { user } = useUser()
 
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
+    const is_favorited = course?.favorited_by.find((item) => item.id == user?.id)
 
     const [lessons, setLessons] = useState<Lesson[]>([])
     const [loadingLessons, setLoadingLessons] = useState(true)
+    const [favoriting, setFavoriting] = useState(false)
+    const [showMenu, setShowMenu] = useState(false)
 
     const [tabIndex, setTabIndex] = useState(0)
     const [tabStates] = useState([
@@ -79,6 +83,19 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
         }, timeout)
     }
 
+    const onFavoritePress = async () => {
+        if (!user || !course) return
+        setFavoriting(true)
+        try {
+            const response = await api.post("/course/favorite", { user_id: user.id, course_id: course.id, like: !is_favorited })
+            setCourse(response.data)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setFavoriting(false)
+        }
+    }
+
     useEffect(() => {
         setTimeout(() => {
             // LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
@@ -100,7 +117,27 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
             contentContainerStyle={{ padding: 20, paddingBottom: 0 }}
             refreshControl={<RefreshControl refreshing={loadingLessons} onRefresh={refreshCourse} />}
         >
-            <ScreenTitle title={course.name} />
+            <ScreenTitle
+                title={course.name}
+                right={
+                    <View style={{ flexDirection: "row", gap: -5 }}>
+                        <IconButton
+                            icon={is_favorited ? "heart" : "heart-outline"}
+                            style={{ margin: 0 }}
+                            loading={favoriting}
+                            onPress={onFavoritePress}
+                            iconColor={is_favorited && theme.colors.error}
+                        />
+                        <IconButton icon={"comment-text-outline"} style={{ margin: 0 }} />
+                        <OptionsMenu
+                            options={[{ label: "Editar curso", onPress: () => null }]}
+                            Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
+                            onDismiss={() => setShowMenu(false)}
+                            visible={showMenu}
+                        />
+                    </View>
+                }
+            />
             <CourseGallery course={course} />
             <ExtendableText minLines={3} text={course.description} />
 

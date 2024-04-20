@@ -6,6 +6,7 @@ import { Chat } from "./Chat/Chat";
 import { LessonForm } from "./Course/Lesson";
 import { FileUpload, WithoutFunctions } from "./helpers";
 import { Socket } from "socket.io";
+import { Role } from "./Role";
 export declare const course_include: {
     categories: true;
     chat: {
@@ -33,7 +34,18 @@ export declare const course_include: {
             user: true;
         };
     };
-    favorited_by: true;
+    favorited_by: {
+        select: {
+            id: true;
+        };
+    };
+    roles: {
+        include: {
+            admin_permissions: true;
+            general_permissions: true;
+            profile_permissions: true;
+        };
+    };
     _count: {
         select: {
             lessons: true;
@@ -59,7 +71,7 @@ export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by
         id: string;
     }[];
 };
-export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views"> & {
+export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles"> & {
     lessons: LessonForm[];
     cover?: CoverForm;
     gallery: GalleryForm;
@@ -88,7 +100,11 @@ export declare class Course {
     categories: Category[];
     creators: Partial<Creator>[];
     chat: Chat | null;
-    favorited_by: number;
+    roles: Role[];
+    favorited_by: {
+        id: string;
+    }[];
+    likes: number;
     lessons: number;
     students: number;
     views: number;
@@ -98,4 +114,6 @@ export declare class Course {
     load(data: CoursePrisma): void;
     updateCover(cover: CoverForm): Promise<void>;
     update(data: PartialCourse): Promise<void>;
+    viewer(user_id: string): Promise<void>;
+    favorite(user_id: string): Promise<void>;
 }

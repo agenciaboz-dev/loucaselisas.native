@@ -32,7 +32,7 @@ export const MiniStatistics: React.FC<MiniStatisticsProps> = ({ course }) => {
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 10 }}>
                 <Data icon="eye-outline" title="Visualizações" value={course.views} />
                 <Data icon="account-outline" title="Alunos" value={course.students} />
-                <Data icon="heart-outline" title="Favoritados" value={course.favorited_by} />
+                <Data icon="heart-outline" title="Favoritados" value={course.likes} />
             </View>
         </Surface>
     )

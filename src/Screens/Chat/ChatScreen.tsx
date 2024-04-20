@@ -60,6 +60,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
         socket.current.on("chat:join", (data: Message[]) => {
             console.log("joined chat!")
             setMessages(data)
+            setRefreshing(false)
         })
 
         socket.current.on("chat:message", (message: Message) => {
@@ -105,7 +106,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
     }, [messages])
 
     return chat && course ? (
-        <View style={{ flex: 1, padding: 20, paddingBottom: 10 }}>
+        <View style={{ flex: 1, padding: 20, paddingBottom: 10, paddingTop: 10 }}>
             <ScreenTitle title={`Grupo - ${course.name}`} />
 
             <FlatList
@@ -121,6 +122,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                     flexDirection: "column-reverse",
                 }}
                 inverted
+                refreshing={refreshing}
             />
 
             <TextInput

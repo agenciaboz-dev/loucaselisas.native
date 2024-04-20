@@ -11,6 +11,7 @@ import { Lesson } from "../../types/server/class/Course/Lesson"
 import { SceneMap, SceneRendererProps, TabBar, TabView } from "react-native-tab-view"
 import { LessonsList } from "./LessonsList"
 import { DownloadedList } from "./DownloadedList"
+import { useUser } from "../../hooks/useUser"
 
 interface CourseProfileProps {
     navigation: NavigationProp<any, any>
@@ -19,6 +20,7 @@ interface CourseProfileProps {
 
 export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route }) => {
     const theme = useTheme()
+    const { user } = useUser()
 
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
 
@@ -50,9 +52,10 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     }
 
     const refreshCourse = async () => {
+        if (!user || !course) return
         setLoadingLessons(true)
         try {
-            const response = await api.get("/course", { params: { course_id: course?.id } })
+            const response = await api.get("/course", { params: { course_id: course.id, user_id: user.id } })
             setCourse(response.data)
         } catch (error) {
             console.log(error)
@@ -60,9 +63,11 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     }
 
     const refreshLessons = async (timeout = 1000) => {
+        if (!course) return
+
         setTimeout(async () => {
             try {
-                const response = await api.get("/lesson", { params: { course_id: course?.id } })
+                const response = await api.get("/lesson", { params: { course_id: course.id } })
                 // TODO: ACTIVATE ON BUILD
                 // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
                 setLessons(response.data)

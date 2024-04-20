@@ -4,7 +4,6 @@ import { Lesson } from "../../types/server/class/Course/Lesson"
 import { IconButton, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { NavigationProp, useNavigation } from "@react-navigation/native"
 import { Image } from "expo-image"
-import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
 import { useUser } from "../../hooks/useUser"
 
 interface LessonContainerProps {

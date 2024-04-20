@@ -1,6 +1,4 @@
 import React from "react"
-import Svg, { G, Path } from "react-native-svg"
-import { colors } from "../style/colors"
 import { Image } from "expo-image"
 
 interface LogoProps {

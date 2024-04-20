@@ -11,7 +11,11 @@ export declare const student_include: {
                             media: true;
                         };
                     };
-                    messages: true;
+                    _count: {
+                        select: {
+                            messages: true;
+                        };
+                    };
                 };
             };
             creators: {

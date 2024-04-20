@@ -1,5 +1,4 @@
 import React from "react"
-import { Icon, Surface, Text } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
 import { BottomTabs } from "../../components/BottomTabs"
 import { View } from "react-native"

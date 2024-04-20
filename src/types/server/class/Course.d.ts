@@ -16,7 +16,11 @@ export declare const course_include: {
                     media: true;
                 };
             };
-            messages: true;
+            _count: {
+                select: {
+                    messages: true;
+                };
+            };
         };
     };
     creators: {
@@ -71,7 +75,7 @@ export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by
         id: string;
     }[];
 };
-export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles"> & {
+export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles" | "likes"> & {
     lessons: LessonForm[];
     cover?: CoverForm;
     gallery: GalleryForm;
@@ -115,5 +119,5 @@ export declare class Course {
     updateCover(cover: CoverForm): Promise<void>;
     update(data: PartialCourse): Promise<void>;
     viewer(user_id: string): Promise<void>;
-    favorite(user_id: string): Promise<void>;
+    favorite(user_id: string, like?: boolean): Promise<void>;
 }

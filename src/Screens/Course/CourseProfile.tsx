@@ -1,18 +1,19 @@
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useState } from "react"
-import { LayoutAnimation, RefreshControl, ScrollView, View } from "react-native"
+import { RefreshControl, ScrollView, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { Course } from "../../types/server/class/Course"
 import { CourseGallery } from "../../components/CourseGallery"
-import { IconButton, useTheme } from "react-native-paper"
+import { IconButton, Menu, Text, useTheme } from "react-native-paper"
 import { ExtendableText } from "../../components/ExtendableText"
 import { api } from "../../backend/api"
 import { Lesson } from "../../types/server/class/Course/Lesson"
-import { SceneMap, SceneRendererProps, TabBar, TabView } from "react-native-tab-view"
+import { SceneRendererProps, TabBar, TabView } from "react-native-tab-view"
 import { LessonsList } from "./LessonsList"
 import { DownloadedList } from "./DownloadedList"
 import { useUser } from "../../hooks/useUser"
 import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
+import { TrianguloMiseravel } from "../../components/TrianguloMiseravel"
 
 interface CourseProfileProps {
     navigation: NavigationProp<any, any>
@@ -24,12 +25,13 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     const { user } = useUser()
 
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
-    const is_favorited = course?.favorited_by.find((item) => item.id == user?.id)
+    const is_favorited = course?.favorited_by?.find((item) => item.id == user?.id)
 
     const [lessons, setLessons] = useState<Lesson[]>([])
     const [loadingLessons, setLoadingLessons] = useState(true)
     const [favoriting, setFavoriting] = useState(false)
     const [showMenu, setShowMenu] = useState(false)
+    const [showChatDenied, setShowChatDenied] = useState(false)
 
     const [tabIndex, setTabIndex] = useState(0)
     const [tabStates] = useState([
@@ -96,6 +98,16 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
         }
     }
 
+    const onChatPress = async () => {
+        if (!is_favorited) {
+            setShowChatDenied(true)
+            setTimeout(() => setShowChatDenied(false), 3000)
+            return
+        }
+
+        navigation.navigate("course:chat", { course })
+    }
+
     useEffect(() => {
         setTimeout(() => {
             // LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
@@ -128,7 +140,19 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
                             onPress={onFavoritePress}
                             iconColor={is_favorited && theme.colors.error}
                         />
-                        <IconButton icon={"comment-text-outline"} style={{ margin: 0 }} />
+                        <Menu
+                            visible={showChatDenied}
+                            onDismiss={() => setShowChatDenied(false)}
+                            anchorPosition={"bottom"}
+                            anchor={<IconButton icon={"comment-text-outline"} style={{ margin: 0 }} onPress={onChatPress} />}
+                            contentStyle={[{ borderRadius: 15 }]}
+                        >
+                            <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} />
+                            <View style={{ paddingHorizontal: 15 }}>
+                                <Text variant="bodyLarge">Favorite o curso para acessar o chat</Text>
+                            </View>
+                        </Menu>
+
                         <OptionsMenu
                             options={[{ label: "Editar curso", onPress: () => null }]}
                             Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}

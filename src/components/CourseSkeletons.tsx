@@ -1,7 +1,7 @@
 import { useArray } from "burgos-array"
 import React from "react"
 import { View } from "react-native"
-import { useTheme } from "react-native-paper"
+import { Surface, useTheme } from "react-native-paper"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 
 interface CourseSkeletonsProps {
@@ -14,11 +14,13 @@ export const CourseSkeletons: React.FC<CourseSkeletonsProps> = ({ quantity = 3 }
 
     return (
         <SkeletonPlaceholder borderRadius={15} backgroundColor={theme.colors.backdrop}>
-            <SkeletonPlaceholder.Item flexDirection="row" gap={10}>
-                {array.map((index) => (
-                    <SkeletonPlaceholder.Item key={index} width={175} height={175} />
-                ))}
-            </SkeletonPlaceholder.Item>
+            <Surface style={{ borderRadius: 15 }}>
+                <SkeletonPlaceholder.Item flexDirection="row" gap={10}>
+                    {array.map((index) => (
+                        <SkeletonPlaceholder.Item key={index} width={175} height={175} />
+                    ))}
+                </SkeletonPlaceholder.Item>
+            </Surface>
         </SkeletonPlaceholder>
     )
 }

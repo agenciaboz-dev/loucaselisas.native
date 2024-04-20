@@ -5,6 +5,7 @@ import { Category } from "../../../../types/server/class/Category"
 import { useFocusEffect } from "@react-navigation/native"
 import { api } from "../../../../backend/api"
 import { Course } from "../../../../types/server/class/Course"
+import { FilterSkeleton } from "./FilterSkeleton"
 
 interface FiltersProps {
     onFilter: (courses: Course[]) => void
@@ -80,6 +81,7 @@ export const Filters: React.FC<FiltersProps> = ({ onFilter, courses }) => {
                     {item.name}
                 </FilterButton>
             )}
+            ListEmptyComponent={<FilterSkeleton quantity={5} />}
         />
     )
 }

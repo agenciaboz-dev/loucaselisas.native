@@ -112,15 +112,25 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                         <ScreenTitle
                             title={course.name}
                             right={
-                                <OptionsMenu
-                                    options={[
-                                        { label: "Editar curso", onPress: () => onMenuItemPress("creator:course:form") },
-                                        { label: "Deletar", onPress: onDelete },
-                                    ]}
-                                    Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
-                                    onDismiss={() => setShowMenu(false)}
-                                    visible={showMenu}
-                                />
+                                <View style={{ flexDirection: "row", gap: -10 }}>
+                                    <IconButton
+                                        icon={"comment-text-outline"}
+                                        style={{ margin: 0 }}
+                                        onPress={() => onMenuItemPress("creator:course:chat")}
+                                    />
+                                    <OptionsMenu
+                                        options={[
+                                            { label: "Editar curso", onPress: () => onMenuItemPress("creator:course:form") },
+                                            { label: "Chat", onPress: () => onMenuItemPress("creator:course:chat") },
+                                            { label: "Deletar", onPress: onDelete },
+                                        ]}
+                                        Anchor={
+                                            <IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />
+                                        }
+                                        onDismiss={() => setShowMenu(false)}
+                                        visible={showMenu}
+                                    />
+                                </View>
                             }
                         />
                         <CourseGallery course={course} />

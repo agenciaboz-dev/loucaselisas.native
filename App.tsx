@@ -9,9 +9,9 @@ import { useCallback } from "react"
 
 SplashScreen.preventAutoHideAsync()
 
-if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true)
-}
+// if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+//     UIManager.setLayoutAnimationEnabledExperimental(true)
+// }
 
 export default function App() {
     useKeepAwake()

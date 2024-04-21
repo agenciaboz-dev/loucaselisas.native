@@ -11,6 +11,7 @@ import { PlanHistory } from "./PlanHistory/PlanHistory"
 import { SavedCards } from "./SavedCards/SavedCards"
 import { CardForm } from "./SavedCards/CardForm"
 import { Profile } from "../../Profile/Profile"
+import { Profile as EditProfile } from "./Profile"
 
 interface SetupProps {
     navigation: NavigationProp<any, any>
@@ -24,6 +25,7 @@ export const Setup: React.FC<SetupProps> = ({ navigation }) => {
             <Stack.Screen name="setup:menus" component={Menus} />
             <Stack.Screen name="setup:account" component={Account} />
             <Stack.Screen name="setup:profile" component={Profile} />
+            <Stack.Screen name="setup:profile:edit" component={EditProfile} />
             <Stack.Screen name="setup:delete" component={Delete} />
             <Stack.Screen name="setup:plan" component={ManagePlan} />
             <Stack.Screen name="setup:plan:details" component={ContractDetails} />

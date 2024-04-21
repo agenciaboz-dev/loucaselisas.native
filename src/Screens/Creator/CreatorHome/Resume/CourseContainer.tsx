@@ -21,7 +21,6 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course, route 
     const onThumbError = async (error: string) => {
         if (error == "Downloaded image decode failed") {
             try {
-                //TODO: need to build
                 const { uri } = await VideoThumbnails.getThumbnailAsync(course.cover, { time: 0 })
                 setCoverSource(uri)
             } catch (error) {

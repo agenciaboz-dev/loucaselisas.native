@@ -118,7 +118,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                     mode="outlined"
                     value={filterCourseName}
                     onChangeText={handleSearchCourse}
-                    style={{ backgroundColor: theme.colors.surfaceDisabled }}
+                    style={{ backgroundColor: theme.colors.surfaceDisabled, marginTop: 15 }}
                     outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
                     left={<TextInput.Icon icon={"menu"} />}
                     right={<TextInput.Icon icon="magnify" />}

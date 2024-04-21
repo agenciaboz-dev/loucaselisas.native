@@ -166,7 +166,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
             <ExtendableText minLines={3} text={course.description} />
 
             <TabView
-                style={{ marginTop: 15, marginHorizontal: -20, height: course.lessons * 140 || 90 }}
+                style={{ marginTop: 15, marginHorizontal: -20, height: course.lessons * 200 || 90 }}
                 navigationState={{ index: tabIndex, routes: tabStates }}
                 onIndexChange={setTabIndex}
                 renderScene={renderScene}

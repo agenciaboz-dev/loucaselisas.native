@@ -15,6 +15,17 @@ interface CreatorStackProps {
     navigation: NavigationProp<any, any>
 }
 
+export type CreatorStackList = {
+    "creator:home": undefined
+    "creator:course:form": undefined
+    "creator:course:manage": undefined
+    "creator:course:delete": undefined
+    "creator:course:chat": undefined
+    "creator:lesson:form": undefined
+    "creator:lesson:delete": undefined
+    "creator:lesson": undefined
+}
+
 const Stack = createNativeStackNavigator()
 
 export const CreatorStack: React.FC<CreatorStackProps> = ({ navigation }) => {

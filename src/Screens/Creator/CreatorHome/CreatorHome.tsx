@@ -7,9 +7,10 @@ import { CommentsTab } from "./CommentsTab/CommentsTab"
 import { Statistics } from "./Statistics/Statistics"
 import { colors } from "../../../style/colors"
 import { View } from "react-native"
+import { CreatorStackList } from "../CreatorStack"
 
 interface CreatorHomeProps {
-    navigation: NavigationProp<any, any>
+    navigation: NavigationProp<CreatorStackList, "creator:home">
 }
 
 const renderScene = SceneMap({ resume: Resume, comments: CommentsTab, statistics: Statistics })

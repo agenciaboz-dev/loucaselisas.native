@@ -9,9 +9,10 @@ import { Login } from "./Login"
 import { ResizeMode, Video } from "expo-av"
 import { setStatusBarStyle } from "expo-status-bar"
 import * as SplashScreen from "expo-splash-screen"
+import { HomeStackParams } from "../../Routes"
 
 interface HomeProps {
-    navigation: NavigationProp<any, any>
+    navigation: NavigationProp<HomeStackParams, "home">
 }
 
 export const Home: React.FC<HomeProps> = ({ navigation }) => {

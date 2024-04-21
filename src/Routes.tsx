@@ -8,9 +8,15 @@ import { default_navigator_options } from "./tools/default_navigator_options"
 
 interface RoutesProps {}
 
-export const Routes: React.FC<RoutesProps> = ({}) => {
-    const Stack = createNativeStackNavigator()
+export type HomeStackParams = {
+    home: undefined
+    signup: undefined
+    mainscreen: undefined
+}
 
+const Stack = createNativeStackNavigator<HomeStackParams>()
+
+export const Routes: React.FC<RoutesProps> = ({}) => {
     return (
         <Stack.Navigator screenOptions={{ ...default_navigator_options, headerTitle: () => <Header />, headerShown: true }}>
             <Stack.Screen name="home" component={Home} options={{ headerShown: false }} />

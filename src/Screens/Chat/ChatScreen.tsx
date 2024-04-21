@@ -63,7 +63,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             setTimeout(() => {
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
                 setRefreshing(false)
-            }, 1000)
+            }, 2000)
         })
 
         socket.current.on("chat:message", (message: Message) => {

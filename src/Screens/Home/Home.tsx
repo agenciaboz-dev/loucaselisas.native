@@ -65,7 +65,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                 isLooping
                 onLoad={onVideoLoad}
             />
-            <Logo invert />
+            <Logo />
             {!form && (
                 <Surface style={{ gap: 10, backgroundColor: "transparent", alignItems: "center" }}>
                     <Button onPress={onLoginPress} icon={"account-outline"}>

@@ -28,7 +28,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
     const [text, setText] = useState("")
 
     const onSubmitText = () => {
-        if (!chat || !socket.current || !user) return
+        if (!chat || !socket.current || !user || !text) return
         console.log(text)
 
         const data: MessageForm = {

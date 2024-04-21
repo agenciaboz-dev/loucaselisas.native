@@ -23,7 +23,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
 
     return user ? (
         <View
-            style={[{ alignItems: "flex-end", alignSelf: "flex-start" }, you && { alignSelf: "flex-end" }, same_message_above && { marginTop: -12 }]}
+            style={[{ alignSelf: "flex-start" }, you && { alignSelf: "flex-end", alignItems: "flex-end" }, same_message_above && { marginTop: -12 }]}
         >
             {!same_message_above && (
                 <Text variant="bodySmall" style={{ paddingHorizontal: 5 }}>

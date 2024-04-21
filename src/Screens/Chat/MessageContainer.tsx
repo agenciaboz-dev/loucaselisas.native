@@ -1,15 +1,18 @@
 import React from "react"
 import { View } from "react-native"
 import { Message } from "../../types/server/class/Chat/Message"
-import { Surface, Text, useTheme } from "react-native-paper"
+import { Icon, Surface, Text, useTheme } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
+import { Logo } from "../../components/Logo"
+import { Creator } from "../../types/server/class"
 
 interface MessageContainerProps {
     message: Message
     list: Message[]
+    creators: Partial<Creator>[]
 }
 
-export const MessageContainer: React.FC<MessageContainerProps> = ({ message, list }) => {
+export const MessageContainer: React.FC<MessageContainerProps> = ({ message, list, creators }) => {
     const { user } = useUser()
     const you = message.user_id == user?.id
     const theme = useTheme()
@@ -21,14 +24,19 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
     const same_message_above = !(!previous_message || previous_message.user_id != message.user_id)
     const same_message_bellow = !(!next_message || next_message.user_id != message.user_id)
 
+    console.log(creators)
+
     return user ? (
         <View
             style={[{ alignSelf: "flex-start" }, you && { alignSelf: "flex-end", alignItems: "flex-end" }, same_message_above && { marginTop: -12 }]}
         >
             {!same_message_above && (
-                <Text variant="bodySmall" style={{ paddingHorizontal: 5 }}>
-                    {you ? "Você" : message.user?.name}
-                </Text>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 0 }}>
+                    {!!creators.find((item) => item.user_id == message.user_id) && <Logo size={20} tintColor={"black"} />}
+                    <Text variant="bodySmall" style={{ paddingHorizontal: 5 }}>
+                        {you ? "Você" : message.user?.name}
+                    </Text>
+                </View>
             )}
             <Surface
                 style={[

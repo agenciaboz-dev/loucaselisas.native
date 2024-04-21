@@ -112,7 +112,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             <FlatList
                 ref={scrollRef}
                 data={messages.sort((a, b) => Number(a.datetime) - Number(b.datetime))}
-                renderItem={({ item }) => <MessageContainer message={item} list={messages} />}
+                renderItem={({ item }) => <MessageContainer message={item} list={messages} creators={[course.owner, ...course.creators]} />}
                 style={{ marginHorizontal: -20 }}
                 contentContainerStyle={{
                     // flex: 1,

@@ -60,7 +60,10 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
         socket.current.on("chat:join", (data: Message[]) => {
             console.log("joined chat!")
             setMessages(data)
-            setRefreshing(false)
+            setTimeout(() => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+                setRefreshing(false)
+            }, 1000)
         })
 
         socket.current.on("chat:message", (message: Message) => {
@@ -99,9 +102,9 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
     )
 
     useEffect(() => {
-        if (!!messages.length) {
+        if (!!messages.length && !refreshing) {
             console.log("should scroll")
-            setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 1000)
+            setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 2000)
         }
     }, [messages])
 
@@ -112,7 +115,9 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             <FlatList
                 ref={scrollRef}
                 data={messages.sort((a, b) => Number(a.datetime) - Number(b.datetime))}
-                renderItem={({ item }) => <MessageContainer message={item} list={messages} creators={[course.owner, ...course.creators]} />}
+                renderItem={({ item }) => (
+                    <MessageContainer message={item} list={messages} creators={[course.owner, ...course.creators]} refreshing={refreshing} />
+                )}
                 style={{ marginHorizontal: -20 }}
                 contentContainerStyle={{
                     // flex: 1,
@@ -123,6 +128,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                 }}
                 inverted
                 refreshing={refreshing}
+                initialScrollIndex={0}
             />
 
             <TextInput

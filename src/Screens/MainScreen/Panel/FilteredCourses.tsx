@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { FlatList, LayoutAnimation, View } from "react-native"
 import { Course } from "../../../types/server/class/Course"
 import { CourseContainer } from "../../Creator/CreatorHome/Resume/CourseContainer"
@@ -12,6 +12,7 @@ interface FilteredCoursesProps {
 }
 
 export const FilteredCourses: React.FC<FilteredCoursesProps> = ({ courses, refreshing }) => {
+    const scrollRef = useRef<FlatList>(null)
     const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses)
     const [active, setActive] = useState("popular")
 
@@ -20,8 +21,11 @@ export const FilteredCourses: React.FC<FilteredCoursesProps> = ({ courses, refre
         console.log(JSON.stringify(filtered_courses[0], null, 4))
         console.log("PRIMEIRO DA LISTA")
         // TODO: ACTIVATE ON BUILD
-        // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-        setFilteredCourses(filtered_courses)
+        setFilteredCourses([])
+        setTimeout(() => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setFilteredCourses(filtered_courses)
+        }, 200)
     }
 
     useEffect(() => {
@@ -30,10 +34,15 @@ export const FilteredCourses: React.FC<FilteredCoursesProps> = ({ courses, refre
         setTimeout(() => setActive(current_filter), 100)
     }, [courses])
 
+    useEffect(() => {
+        scrollRef.current?.scrollToOffset({ offset: 0 })
+    }, [filteredCourses])
+
     return (
         <>
             <Filters onFilter={onFilterCourses} courses={courses} active={active} setActive={setActive} />
             <FlatList
+                ref={scrollRef}
                 data={filteredCourses}
                 renderItem={({ item }) => <CourseContainer course={item} route="course:profile" />}
                 horizontal

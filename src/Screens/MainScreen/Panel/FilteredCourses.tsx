@@ -20,7 +20,7 @@ export const FilteredCourses: React.FC<FilteredCoursesProps> = ({ courses, refre
         console.log(JSON.stringify(filtered_courses[0], null, 4))
         console.log("PRIMEIRO DA LISTA")
         // TODO: ACTIVATE ON BUILD
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         setFilteredCourses(filtered_courses)
     }
 

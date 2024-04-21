@@ -7,12 +7,6 @@ interface LogoProps {
     tintColor?: ColorValue
 }
 
-export const Logo: React.FC<LogoProps> = ({ size, tintColor = "white" }) => {
-    const default_size = 200
-    return (
-        <Image
-            source={require("../../assets/logo.webp")}
-            style={{ width: size || default_size, height: size || default_size, tintColor: tintColor }}
-        />
-    )
+export const Logo: React.FC<LogoProps> = ({ size = 200, tintColor = "white" }) => {
+    return <Image source={require("../../assets/logo.webp")} style={{ width: size, height: size, tintColor: tintColor }} />
 }

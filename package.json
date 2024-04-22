@@ -36,6 +36,7 @@
         "expo-video-thumbnails": "^7.9.0",
         "formik": "^2.4.5",
         "lodash": "^4.17.21",
+        "numeral": "^2.0.6",
         "react": "18.2.0",
         "react-native": "0.73.6",
         "react-native-controlled-mentions": "^2.2.5",
@@ -63,6 +64,7 @@
     "devDependencies": {
         "@babel/core": "^7.20.0",
         "@types/lodash": "^4.17.0",
+        "@types/numeral": "^2.0.5",
         "@types/react": "~18.2.45",
         "typescript": "^5.1.3"
     },

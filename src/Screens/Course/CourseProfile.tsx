@@ -49,7 +49,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     > = ({ route }) => {
         switch (route.key) {
             case "lessons":
-                return <LessonsList lessons={lessons} quantity={course?.lessons || 0} refreshing={loadingLessons} />
+                return <LessonsList lessons={lessons} refreshing={loadingLessons} course={course} />
             case "downloaded":
                 return <DownloadedList />
             default:
@@ -70,10 +70,11 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
 
     const refreshLessons = async (timeout = 1000) => {
         if (!course) return
+        console.log("getting lessons")
 
         setTimeout(async () => {
             try {
-                const response = await api.get("/lesson", { params: { course_id: course.id } })
+                const response = await api.get("/lesson/course", { params: { course_id: course.id } })
                 // TODO: ACTIVATE ON BUILD
                 // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
                 setLessons(response.data)
@@ -154,7 +155,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
                         </Menu>
 
                         <OptionsMenu
-                            options={[{ label: "Editar curso", onPress: () => null }]}
+                            options={[{ label: "Compartilhar", onPress: () => null }]}
                             Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
                             onDismiss={() => setShowMenu(false)}
                             visible={showMenu}

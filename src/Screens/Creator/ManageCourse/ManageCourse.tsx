@@ -50,7 +50,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
         setLoadingLessons(true)
         setTimeout(async () => {
             try {
-                const response = await api.get("/lesson", { params: { course_id: course?.id } })
+                const response = await api.get("/lesson/course", { params: { course_id: course?.id } })
                 // TODO: ACTIVATE ON BUILD
                 // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
                 setLessons(response.data)

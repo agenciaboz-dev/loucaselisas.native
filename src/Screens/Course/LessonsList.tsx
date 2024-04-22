@@ -5,26 +5,28 @@ import { Text } from "react-native-paper"
 import { LessonContainer } from "./LessonContainer"
 import { useArray } from "burgos-array"
 import { LessonsSkeletons } from "../Creator/ManageCourse/LessonsSkeletons"
+import { Course } from "../../types/server/class/Course"
 
 interface LessonsListProps {
     lessons: Lesson[]
-    quantity: number
     refreshing: boolean
+    course?: Course
 }
 
-export const LessonsList: React.FC<LessonsListProps> = ({ lessons, quantity, refreshing }) => {
+export const LessonsList: React.FC<LessonsListProps> = ({ lessons, course, refreshing }) => {
+    const quantity = course?.lessons || 0
     const skeletons = useArray().newArray(quantity)
 
-    return (
+    return course ? (
         <View style={{ gap: 10, padding: 20, paddingBottom: 0 }}>
             {refreshing && !!quantity && !lessons.length && skeletons.map((index) => <LessonsSkeletons key={index} />)}
             {quantity ? (
                 lessons
                     .sort((a, b) => Number(b.published) - Number(a.published))
-                    .map((item, index) => <LessonContainer key={item.id} lesson={item} index={lessons.length - index} />)
+                    .map((item, index) => <LessonContainer key={item.id} lesson={item} index={lessons.length - index} course={course} />)
             ) : (
                 <Text>Esse curso ainda não possui nenhuma lição.</Text>
             )}
         </View>
-    )
+    ) : null
 }

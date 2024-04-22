@@ -9,6 +9,7 @@ import { StatisticsSkeletons } from "./StatisticSkeletons"
 import { useFocusEffect } from "@react-navigation/native"
 import { MaterialTopTabNavigationOptions, createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
 import { StatsCourseList } from "./StatsCourseList"
+import { StatsLessonList } from "./StatsLessonList"
 
 interface StatisticsProps {}
 
@@ -64,7 +65,7 @@ export const Statistics: React.FC<StatisticsProps> = ({}) => {
                 />
                 <Tab.Screen
                     name="stats:lessons"
-                    component={StatsCourseList}
+                    component={StatsLessonList}
                     options={{ ...tab_options, title: "Lições" }}
                     initialParams={{ creator }}
                 />

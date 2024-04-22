@@ -1,6 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { FileUpload, WithoutFunctions } from "./helpers";
+import { Course } from "./Course";
 import { Socket } from "socket.io";
+import { Lesson } from "./Course/Lesson";
 export declare const creator_include: {
     categories: true;
     favorited_by: true;
@@ -45,6 +47,8 @@ export declare class Creator {
     load(data: CreatorPrisma): void;
     update(data: Partial<Creator>): Promise<this | undefined>;
     updateImage(data: CreatorImageForm, socket?: Socket): Promise<void>;
+    getCourses(): Promise<Course[]>;
+    getLessons(): Promise<Lesson[]>;
     getStatistics(): Promise<{
         views: number;
         likes: number;

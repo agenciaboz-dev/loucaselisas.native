@@ -11,8 +11,8 @@ interface StatDataProps {
 export const StatData: React.FC<StatDataProps> = ({ icon, value }) => {
     return (
         <View style={{ alignItems: "center", gap: -5 }}>
-            <Text variant="headlineSmall">{numeral(value).format("0.[00]a").toUpperCase()}</Text>
-            <Icon size={30} source={icon} />
+            <Text variant="titleLarge">{numeral(value).format("0.[00]a").toUpperCase()}</Text>
+            <Icon size={25} source={icon} />
         </View>
     )
 }

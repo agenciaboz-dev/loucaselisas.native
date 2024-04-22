@@ -3,7 +3,7 @@ import { Category } from "./Category";
 import { Prisma } from "@prisma/client";
 import { Gallery, GalleryForm } from "./Gallery/Gallery";
 import { Chat } from "./Chat/Chat";
-import { LessonForm } from "./Course/Lesson";
+import { Lesson, LessonForm } from "./Course/Lesson";
 import { FileUpload, WithoutFunctions } from "./helpers";
 import { Socket } from "socket.io";
 import { Role } from "./Role";
@@ -121,5 +121,6 @@ export declare class Course {
     update(data: PartialCourse): Promise<void>;
     viewer(user_id: string): Promise<void>;
     favorite(user_id: string, like?: boolean): Promise<void>;
+    getLessons(): Promise<Lesson[]>;
     getLastMessage(): Promise<Message | undefined>;
 }

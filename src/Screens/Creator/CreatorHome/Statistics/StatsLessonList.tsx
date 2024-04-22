@@ -1,29 +1,28 @@
+import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useState } from "react"
 import { FlatList, LayoutAnimation, View } from "react-native"
-import { Course } from "../../../../types/server/class/Course"
-import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
-import { Text } from "react-native-paper"
-import { api } from "../../../../backend/api"
 import { Creator } from "../../../../types/server/class"
+import { Lesson } from "../../../../types/server/class/Course/Lesson"
+import { api } from "../../../../backend/api"
 import { StatsCardContainer } from "./StatsCardContainer"
 
-interface StatsCourseListProps {
+interface StatsLessonListProps {
     navigation: NavigationProp<any, any>
     route: RouteProp<any, any>
 }
 
-export const StatsCourseList: React.FC<StatsCourseListProps> = ({ navigation, route }) => {
+export const StatsLessonList: React.FC<StatsLessonListProps> = ({ navigation, route }) => {
     const creator = route.params?.creator as Creator | undefined
 
-    const [courses, setCourses] = useState<Course[]>([])
+    const [lessons, setLessons] = useState<Lesson[]>([])
     const [refreshing, setRefreshing] = useState(true)
 
     const refresh = async () => {
         setRefreshing(true)
         try {
-            const response = await api.get("/course/owner", { params: { owner_id: creator?.id } })
+            const response = await api.get("/creator/lessons", { params: { creator_id: creator?.id } })
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-            setCourses(response.data)
+            setLessons(response.data)
         } catch (error) {
             console.log(error)
         } finally {
@@ -39,15 +38,15 @@ export const StatsCourseList: React.FC<StatsCourseListProps> = ({ navigation, ro
 
     return (
         <FlatList
-            data={courses.sort((a, b) => Number(b.published) - Number(a.published))}
+            data={lessons.sort((a, b) => Number(b.published) - Number(a.published))}
             renderItem={({ item }) => (
                 <StatsCardContainer
                     name={item.name}
-                    image={item.cover}
+                    image={item.thumb || ""}
                     likes={item.likes}
                     views={item.views}
-                    messages={item.chat?.messages}
-                    alt_text={`${item.lessons} lições`}
+                    downloads={item.downloads}
+                    alt_text={item.course.name}
                 />
             )}
             keyExtractor={(item) => item.id}

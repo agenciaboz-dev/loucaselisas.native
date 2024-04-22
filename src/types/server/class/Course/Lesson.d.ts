@@ -4,6 +4,7 @@ import { FileUpload, WithoutFunctions } from "../helpers";
 export declare const lesson_include: {
     media: true;
     likes: true;
+    course: true;
     _count: {
         select: {
             downloads: true;
@@ -34,6 +35,7 @@ export declare class Lesson {
     likes: number;
     downloads: number;
     course_id: string;
+    course: any;
     favorited_by: {
         id: string;
     }[];

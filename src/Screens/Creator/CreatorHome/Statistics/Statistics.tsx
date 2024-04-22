@@ -7,8 +7,12 @@ import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import { useTheme } from "react-native-paper"
 import { StatisticsSkeletons } from "./StatisticSkeletons"
 import { useFocusEffect } from "@react-navigation/native"
+import { MaterialTopTabNavigationOptions, createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
+import { StatsCourseList } from "./StatsCourseList"
 
 interface StatisticsProps {}
+
+const Tab = createMaterialTopTabNavigator()
 
 export const Statistics: React.FC<StatisticsProps> = ({}) => {
     const theme = useTheme()
@@ -16,6 +20,11 @@ export const Statistics: React.FC<StatisticsProps> = ({}) => {
     const creator = user?.creator
 
     const [statistics, setStatistics] = useState<{ views: number; downloads: number; likes: number; messages: number }>()
+
+    const tab_options: MaterialTopTabNavigationOptions = {
+        tabBarLabelStyle: { textTransform: "none" },
+        tabBarContentContainerStyle: { backgroundColor: theme.colors.background },
+    }
 
     const refresh = async () => {
         try {
@@ -42,6 +51,24 @@ export const Statistics: React.FC<StatisticsProps> = ({}) => {
                 <StatContainer value={statistics?.likes} title="Favoritados" skeleton={!statistics} />
                 <StatContainer value={statistics?.messages} title="Comentários" skeleton={!statistics} />
             </View>
+
+            <Tab.Navigator
+                style={{ marginHorizontal: -20, marginBottom: -20, shadowOpacity: 0, elevation: 0 }}
+                sceneContainerStyle={{ padding: 20, paddingBottom: 0 }}
+            >
+                <Tab.Screen
+                    name="stats:courses"
+                    component={StatsCourseList}
+                    options={{ ...tab_options, title: "Cursos" }}
+                    initialParams={{ creator }}
+                />
+                <Tab.Screen
+                    name="stats:lessons"
+                    component={StatsCourseList}
+                    options={{ ...tab_options, title: "Lições" }}
+                    initialParams={{ creator }}
+                />
+            </Tab.Navigator>
         </View>
     )
 }

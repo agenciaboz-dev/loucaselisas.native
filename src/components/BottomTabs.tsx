@@ -22,7 +22,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
     return user ? (
         <Tab.Navigator
             theme={paper_theme}
-            initialRouteName={!!user.creator ? "creator" : "panel"}
+            initialRouteName={"panel"}
             activeColor={colors.primary}
             inactiveColor={colors.primary}
             activeIndicatorStyle={{ backgroundColor: colors.primary }}

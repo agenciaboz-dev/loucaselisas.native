@@ -20,6 +20,8 @@ export const Panel: React.FC<PanelProps> = ({ navigation }) => {
             <PanelStack.Screen name="course:profile" component={CourseProfile} />
             <PanelStack.Screen name="course:chat" component={ChatScreen} />
             <PanelStack.Screen name="lesson:main" component={LessonScreen} />
+            <PanelStack.Screen name="chat" component={ChatScreen} />
+            <PanelStack.Screen name="lesson" component={LessonScreen} />
         </PanelStack.Navigator>
     )
 }

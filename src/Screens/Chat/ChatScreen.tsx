@@ -109,7 +109,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
     }, [messages])
 
     return chat && course ? (
-        <View style={{ flex: 1, padding: 20, paddingBottom: 10, paddingTop: 10 }}>
+        <View style={{ flex: 1, padding: 20, paddingBottom: 0, paddingTop: 10, position: "relative" }}>
             <ScreenTitle title={`Grupo - ${course.name}`} />
 
             <FlatList
@@ -123,7 +123,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                     // flex: 1,
                     gap: 20,
                     paddingHorizontal: 20,
-                    paddingTop: 20,
+                    paddingTop: 80,
                     flexDirection: "column-reverse",
                 }}
                 inverted
@@ -136,7 +136,13 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                 value={text}
                 onChangeText={setText}
                 mode="outlined"
-                style={{ backgroundColor: theme.colors.surfaceDisabled }}
+                style={{
+                    backgroundColor: theme.colors.elevation.level2,
+                    position: "absolute",
+                    bottom: 10,
+                    width: "100%",
+                    alignSelf: "center",
+                }}
                 outlineStyle={{ borderRadius: 10, borderWidth: 0 }}
                 left={<TextInput.Icon icon={"image-plus"} />}
                 right={<TextInput.Icon icon="chevron-right" onPress={onSubmitText} />}

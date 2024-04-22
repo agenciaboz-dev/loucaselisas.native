@@ -22,7 +22,7 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
     const theme = useTheme()
     const image_width = Dimensions.get("screen").width * 0.9
     const max_image_height = (image_width / 16) * 9
-    const media_style: ImageStyle = { width: image_width, borderRadius: 15 }
+    const media_style: ImageStyle = { width: image_width, borderRadius: 15, aspectRatio: lesson.media.width / lesson.media.height }
 
     const [extendedDescription, setExtendedDescription] = useState(false)
     const [showMenu, setShowMenu] = useState(false)
@@ -71,10 +71,11 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
             ) : (
                 <Video
                     source={{ uri: lesson.media.url }}
-                    style={[media_style, { width: "100%", aspectRatio: lesson.media.width / lesson.media.height }]}
+                    style={[media_style]}
                     useNativeControls
                     shouldPlay
                     resizeMode={ResizeMode.CONTAIN}
+                    onError={(error) => console.log(error)}
                 />
             )}
             <Text numberOfLines={!extendedDescription ? 2 : undefined}>{lesson.info}</Text>

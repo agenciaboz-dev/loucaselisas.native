@@ -1,10 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import { View } from "react-native"
 import { Lesson } from "../../types/server/class/Course/Lesson"
 import { IconButton, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { NavigationProp, useNavigation } from "@react-navigation/native"
 import { Image } from "expo-image"
 import { useUser } from "../../hooks/useUser"
+import { api } from "../../backend/api"
 
 interface LessonContainerProps {
     lesson: Lesson
@@ -16,6 +17,29 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index 
 
     const navigation = useNavigation<NavigationProp<any, any>>()
     const theme = useTheme()
+
+    const [liking, setLiking] = useState(false)
+    const [liked, setliked] = useState(!!lesson?.favorited_by.find((item) => item.id == user?.id))
+
+    const onLikePress = async () => {
+        if (!user) return
+        setLiking(true)
+
+        try {
+            const data: { user_id: string; lesson_id: string; like?: boolean } = {
+                lesson_id: lesson.id,
+                user_id: user.id,
+                like: !liked,
+            }
+            const response = await api.post("/lesson/favorite", data)
+            const updated_lesson = response.data as Lesson
+            setliked(!!updated_lesson.favorited_by.find((item) => item.id == user.id))
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLiking(false)
+        }
+    }
 
     return user ? (
         <Surface style={[{ backgroundColor: theme.colors.background, borderRadius: 15, opacity: lesson.active ? 1 : 0.5 }]}>
@@ -35,7 +59,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index 
                         <Text numberOfLines={2}>{lesson.info}</Text>
                     </View>
                     <View style={{ marginLeft: "auto", alignSelf: "center" }}>
-                        <IconButton icon={"heart-outline"} />
+                        <IconButton loading={liking} icon={liked ? "heart" : "heart-outline"} onPress={onLikePress} />
                         {/* <OptionsMenu  /> */}
                     </View>
                 </>

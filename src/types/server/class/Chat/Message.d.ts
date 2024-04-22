@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { Socket } from "socket.io";
 import { WithoutFunctions } from "../helpers";
 export declare const message_include: {
-    user: true;
+    user: boolean;
 };
 export type MessagePrisma = Prisma.MessageGetPayload<{
     include: {

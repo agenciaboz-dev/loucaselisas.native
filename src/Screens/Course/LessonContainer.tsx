@@ -11,10 +11,11 @@ import { Course } from "../../types/server/class/Course"
 interface LessonContainerProps {
     lesson: Lesson
     index: number
-    course: Course
+    course?: Course
+    liked_variant?: boolean
 }
 
-export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index, course }) => {
+export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index, course, liked_variant }) => {
     const { user } = useUser()
 
     const navigation = useNavigation<NavigationProp<any, any>>()
@@ -43,6 +44,10 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
         }
     }
 
+    const onChatPress = () => {
+        navigation.navigate("chat", { course })
+    }
+
     useEffect(() => {
         setliked(!!lesson?.favorited_by.find((item) => item.id == user?.id))
     }, [lesson])
@@ -52,20 +57,31 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
             <TouchableRipple
                 borderless
                 style={{ flexDirection: "row", borderRadius: 15, padding: 5, gap: 5 }}
-                onPress={() => navigation.navigate("lesson:main", { lesson, course })}
+                onPress={() => navigation.navigate("lesson", { lesson, course })}
                 disabled={!lesson.active}
             >
                 <>
                     <Image source={lesson.thumb} contentFit="cover" style={{ width: 100, aspectRatio: "1/1", borderRadius: 15 }} />
                     <View style={{ padding: 5, gap: 2, paddingRight: 140 }}>
-                        <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceDisabled }}>
-                            Lição {index}
-                        </Text>
+                        {!liked_variant && (
+                            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceDisabled }}>
+                                Lição {index}
+                            </Text>
+                        )}
                         <Text variant="bodyLarge">{lesson.name}</Text>
                         <Text numberOfLines={2}>{lesson.info}</Text>
+                        {liked_variant && (
+                            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceDisabled, marginTop: "auto" }}>
+                                {course?.name}
+                            </Text>
+                        )}
                     </View>
                     <View style={{ marginLeft: "auto", alignSelf: "center" }}>
-                        <IconButton loading={liking} icon={liked ? "heart" : "heart-outline"} onPress={onLikePress} />
+                        {liked_variant ? (
+                            <IconButton icon={"comment-text-outline"} onPress={onChatPress} />
+                        ) : (
+                            <IconButton loading={liking} icon={liked ? "heart" : "heart-outline"} onPress={onLikePress} />
+                        )}
                         {/* <OptionsMenu  /> */}
                     </View>
                 </>

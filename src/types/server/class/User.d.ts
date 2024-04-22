@@ -91,6 +91,11 @@ export declare const user_include: {
             plan_data: true;
         };
     };
+    _count: {
+        select: {
+            lessons_likes: true;
+        };
+    };
 };
 export type UserPrisma = Prisma.UserGetPayload<{
     include: typeof user_include;
@@ -100,7 +105,7 @@ export interface UserImageForm {
     image?: FileUpload | null;
     cover?: FileUpload | null;
 }
-export type UserForm = Omit<WithoutFunctions<User>, "id" | "plan" | "plan_history" | "admin" | "favorite_creators" | "favorite_courses" | "payment_cards" | "creator" | "student" | "role" | "cover" | "image" | "payment_cards"> & {
+export type UserForm = Omit<WithoutFunctions<User>, "id" | "plan" | "plan_history" | "admin" | "favorite_creators" | "favorite_courses" | "payment_cards" | "creator" | "student" | "role" | "cover" | "image" | "payment_cards" | "liked_lessons"> & {
     image: FileUpload | null;
     cover: FileUpload | null;
     student: boolean;
@@ -139,6 +144,7 @@ export declare class User {
     student: Student | null;
     plan: PlanContract | null;
     role: Role;
+    liked_lessons: number;
     constructor(id: string, user_prisma?: UserPrisma);
     init(): Promise<void>;
     static update(data: PartialUser, socket: Socket): Promise<void>;

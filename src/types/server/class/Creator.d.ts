@@ -45,4 +45,10 @@ export declare class Creator {
     load(data: CreatorPrisma): void;
     update(data: Partial<Creator>): Promise<this | undefined>;
     updateImage(data: CreatorImageForm, socket?: Socket): Promise<void>;
+    getStatistics(): Promise<{
+        views: number;
+        likes: number;
+        downloads: number;
+        messages: number;
+    }>;
 }

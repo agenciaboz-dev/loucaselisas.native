@@ -1,11 +1,13 @@
 import { Prisma } from "@prisma/client";
 import { Socket } from "socket.io";
 import { LoginForm } from "../types/shared/login";
+import { Course } from "./Course";
 import { PaymentCard, PaymentCardForm } from "./PaymentCard";
 import { FileUpload, WithoutFunctions } from "./helpers";
 import { Creator, CreatorForm, Student } from "./index";
 import { Role } from "./Role";
 import { PlanContract } from "./Plan";
+import { Lesson } from "./Course/Lesson";
 export declare const user_include: {
     creator: {
         include: {
@@ -159,4 +161,8 @@ export declare class User {
     load(data: UserPrisma): void;
     update(data: Partial<User>, socket?: Socket): Promise<string | undefined>;
     updateImage(data: UserImageForm, socket?: Socket): Promise<void>;
+    getLikedLessons(): Promise<{
+        lessons: Lesson[];
+        courses: Course[];
+    }>;
 }

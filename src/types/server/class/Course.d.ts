@@ -7,6 +7,7 @@ import { LessonForm } from "./Course/Lesson";
 import { FileUpload, WithoutFunctions } from "./helpers";
 import { Socket } from "socket.io";
 import { Role } from "./Role";
+import { Message } from "./Chat/Message";
 export declare const course_include: {
     categories: true;
     chat: {
@@ -120,4 +121,5 @@ export declare class Course {
     update(data: PartialCourse): Promise<void>;
     viewer(user_id: string): Promise<void>;
     favorite(user_id: string, like?: boolean): Promise<void>;
+    getLastMessage(): Promise<Message | undefined>;
 }

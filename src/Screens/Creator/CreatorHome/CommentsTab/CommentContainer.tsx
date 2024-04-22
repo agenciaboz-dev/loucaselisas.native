@@ -50,6 +50,7 @@ export const CommentContainer: React.FC<CommentContainerProps> = ({ course }) =>
                         style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
+                            alignItems: "center",
                         }}
                     >
                         <View style={{ gap: 5, maxWidth: 300 }}>

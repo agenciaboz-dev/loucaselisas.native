@@ -83,7 +83,7 @@ export const Favorites: React.FC<FavoritesProps> = ({ navigation }) => {
                 onRefresh={onRefresh}
                 ListEmptyComponent={!refreshing && !lessons.length ? <Text variant="bodyLarge">Nenhuma lição favoritada</Text> : null}
                 style={{ margin: -20 }}
-                contentContainerStyle={{ padding: 20 }}
+                contentContainerStyle={{ padding: 20, gap: 15 }}
             />
         </View>
     ) : null

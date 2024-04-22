@@ -1,11 +1,11 @@
 import React from "react"
 import { View } from "react-native"
 import { Message } from "../../types/server/class/Chat/Message"
-import { Icon, Surface, Text, useTheme } from "react-native-paper"
+import { Surface, Text, useTheme } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
-import { Logo } from "../../components/Logo"
 import { Creator } from "../../types/server/class"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
+import { Image } from "expo-image"
 
 interface MessageContainerProps {
     message: Message
@@ -37,8 +37,10 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
                 ]}
             >
                 {!same_message_above && (
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: 0 }}>
-                        {!!creators.find((item) => item.user_id == message.user_id) && <Logo size={20} tintColor={"black"} />}
+                    <View style={{ flexDirection: "row", alignItems: "flex-end", gap: 0, marginBottom: 5 }}>
+                        {!!creators.find((item) => item.user_id == message.user_id) && (
+                            <Image source={require("../../../assets/logo_without_text.svg")} style={{ width: 20, height: 20 }} tintColor={"black"} />
+                        )}
                         <Text variant="bodySmall" style={{ paddingHorizontal: 5 }}>
                             {you ? "Você" : message.user?.name}
                         </Text>

@@ -15,9 +15,11 @@ export const ScreenTitle: React.FC<ScreenTitleProps> = ({ title, hideBackArrow, 
     return (
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 10 }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                <Surface elevation={2} style={{ borderRadius: 100 }}>
-                    <IconButton icon={"chevron-left"} onPress={() => navigation.goBack()} style={{ margin: 0 }} />
-                </Surface>
+                {!hideBackArrow && (
+                    <Surface elevation={2} style={{ borderRadius: 100 }}>
+                        <IconButton icon={"chevron-left"} onPress={() => navigation.goBack()} style={{ margin: 0 }} />
+                    </Surface>
+                )}
                 <Text variant="titleLarge" style={{ alignSelf: "center" }}>
                     {title}
                 </Text>

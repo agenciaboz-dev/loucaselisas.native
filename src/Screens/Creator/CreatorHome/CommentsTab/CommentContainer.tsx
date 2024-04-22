@@ -8,6 +8,7 @@ import { Message } from "../../../../types/server/class/Chat/Message"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import { NavigationProp, useFocusEffect, useNavigation } from "@react-navigation/native"
 import { api } from "../../../../backend/api"
+import placeholders from "../../../../tools/placeholders"
 
 interface CommentContainerProps {
     course: Course
@@ -58,7 +59,12 @@ export const CommentContainer: React.FC<CommentContainerProps> = ({ course }) =>
                                 Curso
                             </Text>
                         </View>
-                        <Image source={course.cover} contentFit={"cover"} style={{ width: image_size, aspectRatio: "1/1", borderRadius: 15 }} />
+                        <Image
+                            source={course.cover}
+                            contentFit={"cover"}
+                            style={{ width: image_size, aspectRatio: "1/1", borderRadius: 15 }}
+                            placeholder={placeholders.square}
+                        />
                     </View>
 
                     <View
@@ -74,6 +80,7 @@ export const CommentContainer: React.FC<CommentContainerProps> = ({ course }) =>
                             <Image
                                 source={message.user.image}
                                 contentFit={"cover"}
+                                placeholder={placeholders.avatar}
                                 style={{ width: image_size, aspectRatio: "1/1", borderRadius: 100 }}
                             />
                             <View style={{ gap: 5, maxWidth: 250 }}>

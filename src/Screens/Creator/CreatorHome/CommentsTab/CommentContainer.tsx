@@ -86,6 +86,9 @@ export const CommentContainer: React.FC<CommentContainerProps> = ({ course }) =>
                             <View style={{ gap: 5, maxWidth: 250 }}>
                                 <Text variant="bodyLarge">{message.user.name}</Text>
                                 <Text numberOfLines={3}>{message.text}</Text>
+                                <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceDisabled }}>
+                                    {new Date(Number(message.datetime)).toLocaleString("pt-br")}
+                                </Text>
                             </View>
                         </View>
                     ) : (

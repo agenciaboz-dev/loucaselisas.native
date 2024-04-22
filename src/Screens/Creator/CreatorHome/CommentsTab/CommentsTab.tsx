@@ -62,27 +62,27 @@ export const CommentsTab: React.FC<CommentsTabProps> = ({}) => {
     )
 
     return (
-        <View style={{ flex: 1, padding: 20, gap: 10 }}>
-            <TextInput
-                placeholder={"Pesquisar Cursos"}
-                mode="outlined"
-                value={filterCourseName}
-                onChangeText={handleSearchCourse}
-                style={{ backgroundColor: theme.colors.surfaceDisabled, marginTop: 15 }}
-                outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
-                left={<TextInput.Icon icon={"menu"} />}
-                right={<TextInput.Icon icon="magnify" />}
-                onFocus={() => setTimeout(() => Platform.OS == "android" && scrollRef.current?.scrollToOffset({ offset: 0 }), 500)}
-            />
-
+        <View style={{ flex: 1, padding: 20, gap: 10, paddingTop: 0, position: "relative" }}>
             <FlatList
                 data={ownedCourses.filter((item) => !!item.chat?.messages)}
                 renderItem={({ item }) => <CommentContainer course={item} />}
                 keyExtractor={(item) => item.id}
                 refreshing={refreshing}
                 onRefresh={refreshCourses}
-                style={{ margin: -20, marginTop: -10 }}
-                contentContainerStyle={{ padding: 20, gap: 15 }}
+                style={{ margin: -20 }}
+                contentContainerStyle={{ padding: 20, gap: 15, paddingTop: 100 }}
+            />
+
+            <TextInput
+                placeholder={"Pesquisar Cursos"}
+                mode="outlined"
+                value={filterCourseName}
+                onChangeText={handleSearchCourse}
+                style={{ backgroundColor: theme.colors.elevation.level3, position: "absolute", top: 10, width: "100%", alignSelf: "center" }}
+                outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
+                left={<TextInput.Icon icon={"menu"} />}
+                right={<TextInput.Icon icon="magnify" />}
+                onFocus={() => setTimeout(() => Platform.OS == "android" && scrollRef.current?.scrollToOffset({ offset: 0 }), 500)}
             />
         </View>
     )

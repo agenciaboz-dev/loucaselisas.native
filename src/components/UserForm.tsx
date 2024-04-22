@@ -193,6 +193,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                                     { label: "Ele/dele", value: "him" },
                                     { label: "Ela/dela", value: "her" },
                                 ]}
+                                placeholder=""
                                 labelField="label"
                                 onChange={(item) => formik.setFieldValue("pronoun", item.value)}
                                 valueField="value"
@@ -233,6 +234,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                         label="Estado"
                         Component={
                             <Dropdown
+                                placeholder=""
                                 ref={dropdown_refs[9]}
                                 data={estados.reverse()}
                                 labelField="label"

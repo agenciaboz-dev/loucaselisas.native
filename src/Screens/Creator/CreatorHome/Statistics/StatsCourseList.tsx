@@ -47,6 +47,7 @@ export const StatsCourseList: React.FC<StatsCourseListProps> = ({ navigation, ro
                     likes={item.likes}
                     views={item.views}
                     messages={item.chat?.messages}
+                    onPress={() => navigation.navigate("creator:course:manage", { course: item })}
                     alt_text={`${item.lessons} lições`}
                 />
             )}

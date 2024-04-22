@@ -13,13 +13,14 @@ interface StatsCardContainerProps {
     messages?: number
     downloads?: number
     alt_text?: string
+    onPress: () => void
 }
 
 export const StatsCardContainer: React.FC<StatsCardContainerProps> = (props) => {
     const theme = useTheme()
     return (
         <Surface style={{ borderRadius: 15 }}>
-            <TouchableRipple borderless style={{ borderRadius: 15, padding: 10, flexDirection: "row", gap: 10 }}>
+            <TouchableRipple borderless style={{ borderRadius: 15, padding: 10, flexDirection: "row", gap: 10 }} onPress={props.onPress}>
                 <>
                     <Image source={props.image} style={{ width: 75, aspectRatio: "1/1", borderRadius: 15 }} contentFit="cover" />
                     <View style={{ flex: 1, paddingHorizontal: 10 }}>

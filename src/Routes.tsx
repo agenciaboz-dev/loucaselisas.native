@@ -25,5 +25,5 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
             <Stack.Screen name="signup" component={Signup} options={{ headerShown: false }} />
             <Stack.Screen name="mainscreen" component={MainScreen} options={{}} />
         </Stack.Navigator>
-    )
+    ) 
 }

@@ -29,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 paddingRight: 30,
             }}
         >
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 10, }}>
                 <Pressable onPress={() => navigation.navigate("setup")}>
                     <Image
                         source={user.image}

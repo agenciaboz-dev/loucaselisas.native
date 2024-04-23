@@ -1,6 +1,14 @@
 import { RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { FlatList, LayoutAnimation, NativeSyntheticEvent, TextInputSubmitEditingEventData, View } from "react-native"
+import {
+    FlatList,
+    Keyboard,
+    LayoutAnimation,
+    NativeSyntheticEvent,
+    Platform,
+    TextInputSubmitEditingEventData,
+    View,
+} from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { Chat } from "../../types/server/class/Chat/Chat"
 import { Course } from "../../types/server/class/Course"
@@ -108,6 +116,25 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
         }
     }, [messages])
 
+    const [keyboardOpen, setKeyboardOpen] = useState(false)
+    const iosKeyboard = Platform.OS == "ios" && keyboardOpen
+
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setKeyboardOpen(true)
+        })
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setKeyboardOpen(false)
+        })
+
+        return () => {
+            showSubscription.remove()
+            hideSubscription.remove()
+        }
+    }, [])
+
     return chat && course ? (
         <View style={{ flex: 1, padding: 20, paddingBottom: 0, paddingTop: 10, position: "relative" }}>
             <ScreenTitle title={`Grupo - ${course.name}`} />
@@ -116,14 +143,19 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                 ref={scrollRef}
                 data={messages.sort((a, b) => Number(a.datetime) - Number(b.datetime))}
                 renderItem={({ item }) => (
-                    <MessageContainer message={item} list={messages} creators={[course.owner, ...course.creators]} refreshing={refreshing} />
+                    <MessageContainer
+                        message={item}
+                        list={messages}
+                        creators={[course.owner, ...course.creators]}
+                        refreshing={refreshing}
+                    />
                 )}
                 style={{ marginHorizontal: -20 }}
                 contentContainerStyle={{
                     // flex: 1,
                     gap: 20,
                     paddingHorizontal: 20,
-                    paddingTop: 80,
+                    paddingTop: iosKeyboard ? 270 : 80,
                     flexDirection: "column-reverse",
                 }}
                 inverted
@@ -139,7 +171,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                 style={{
                     backgroundColor: theme.colors.elevation.level2,
                     position: "absolute",
-                    bottom: 10,
+                    bottom: iosKeyboard ? 200 : 10,
                     width: "100%",
                     alignSelf: "center",
                 }}

@@ -45,8 +45,8 @@ export const CategoryScreen: React.FC<CategoryScreenProps> = ({ navigation, rout
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
         >
             <ScreenTitle title={category.name} />
-            <CategoryCourseList title={`Populares`} courses={courses.sort((a, b) => b.views - a.views).slice(0, 10)} loading={refreshing} />
-            <CategoryCourseList title={`Favoritos`} courses={courses.sort((a, b) => b.likes - a.likes).slice(0, 10)} loading={refreshing} />
+            <CategoryCourseList title={`Populares`} courses={[...courses].sort((a, b) => b.views - a.views).slice(0, 10)} loading={refreshing} />
+            <CategoryCourseList title={`Favoritos`} courses={[...courses].sort((a, b) => b.likes - a.likes).slice(0, 10)} loading={refreshing} />
             <CategoryCourseList
                 title={`Gratuitos`}
                 courses={courses

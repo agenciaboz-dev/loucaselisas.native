@@ -19,7 +19,8 @@ export const CategoryCourseList: React.FC<CategoryCourseListProps> = ({ courses,
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 data={courses}
-                renderItem={({ item }) => <CourseContainer course={item} route={"course:profile"} />}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => <CourseContainer course={item} route={"search:course:profile"} />}
                 style={{ margin: -20 }}
                 contentContainerStyle={{ gap: 10, padding: 20 }}
                 ListEmptyComponent={loading ? <CourseSkeletons /> : <Text>Nenhum curso encontrado</Text>}

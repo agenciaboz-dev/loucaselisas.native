@@ -18,6 +18,12 @@ export const Search: React.FC<SearchProps> = ({ navigation }) => {
     const [categories, setCategories] = useState<Category[]>([])
     const [refreshing, setRefreshing] = useState(true)
 
+    const searchCourses = async () => {
+        if (searchText) {
+            navigation.navigate("search:courses", { text: searchText })
+        }
+    }
+
     const refresh = async () => {
         setRefreshing(true)
         try {
@@ -47,7 +53,8 @@ export const Search: React.FC<SearchProps> = ({ navigation }) => {
                 style={{ backgroundColor: theme.colors.surfaceDisabled, marginTop: 10 }}
                 outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
                 left={<TextInput.Icon icon={"menu"} />}
-                right={<TextInput.Icon icon="magnify" />}
+                right={<TextInput.Icon icon="magnify" onPress={searchCourses} />}
+                onSubmitEditing={searchCourses}
             />
 
             <FlatList

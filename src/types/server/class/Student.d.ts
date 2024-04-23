@@ -45,6 +45,15 @@ export declare const student_include: {
                     profile_permissions: true;
                 };
             };
+            lessons: {
+                include: {
+                    _count: {
+                        select: {
+                            downloads: true;
+                        };
+                    };
+                };
+            };
             _count: {
                 select: {
                     lessons: true;

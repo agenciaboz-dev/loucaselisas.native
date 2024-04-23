@@ -62,6 +62,15 @@ export declare const user_include: {
                             profile_permissions: true;
                         };
                     };
+                    lessons: {
+                        include: {
+                            _count: {
+                                select: {
+                                    downloads: true;
+                                };
+                            };
+                        };
+                    };
                     _count: {
                         select: {
                             lessons: true;

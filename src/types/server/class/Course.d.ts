@@ -51,6 +51,15 @@ export declare const course_include: {
             profile_permissions: true;
         };
     };
+    lessons: {
+        include: {
+            _count: {
+                select: {
+                    downloads: true;
+                };
+            };
+        };
+    };
     _count: {
         select: {
             lessons: true;
@@ -68,7 +77,7 @@ export type CoverForm = {
     type: "image" | "video";
     url?: string;
 };
-export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by" | "cover" | "cover_type" | "owner" | "gallery" | "creators" | "chat" | "published" | "lessons" | "students" | "views">> & {
+export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by" | "cover" | "cover_type" | "owner" | "gallery" | "creators" | "chat" | "published" | "lessons" | "students" | "views" | "">> & {
     id: string;
     cover?: CoverForm;
     gallery: GalleryForm;
@@ -76,7 +85,7 @@ export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by
         id: string;
     }[];
 };
-export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles" | "likes"> & {
+export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles" | "likes" | "downloads"> & {
     lessons: LessonForm[];
     cover?: CoverForm;
     gallery: GalleryForm;
@@ -113,6 +122,7 @@ export declare class Course {
     lessons: number;
     students: number;
     views: number;
+    downloads: number;
     constructor(id: string, data?: CoursePrisma);
     static new(data: CourseForm, socket?: Socket): Promise<Course | undefined>;
     init(): Promise<void>;

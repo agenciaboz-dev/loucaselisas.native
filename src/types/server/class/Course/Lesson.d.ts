@@ -16,7 +16,7 @@ export declare const lesson_include: {
 export type LessonPrisma = Prisma.LessonGetPayload<{
     include: typeof lesson_include;
 }>;
-export type LessonForm = Omit<WithoutFunctions<Lesson>, "id" | "published" | "thumb" | "views" | "likes" | "downloads" | "active"> & {
+export type LessonForm = Omit<WithoutFunctions<Lesson>, "id" | "published" | "thumb" | "views" | "likes" | "downloads" | "active" | "course" | "favorited_by"> & {
     thumb: FileUpload;
     media: MediaForm;
 };

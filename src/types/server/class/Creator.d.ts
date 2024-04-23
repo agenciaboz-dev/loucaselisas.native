@@ -48,7 +48,7 @@ export declare class Creator {
     update(data: Partial<Creator>): Promise<this | undefined>;
     updateImage(data: CreatorImageForm, socket?: Socket): Promise<void>;
     getCourses(): Promise<Course[]>;
-    getLessons(): Promise<Lesson[]>;
+    getLessons(course_list?: Course[]): Promise<Lesson[]>;
     getStatistics(): Promise<{
         views: number;
         likes: number;

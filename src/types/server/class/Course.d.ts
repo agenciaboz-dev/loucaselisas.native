@@ -8,6 +8,7 @@ import { FileUpload, WithoutFunctions } from "./helpers";
 import { Socket } from "socket.io";
 import { Role } from "./Role";
 import { Message } from "./Chat/Message";
+import { User } from "./User";
 export declare const course_include: {
     categories: true;
     chat: {
@@ -108,7 +109,9 @@ export declare class Course {
     language: string;
     recorder: string | null;
     price: number;
-    owner: Partial<Creator>;
+    owner: Partial<Creator> & {
+        user: Partial<User>;
+    };
     owner_id: string;
     gallery: Gallery;
     categories: Category[];
@@ -124,6 +127,7 @@ export declare class Course {
     views: number;
     downloads: number;
     constructor(id: string, data?: CoursePrisma);
+    static search(text: string): Promise<Course[]>;
     static new(data: CourseForm, socket?: Socket): Promise<Course | undefined>;
     init(): Promise<void>;
     load(data: CoursePrisma): void;

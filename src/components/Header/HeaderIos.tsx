@@ -8,9 +8,9 @@ import placeholders from "../../tools/placeholders"
 import { TrianguloMiseravel } from "../TrianguloMiseravel"
 import { Image } from "expo-image"
 
-interface HeaderProps {}
+interface HeaderIosProps {}
 
-export const Header: React.FC<HeaderProps> = ({}) => {
+export const HeaderIos: React.FC<HeaderIosProps> = ({}) => {
     const theme = useTheme()
     const navigation = useNavigation<any>()
     const { user } = useUser()
@@ -22,11 +22,12 @@ export const Header: React.FC<HeaderProps> = ({}) => {
             style={{
                 // backgroundColor: theme.colors.background,
                 flexDirection: "row",
-                paddingVertical: 15,
+                paddingTop: 35,
+                paddingBottom: 15,
                 alignItems: "center",
                 justifyContent: "space-between",
                 width: "100%",
-                paddingRight: 30,
+                paddingHorizontal: 20,
             }}
         >
             <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>

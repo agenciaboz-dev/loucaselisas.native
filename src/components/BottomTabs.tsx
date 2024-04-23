@@ -1,15 +1,14 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs"
 import React from "react"
-import { Icon, Surface } from "react-native-paper"
+import { Icon } from "react-native-paper"
 import { colors } from "../style/colors"
 import { paper_theme } from "../style/theme"
 import { Panel } from "../Screens/MainScreen/Panel/PanelStack"
-import { Search } from "../Screens/MainScreen/Search/Search"
 import { Favorites } from "../Screens/MainScreen/Favorites/Favorites"
 import { Setup } from "../Screens/MainScreen/Setup/Setup"
-import { Account } from "../Screens/Account/Account"
 import { useUser } from "../hooks/useUser"
 import { CreatorStack } from "../Screens/Creator/CreatorStack"
+import { SearchStack } from "../Screens/MainScreen/Search/SearchStack"
 
 interface BottomTabsProps {}
 
@@ -44,7 +43,11 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                     options={{ tabBarLabel: "Criador", tabBarIcon: (tab) => getIcon("account", tab.focused) }}
                 />
             )}
-            <Tab.Screen name="search" component={Search} options={{ tabBarLabel: "Buscar", tabBarIcon: (tab) => getIcon("magnify", tab.focused) }} />
+            <Tab.Screen
+                name="search"
+                component={SearchStack}
+                options={{ tabBarLabel: "Buscar", tabBarIcon: (tab) => getIcon("magnify", tab.focused) }}
+            />
             <Tab.Screen
                 name="favorites"
                 component={Favorites}

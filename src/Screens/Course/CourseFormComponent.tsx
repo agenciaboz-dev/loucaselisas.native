@@ -64,7 +64,6 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
         name: Yup.string().required(validationErrors.required),
         price: Yup.string()
             .required(validationErrors.required)
-            .test("exists", validationErrors.required, (value) => !!Number(unmask(value)))
             .test("is-decimal", "Preço inválido. Permitido apenas números e até 2 casas decimais.", (value) => {
                 // Replace comma with dot to validate as a number
                 const numberValue = value.toString().replace(",", ".")

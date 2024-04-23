@@ -6,16 +6,17 @@ import { ResizeMode, Video } from "expo-av"
 import { IconButton, useTheme } from "react-native-paper"
 import { getFilename, pickMedia } from "../../tools/pickMedia"
 import * as FileSystem from "expo-file-system"
-import { MediaTypeOptions } from "expo-image-picker"
+import { ImagePickerAsset, MediaTypeOptions } from "expo-image-picker"
 import { Button } from "../../components/Button"
 
 interface LessonMediaFormProps {
     thumb?: boolean
-    media: MediaForm | null
-    setMedia: React.Dispatch<React.SetStateAction<MediaForm | null>>
+    media: ImagePickerAsset | null
+    setMedia: React.Dispatch<React.SetStateAction<ImagePickerAsset | null>>
+    previousUri?: string
 }
 
-export const LessonMediaForm: React.FC<LessonMediaFormProps> = ({ thumb, media, setMedia }) => {
+export const LessonMediaForm: React.FC<LessonMediaFormProps> = ({ thumb, media, setMedia, previousUri }) => {
     const theme = useTheme()
     const image_width = Dimensions.get("screen").width * 0.9
     const max_image_height = (image_width / 16) * 9
@@ -27,20 +28,13 @@ export const LessonMediaForm: React.FC<LessonMediaFormProps> = ({ thumb, media, 
         if (result) {
             const media = result[0]
 
-            if (!media.base64) {
-                media.base64 = await FileSystem.readAsStringAsync(media.uri, {
-                    encoding: "base64",
-                })
-            }
+            // if (!media.base64) {
+            //     media.base64 = await FileSystem.readAsStringAsync(media.uri, {
+            //         encoding: "base64",
+            //     })
+            // }
 
-            setMedia({
-                height: media.height,
-                name: getFilename(media),
-                position: 1,
-                type: media.type == "image" ? "IMAGE" : "VIDEO",
-                width: media.width,
-                base64: media.base64,
-            })
+            setMedia(media)
         }
     }
 
@@ -48,11 +42,11 @@ export const LessonMediaForm: React.FC<LessonMediaFormProps> = ({ thumb, media, 
         <View style={{ flex: 1 }}>
             {media ? (
                 <View style={{ position: "relative" }}>
-                    {media.type == "IMAGE" ? (
-                        <Image source={{ uri: media.url || "data:image/png;base64," + media.base64 }} style={media_style} contentFit="cover" />
+                    {media.type == "image" ? (
+                        <Image source={{ uri: previousUri || media.uri || "data:image/png;base64," + media.base64 }} style={media_style} contentFit="cover" />
                     ) : (
                         <Video
-                            source={{ uri: media.url || "data:video/mp4;base64," + media.base64 }}
+                            source={{ uri: previousUri || media.uri || "data:video/mp4;base64," + media.base64 }}
                             style={media_style}
                             resizeMode={ResizeMode.COVER}
                             useNativeControls

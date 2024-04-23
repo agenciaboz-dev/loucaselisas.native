@@ -13,6 +13,9 @@ import { useSnackbar } from "../../hooks/useSnackbar"
 import { LessonMediaForm } from "./LessonMediaForm"
 import * as Yup from "yup"
 import { validationErrors } from "../../tools/validationErrors"
+import { ImagePickerAsset } from "expo-image-picker"
+import { getFilename } from "../../tools/pickMedia"
+import { AxiosError } from "axios"
 
 interface LessonFormComponentProps {
     navigation: NavigationProp<any, any>
@@ -30,8 +33,8 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
 
     const { snackbar } = useSnackbar()
 
-    const [media, setMedia] = useState<MediaForm | null>(null)
-    const [thumb, setThumb] = useState<MediaForm | null>(null)
+    const [media, setMedia] = useState<ImagePickerAsset | null>(null)
+    const [thumb, setThumb] = useState<ImagePickerAsset | null>(null)
     const [loading, setLoading] = useState(false)
     const [mediaError, setMediaError] = useState("")
 
@@ -50,21 +53,33 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
             course_id: course_id || "",
         },
         async onSubmit(values, formikHelpers) {
-            if (loading || !media || !thumb) return
-            console.log(values)
-
+            if (loading) return
+            if (!lesson && (!media || !thumb)) return
             setLoading(true)
 
-            const data: LessonForm = {
+            const formData = new FormData()
+            const data: LessonForm & { id?: string } = {
                 ...values,
-                media: { ...media, id: "", url: "" },
-                thumb,
+                id: lesson ? lesson.id : undefined,
+            }
+            if (media) {
+                data.media = { ...values.media, height: media.height, width: media.width, type: media.type == "image" ? "IMAGE" : "VIDEO" }
+            }
+
+            formData.append("data", JSON.stringify(data))
+            if (media) {
+                formData.append("media", { uri: media.uri, type: media.mimeType!, name: getFilename(media) } as any)
+            }
+            if (thumb) {
+                formData.append("thumb", { uri: thumb.uri, type: thumb.mimeType!, name: getFilename(thumb) } as any)
             }
 
             try {
-                const response = lesson ? await api.patch("/lesson", { ...data, id: lesson.id }) : await api.post("/lesson", data)
-                snackbar(`lição ${lesson ? "atualizada" : "criada"} com sucesso`)
-                navigation.goBack()
+                const response = lesson
+                    ? await api.patch("/lesson", formData, { headers: { "content-type": "multipart/form-data" } })
+                    : await api.post("/lesson", formData, { headers: { "content-type": "multipart/form-data" } })
+                // snackbar(`lição ${lesson ? "atualizada" : "criada"} com sucesso`)
+                // navigation.goBack()
             } catch (error) {
                 console.log(error)
             } finally {
@@ -101,8 +116,6 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
 
     useEffect(() => {
         if (lesson) {
-            setMedia({ ...lesson.media, name: "" })
-            setThumb({ url: lesson.thumb || undefined, height: 1, name: "", position: 1, type: "IMAGE", width: 1 })
             formik.setFieldValue("name", lesson.name)
             formik.setFieldValue("info", lesson.info)
         }
@@ -121,10 +134,12 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
                 ref={mediasRef}
                 horizontal
                 data={[
-                    { media: media, setMedia: setMedia, thumb: false },
-                    { media: thumb, setMedia: setThumb, thumb: true },
+                    { media: media, setMedia: setMedia, thumb: false, previousUri: lesson?.media.url },
+                    { media: thumb, setMedia: setThumb, thumb: true, previousUri: lesson?.thumb },
                 ]}
-                renderItem={({ item }) => <LessonMediaForm media={item.media} setMedia={item.setMedia} thumb={item.thumb} />}
+                renderItem={({ item }) => (
+                    <LessonMediaForm media={item.media} setMedia={item.setMedia} thumb={item.thumb} previousUri={item.previousUri} />
+                )}
                 style={{ marginHorizontal: -20 }}
                 contentContainerStyle={{ gap: 10, height: max_image_height, paddingHorizontal: 20 }}
                 showsHorizontalScrollIndicator={false}

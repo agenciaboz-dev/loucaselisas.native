@@ -17,7 +17,7 @@ export const CategoryContainer: React.FC<CategoryContainerProps> = ({ category }
         <Surface style={{ flex: 1, borderRadius: 15 }}>
             <TouchableRipple
                 borderless
-                style={{ borderRadius: 15, padding: 10, flexDirection: "row", alignItems: "center" }}
+                style={{ borderRadius: 15, padding: 10, flexDirection: "row", alignItems: "center", paddingLeft: 0 }}
                 onPress={() => navigation.navigate("category:screen", { category })}
             >
                 <>

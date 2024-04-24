@@ -3,7 +3,7 @@
       "name": "Loucas & Lisas",
       "slug": "loucaselisasnative",
       "owner": "agenciaboz-dev",
-      "version": "1.0.103",
+      "version": "1.0.106",
       "orientation": "portrait",
       "icon": "./assets/icon.png",
       "userInterfaceStyle": "light",
@@ -33,6 +33,7 @@
       },
       "plugins": [
           ["./plugins/withDisableForcedDarkModeAndroid.js", {}],
+          ["./plugins/withAndroidLargeHeap.js", {}],
           [
               "expo-image-picker",
               {

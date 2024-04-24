@@ -1,6 +1,6 @@
 import React from "react"
 import { Dimensions, View } from "react-native"
-import { MediaForm } from "../../types/server/class/Gallery/Media"
+import { Media, MediaForm } from "../../types/server/class/Gallery/Media"
 import { Image, ImageStyle } from "expo-image"
 import { ResizeMode, Video } from "expo-av"
 import { IconButton, useTheme } from "react-native-paper"
@@ -11,7 +11,7 @@ import { Button } from "../../components/Button"
 
 interface LessonMediaFormProps {
     thumb?: boolean
-    media: ImagePickerAsset | null
+    media?: ImagePickerAsset | null | Media
     setMedia: React.Dispatch<React.SetStateAction<ImagePickerAsset | null>>
     previousUri?: string
 }
@@ -42,11 +42,15 @@ export const LessonMediaForm: React.FC<LessonMediaFormProps> = ({ thumb, media, 
         <View style={{ flex: 1 }}>
             {media ? (
                 <View style={{ position: "relative" }}>
-                    {media.type == "image" ? (
-                        <Image source={{ uri: previousUri || media.uri || "data:image/png;base64," + media.base64 }} style={media_style} contentFit="cover" />
+                    {thumb || media.type == "image" ? (
+                        <Image
+                            source={{ uri: thumb ? media.uri || media : media.url || media.uri || "data:image/png;base64," + media.base64 }}
+                            style={media_style}
+                            contentFit="cover"
+                        />
                     ) : (
                         <Video
-                            source={{ uri: previousUri || media.uri || "data:video/mp4;base64," + media.base64 }}
+                            source={{ uri: media.url || media.uri || "data:video/mp4;base64," + media.base64 }}
                             style={media_style}
                             resizeMode={ResizeMode.COVER}
                             useNativeControls

@@ -16,9 +16,9 @@ export declare const lesson_include: {
 export type LessonPrisma = Prisma.LessonGetPayload<{
     include: typeof lesson_include;
 }>;
-export type LessonForm = Omit<WithoutFunctions<Lesson>, "id" | "published" | "thumb" | "views" | "likes" | "downloads" | "active" | "course" | "favorited_by"> & {
-    thumb: FileUpload;
-    media: MediaForm;
+export type LessonForm = Omit<WithoutFunctions<Lesson>, "id" | "published" | "thumb" | "views" | "likes" | "downloads" | "active" | "course" | "favorited_by" | "media"> & {
+    thumb?: FileUpload;
+    media?: MediaForm;
 };
 export type PartialLesson = Partial<Lesson> & {
     id: string;
@@ -44,7 +44,8 @@ export declare class Lesson {
     constructor(id: string, data?: LessonPrisma);
     init(): Promise<void>;
     load(data: LessonPrisma): void;
-    updateMedia(media: MediaForm, thumb: FileUpload): Promise<void>;
+    updateMedia(media: MediaForm): Promise<void>;
+    updateThumb(thumb: FileUpload): Promise<void>;
     update(data: Partial<LessonForm>): Promise<void>;
     favorite(user_id: string, like?: boolean): Promise<void>;
 }

@@ -45,8 +45,6 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
 
     const formik = useFormik<LessonForm>({
         initialValues: {
-            media: { height: 1, id: "", name: "", position: 1, type: "VIDEO", url: "", width: 1 },
-            thumb: { name: "" },
             name: "",
             info: "",
             pdf: null,
@@ -63,7 +61,18 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
                 id: lesson ? lesson.id : undefined,
             }
             if (media) {
-                data.media = { ...values.media, height: media.height, width: media.width, type: media.type == "image" ? "IMAGE" : "VIDEO" }
+                data.media = {
+                    ...values.media,
+                    position: 1,
+                    name: getFilename(media),
+                    height: media.height,
+                    width: media.width,
+                    type: media.type == "image" ? "IMAGE" : "VIDEO",
+                }
+            }
+
+            if (thumb) {
+                data.thumb = { name: getFilename(thumb) }
             }
 
             formData.append("data", JSON.stringify(data))
@@ -78,8 +87,8 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
                 const response = lesson
                     ? await api.patch("/lesson", formData, { headers: { "content-type": "multipart/form-data" } })
                     : await api.post("/lesson", formData, { headers: { "content-type": "multipart/form-data" } })
-                // snackbar(`lição ${lesson ? "atualizada" : "criada"} com sucesso`)
-                // navigation.goBack()
+                snackbar(`lição ${lesson ? "atualizada" : "criada"} com sucesso`)
+                navigation.goBack()
             } catch (error) {
                 console.log(error)
             } finally {
@@ -101,11 +110,16 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
     const preSubmit = () => {
         formik.validateForm()
 
-        if (!thumb && !media) setMediaError("Insira uma mídia e thumbnail")
-        if (!thumb && media) setMediaError("Thumbnail é obrigatória")
-        if (thumb && !media) setMediaError("Insira uma mídia")
-
-        if (thumb && media) formik.handleSubmit()
+        if (!lesson) {
+            if (!thumb && !media) setMediaError("Insira uma mídia e thumbnail")
+            if (!thumb && media) setMediaError("Thumbnail é obrigatória")
+            if (thumb && !media) setMediaError("Insira uma mídia")
+            if (thumb && media) {
+                formik.handleSubmit()
+            }
+        } else {
+            formik.handleSubmit()
+        }
     }
 
     useEffect(() => {
@@ -128,14 +142,14 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
             style={{ flex: 1 }}
             contentContainerStyle={{ padding: 20, gap: 10 }}
         >
-            <ScreenTitle title="Nova lição" />
+            <ScreenTitle title={lesson ? "Ediar lição" : "Nova lição"} />
 
             <FlatList
                 ref={mediasRef}
                 horizontal
                 data={[
-                    { media: media, setMedia: setMedia, thumb: false, previousUri: lesson?.media.url },
-                    { media: thumb, setMedia: setThumb, thumb: true, previousUri: lesson?.thumb },
+                    { media: media || lesson?.media, setMedia: setMedia, thumb: false, previousUri: lesson?.media.url },
+                    { media: thumb || lesson?.thumb, setMedia: setThumb, thumb: true, previousUri: lesson?.thumb },
                 ]}
                 renderItem={({ item }) => (
                     <LessonMediaForm media={item.media} setMedia={item.setMedia} thumb={item.thumb} previousUri={item.previousUri} />

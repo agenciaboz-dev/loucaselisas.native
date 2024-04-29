@@ -61,7 +61,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
 
     const courseSchema = Yup.object().shape({
         description: Yup.string().required(validationErrors.required),
-        name: Yup.string().required(validationErrors.required),
+        name: Yup.string().required(validationErrors.required).max(35, "Máximo de caracteres ultrapassado."),
         price: Yup.string()
             .required(validationErrors.required)
             .test("is-decimal", "Preço inválido. Permitido apenas números e até 2 casas decimais.", (value) => {

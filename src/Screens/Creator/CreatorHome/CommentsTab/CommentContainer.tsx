@@ -2,13 +2,14 @@ import React, { useCallback, useState } from "react"
 import { View } from "react-native"
 import { Course } from "../../../../types/server/class/Course"
 import { Chat } from "../../../../types/server/class/Chat/Chat"
-import { Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
+import { IconButton, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Image } from "expo-image"
 import { Message } from "../../../../types/server/class/Chat/Message"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import { NavigationProp, useFocusEffect, useNavigation } from "@react-navigation/native"
 import { api } from "../../../../backend/api"
 import placeholders from "../../../../tools/placeholders"
+import { OptionsMenu } from "../../../../components/OptionsMenu/OptionsMenu"
 
 interface CommentContainerProps {
     course: Course
@@ -22,6 +23,7 @@ export const CommentContainer: React.FC<CommentContainerProps> = ({ course }) =>
     const chat = course.chat
 
     const [message, setMessage] = useState<Message | null>(null)
+    const [showMenu, setShowMenu] = useState(false)
 
     const getMessage = async () => {
         try {
@@ -86,13 +88,23 @@ export const CommentContainer: React.FC<CommentContainerProps> = ({ course }) =>
                                 placeholder={placeholders.avatar}
                                 style={{ width: image_size, aspectRatio: "1/1", borderRadius: 100 }}
                             />
-                            <View style={{ gap: 5, maxWidth: 250 }}>
+                            <View style={{ gap: 5, maxWidth: 210, flex: 1 }}>
                                 <Text variant="bodyLarge">{message.user.name}</Text>
                                 <Text numberOfLines={3}>{message.text}</Text>
                                 <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceDisabled }}>
                                     {new Date(Number(message.datetime)).toLocaleString("pt-br")}
                                 </Text>
                             </View>
+                            <OptionsMenu
+                                options={[
+                                    { label: "Responder", onPress: () => console.log("creator:course:form") },
+                                    { label: "Ir até o comentário", onPress: () => console.log("creator:course:chat") },
+                                    { label: "Reportar", onPress: () => console.log("report") },
+                                ]}
+                                Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
+                                onDismiss={() => setShowMenu(false)}
+                                visible={showMenu}
+                            />
                         </View>
                     ) : (
                         <SkeletonPlaceholder backgroundColor={theme.colors.backdrop}>

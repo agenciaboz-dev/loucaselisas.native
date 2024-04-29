@@ -135,7 +135,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
         const onCreatorPress = (item: Creator) => {
             onSuggestionPress({ id: item.id, name: item.nickname })
             const new_participants = [...participants]
-            new_participants.push(creator)
+            new_participants.push(item)
             setParticipants(new_participants)
         }
 
@@ -212,9 +212,18 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
     }
 
     useEffect(() => {
+        console.log({ participants })
+        const regex = /@\[[^\]]+\]\(([^)]+)\)/g
+        let ids: string[] = []
+        let match
+        while ((match = regex.exec(participantsText)) !== null) {
+            ids.push(match[1])
+        }
         // deleting from participants if deleted on textfield
         participants.forEach((item) => {
-            if (!participantsText.includes(item.nickname)) {
+            if (!ids.includes(item.id)) {
+                console.log(ids)
+                console.log(item.id)
                 setParticipants((participants) => participants.filter((creat) => creat.id != item.id))
             }
         })

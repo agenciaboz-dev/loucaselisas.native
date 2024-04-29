@@ -46,7 +46,10 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course, route 
                         onError={(ev) => onThumbError(ev.error)}
                     />
                     <View style={{ position: "absolute", padding: 10, justifyContent: "flex-end", height: "100%", gap: 5 }}>
-                        <Text style={{ backgroundColor: theme.colors.background, padding: 5, borderRadius: 5, alignSelf: "flex-start" }}>
+                        <Text
+                            style={{ backgroundColor: theme.colors.background, padding: 5, borderRadius: 5, alignSelf: "flex-start" }}
+                            numberOfLines={2}
+                        >
                             {course.name}
                         </Text>
                         <TouchableRipple
@@ -57,6 +60,7 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course, route 
                                 padding: 5,
                                 borderRadius: 5,
                                 gap: 5,
+                                alignSelf: "flex-start",
                             }}
                             // pointerEvents="none"
                             onPress={() => console.log("comments")}

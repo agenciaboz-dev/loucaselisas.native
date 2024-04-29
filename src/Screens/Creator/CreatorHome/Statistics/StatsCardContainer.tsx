@@ -25,10 +25,10 @@ export const StatsCardContainer: React.FC<StatsCardContainerProps> = (props) => 
                     <Image source={props.image} style={{ width: 75, aspectRatio: "1/1", borderRadius: 15 }} contentFit="cover" />
                     <View style={{ flex: 1, paddingHorizontal: 10 }}>
                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                            <Text variant="bodyLarge" style={{ color: theme.colors.backdrop }} numberOfLines={1}>
+                            <Text variant="bodyLarge" style={{ color: theme.colors.backdrop, maxWidth: 200 }} numberOfLines={1}>
                                 {props.name}
                             </Text>
-                            <Text style={{ color: theme.colors.backdrop }} numberOfLines={1}>
+                            <Text style={{ color: theme.colors.backdrop, maxWidth: 55 }} numberOfLines={1}>
                                 {props.alt_text}
                             </Text>
                         </View>

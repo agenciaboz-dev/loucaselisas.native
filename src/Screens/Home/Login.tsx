@@ -1,6 +1,6 @@
-import { NavigationProp } from "@react-navigation/native"
+import { NavigationProp, ThemeProvider } from "@react-navigation/native"
 import React, { useEffect, useRef, useState } from "react"
-import { Surface, Switch, Text } from "react-native-paper"
+import { Surface, Switch, Text, TouchableRipple } from "react-native-paper"
 import { TextInput } from "./TextInput"
 import { useFormik } from "formik"
 import { LoginForm } from "../../types/server/login"
@@ -26,6 +26,7 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false)
     const [keepSession, setKeepSession] = useState(false)
+    const [lastMailSent, setLastMailSent] = useState<null | number | "loading">(null)
 
     const formik = useFormik<LoginForm>({
         initialValues: {
@@ -62,6 +63,31 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
     const handleStayConnected = (value: boolean) => {
         AsyncStorage.setItem("stay_connected", JSON.stringify(value))
         setKeepSession(value)
+    }
+
+    const handleForgetPassworrd = async () => {
+        if (lastMailSent == "loading") return
+        if (!formik.values.login) {
+            snackbar("Digite seu e-mail ou nome de usuário e aperte novamente")
+            return
+        }
+        if (typeof lastMailSent == "number") {
+            const now = new Date().getTime()
+            if (now - lastMailSent <= 1000 * 60) {
+                snackbar("Aguarde um pouco antes de tentar reenviar o e-mail")
+                return
+            }
+        }
+
+        setLastMailSent("loading")
+        try {
+            const response = await api.post("/user/forgot_password", { login: formik.values.login })
+            setLastMailSent(new Date().getTime())
+            snackbar("Você receberá um e-mail com o passo a passo para redefinir sua senha, caso essa conta exista")
+        } catch (error) {
+            console.log(error)
+            setLastMailSent(null)
+        }
     }
 
     useEffect(() => {
@@ -101,6 +127,11 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
                 onSubmitEditing={() => formik.handleSubmit()}
                 readOnly={loading}
             />
+            <TouchableRipple style={{ marginTop: -5, alignSelf: "flex-start" }} onPress={handleForgetPassworrd}>
+                <Text variant="labelSmall" style={{ color: colors.secondary, textDecorationLine: "underline" }}>
+                    Esqueceu sua senha?
+                </Text>
+            </TouchableRipple>
             <Surface style={{ flexDirection: "row", backgroundColor: "transparent", alignItems: "center", justifyContent: "space-between" }}>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
                     <Switch value={keepSession} onValueChange={(value) => handleStayConnected(value)} color={colors.success} />

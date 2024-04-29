@@ -131,8 +131,8 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
     return (
         <ScrollView
             keyboardShouldPersistTaps="handled"
-            style={{ flex: 1, padding: 20 }}
-            contentContainerStyle={{ gap: 10 }}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ gap: 10, padding: 20 }}
             showsVerticalScrollIndicator={false}
         >
             <ScreenTitle title={card ? "Atualizar cartão" : "Novo cartão"} />

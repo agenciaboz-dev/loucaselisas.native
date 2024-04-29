@@ -41,7 +41,7 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
             .matches(/^\d{3}$/, "O CVC deve conter 3 dígitos."),
         owner: Yup.string()
             .required(validationErrors.required)
-            .matches(/^[a-zA-Z]+(?: [a-zA-Z]+)+$/, "Insira o nome e o sobrenome do titular.")
+            .matches(/^[^\s]+(\s+[^\s]+)+$/, "Insira o nome e o sobrenome do titular.")
             .test("two-words", "Insira pelo menos dois nomes.", (value) => {
                 return !!(value && value.trim().split(/\s+/).length >= 2)
             }),

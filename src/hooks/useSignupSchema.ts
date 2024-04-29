@@ -44,7 +44,7 @@ export const useSignupSchema = () => {
         password: Yup.string()
             .min(8, "Senha precisa ter pelo menos 8 caracteres")
             .matches(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
                 "Senha precisa conter pelo menos uma letra maiúscula, uma letra minúscula e um número ."
             )
             .required(required_message),

@@ -112,7 +112,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                         <ScreenTitle
                             title={course.name}
                             right={
-                                <View style={{ flexDirection: "row", gap: -10 }}>
+                                <View style={{ flexDirection: "row", gap: -10, }}>
                                     <IconButton
                                         icon={"comment-text-outline"}
                                         style={{ margin: 0 }}

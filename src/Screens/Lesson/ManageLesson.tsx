@@ -1,5 +1,5 @@
-import { NavigationProp, RouteProp } from "@react-navigation/native"
-import React, { useState } from "react"
+import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
+import React, { useCallback, useState } from "react"
 import { Dimensions, LayoutAnimation, ScrollView, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { Lesson, PartialLesson } from "../../types/server/class/Course/Lesson"
@@ -18,7 +18,7 @@ interface ManageLessonProps {
 }
 
 export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route }) => {
-    const lesson = route.params?.lesson as Lesson
+    const [lesson, setLesson] = useState(route.params?.lesson as Lesson)
     const theme = useTheme()
     const image_width = Dimensions.get("screen").width * 0.9
     const max_image_height = (image_width / 16) * 9
@@ -47,6 +47,21 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
             console.log(error)
         }
     }
+
+    const refresh = async () => {
+        try {
+            const response = await api.get("/lesson", { params: { lesson_id: lesson.id } })
+            setLesson(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            refresh()
+        }, [])
+    )
 
     return lesson ? (
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 10, padding: 20 }}>

@@ -11,6 +11,7 @@ import { LessonsSkeletons } from "../../Creator/ManageCourse/LessonsSkeletons"
 import { LessonContainer } from "../../Course/LessonContainer"
 import { api } from "../../../backend/api"
 import { FavoriteContainer } from "./FavoriteContainer"
+import { Button } from "../../../components/Button"
 
 interface FavoritesProps {
     navigation: NavigationProp<any, any>
@@ -76,13 +77,20 @@ export const Favorites: React.FC<FavoritesProps> = ({ navigation }) => {
 
             <FlatList
                 data={lessonList.sort((a, b) => Number(b.published) - Number(a.published))}
-                renderItem={({ item, index }) => <FavoriteContainer course={courses.find((course) => course.id == item.course_id)} lesson={item} refresh={onRefresh} />}
+                renderItem={({ item, index }) => (
+                    <FavoriteContainer course={courses.find((course) => course.id == item.course_id)} lesson={item} refresh={onRefresh} />
+                )}
                 keyExtractor={(item) => item.id}
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 ListEmptyComponent={!refreshing && !lessons.length ? <Text variant="bodyLarge">Nenhuma lição favoritada</Text> : null}
                 style={{ margin: -20 }}
                 contentContainerStyle={{ padding: 20, gap: 15 }}
+                ListFooterComponent={
+                    <Button mode="outlined" onPress={() => navigation.navigate("search")}>
+                        Adicionar conteúdo
+                    </Button>
+                }
             />
         </View>
     ) : null

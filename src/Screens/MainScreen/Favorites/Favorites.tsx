@@ -10,6 +10,7 @@ import { useUser } from "../../../hooks/useUser"
 import { LessonsSkeletons } from "../../Creator/ManageCourse/LessonsSkeletons"
 import { LessonContainer } from "../../Course/LessonContainer"
 import { api } from "../../../backend/api"
+import { FavoriteContainer } from "./FavoriteContainer"
 
 interface FavoritesProps {
     navigation: NavigationProp<any, any>
@@ -75,9 +76,7 @@ export const Favorites: React.FC<FavoritesProps> = ({ navigation }) => {
 
             <FlatList
                 data={lessonList.sort((a, b) => Number(b.published) - Number(a.published))}
-                renderItem={({ item, index }) => (
-                    <LessonContainer course={courses.find((course) => course.id == item.course_id)} index={index} lesson={item} liked_variant />
-                )}
+                renderItem={({ item, index }) => <FavoriteContainer course={courses.find((course) => course.id == item.course_id)} lesson={item} refresh={onRefresh} />}
                 keyExtractor={(item) => item.id}
                 refreshing={refreshing}
                 onRefresh={onRefresh}

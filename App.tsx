@@ -2,10 +2,10 @@ import { StatusBar } from "expo-status-bar"
 import { Providers } from "./src/Providers"
 import { Routes } from "./src/Routes"
 import { useKeepAwake } from "expo-keep-awake"
-import { AppState, Keyboard, View } from "react-native"
+import { View } from "react-native"
 import { useFonts } from "expo-font"
 import * as SplashScreen from "expo-splash-screen"
-import { useCallback, useEffect } from "react"
+import { useCallback } from "react"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -35,16 +35,6 @@ export default function App() {
     if (!fontsLoaded && !fontError) {
         return null
     }
-
-    useEffect(() => {
-        const subscription = AppState.addEventListener("change", (nextAppState) => {
-            Keyboard.dismiss()
-        })
-
-        return () => {
-            subscription.remove()
-        }
-    }, [])
 
     return (
         <View onLayout={onLayoutRootView} style={{ flex: 1 }}>

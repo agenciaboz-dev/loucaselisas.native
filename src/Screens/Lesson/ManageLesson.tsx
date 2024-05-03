@@ -11,6 +11,7 @@ import { MiniStatistics } from "./MiniStatistics"
 import { TrianguloMiseravel } from "../../components/TrianguloMiseravel"
 import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
 import { api } from "../../backend/api"
+import { formatStatus } from "../../tools/formatStatus"
 
 interface ManageLessonProps {
     navigation: NavigationProp<any, any>
@@ -97,6 +98,8 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
             <TouchableRipple onPress={extendDescription} style={{ alignSelf: "flex-end", marginTop: -10 }}>
                 <Text style={{ textDecorationLine: "underline" }}>ler {extendedDescription ? "menos" : "mais"}...</Text>
             </TouchableRipple>
+
+            <Text>Status: {formatStatus(lesson.status)}</Text>
             <MiniStatistics lesson={lesson} />
         </ScrollView>
     ) : null

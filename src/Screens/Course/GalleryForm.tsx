@@ -34,7 +34,7 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
                     updated_gallery.media.push({
                         name: filename,
                         base64: media.base64,
-                        type: "IMAGE",
+                        type: "image",
                         position,
                         width: media.width,
                         height: media.height,
@@ -46,7 +46,7 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
                     updated_gallery.media.push({
                         name: filename,
                         base64: base64video,
-                        type: "VIDEO",
+                        type: "video",
                         position,
                         width: media.width,
                         height: media.height,
@@ -87,7 +87,7 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
                     <View style={{ position: "relative" }} key={item.name}>
-                        {item.type == "IMAGE" ? (
+                        {item.type == "image" ? (
                             <Image
                                 source={{ uri: item.url || "data:image/png;base64," + item.base64 }}
                                 style={{ width: button_size, height: button_size, borderRadius: 15 }}

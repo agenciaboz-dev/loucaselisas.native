@@ -67,7 +67,7 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
                     name: getFilename(media),
                     height: media.height,
                     width: media.width,
-                    type: media.type == "image" ? "IMAGE" : "VIDEO",
+                    type: media.type == "image" ? "image" : "video",
                 }
             }
 

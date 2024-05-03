@@ -82,7 +82,7 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
                     />
                 }
             />
-            {lesson.media.type == "IMAGE" ? (
+            {lesson.media.type == "image" ? (
                 <Image source={lesson.media.url} style={media_style} placeholder={placeholders.video} />
             ) : (
                 <Video

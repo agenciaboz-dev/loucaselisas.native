@@ -22,6 +22,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
     const [showMenu, setShowMenu] = useState(false)
     const [switchingActive, setSwitchingActive] = useState(false)
 
+
     const onDelete = () => {
         setShowMenu(false)
         navigation.navigate("creator:lesson:delete", { lesson })
@@ -32,7 +33,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
         setSwitchingActive(true)
         setTimeout(async () => {
             try {
-                const data: PartialLesson = { id: lesson.id, active: !lesson.active }
+                const data: PartialLesson = { id: lesson.id, status: "disabled" }
                 const response = await api.patch("/lesson", data)
                 // TODO: ACTIVATE ON BUILD
                 // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -51,12 +52,11 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
     }, [current_lesson])
 
     return (
-        <Surface style={[{ flex: 1, backgroundColor: theme.colors.background, borderRadius: 15, opacity: lesson.active ? 1 : 0.5 }]}>
+        <Surface style={[{ flex: 1, backgroundColor: theme.colors.background, borderRadius: 15 }]}>
             <TouchableRipple
                 borderless
                 style={{ flexDirection: "row", borderRadius: 15, padding: 5, gap: 5 }}
                 onPress={() => navigation.navigate("creator:lesson", { lesson })}
-                disabled={!lesson.active}
             >
                 <>
                     <Image source={lesson.thumb} contentFit="cover" style={{ width: 100, aspectRatio: "1/1", borderRadius: 15 }} />
@@ -78,7 +78,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
                             <TrianguloMiseravel color={theme.colors.elevation.level3} top={-9} right={15} />
                             <View style={{ paddingVertical: 0 }}>
                                 <TouchableRipple style={{ paddingHorizontal: 20, paddingVertical: 10 }} onPress={onDisable}>
-                                    <Text>{lesson.active ? "Desabilitar" : "Habilitar"}</Text>
+                                    <Text>{lesson.status == "active" ? "Desabilitar" : "Habilitar"}</Text>
                                 </TouchableRipple>
                                 <TouchableRipple style={{ paddingHorizontal: 20, paddingVertical: 10 }} onPress={onDelete}>
                                     <Text>Deletar</Text>

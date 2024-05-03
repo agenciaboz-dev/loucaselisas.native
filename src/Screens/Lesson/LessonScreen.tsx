@@ -129,7 +129,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
             </View>
 
             <Surface style={{ borderRadius: 15 }}>
-                {lesson.media.type == "IMAGE" ? (
+                {lesson.media.type == "image" ? (
                     <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => setViewingMedia(0)}>
                         <Image
                             source={lesson.media.url}
@@ -151,7 +151,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                     />
                 )}
             </Surface>
-            {lesson.media.type == "IMAGE" && (
+            {lesson.media.type == "image" && (
                 <ImageView
                     images={[{ uri: lesson.media.url }]}
                     imageIndex={viewingMedia ?? 0}

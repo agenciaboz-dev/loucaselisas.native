@@ -65,7 +65,7 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ course }) => {
                 }
                 renderItem={({ item, index }) => (
                     <Surface style={{ borderRadius: 15 }}>
-                        {item.type == "IMAGE" ? (
+                        {item.type == "image" ? (
                             <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => setViewingMedia(index + 1)}>
                                 <Image
                                     source={item.url}

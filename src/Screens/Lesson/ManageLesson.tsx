@@ -11,6 +11,7 @@ import { MiniStatistics } from "./MiniStatistics"
 import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
 import { api } from "../../backend/api"
 import { StatusText } from "../../components/StatusText"
+import { StatusForm } from "../../types/server/class/Course"
 
 interface ManageLessonProps {
     navigation: NavigationProp<any, any>
@@ -40,9 +41,9 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
     const onDisable = async () => {
         setShowMenu(false)
         try {
-            const data: PartialLesson = { id: lesson.id, active: !lesson.active }
+            const data: StatusForm = { id: lesson.id, status: "disabled" }
             const response = await api.patch("/lesson", data)
-            navigation.goBack()
+            setLesson(response.data)
         } catch (error) {
             console.log(error)
         }

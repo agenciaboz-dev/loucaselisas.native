@@ -10,6 +10,12 @@ import { Role } from "./Role";
 import { Message } from "./Chat/Message";
 import { User } from "./User";
 export type Status = "active" | "pending" | "disabled" | "declined";
+export interface StatusForm {
+    id: string;
+    status: Status;
+    declined_reason?: string;
+    price?: number;
+}
 export declare const course_include: {
     categories: true;
     chat: {

@@ -31,7 +31,6 @@ export declare class Lesson {
     name: string;
     thumb: string | null;
     info: string;
-    active: boolean;
     media: Media;
     views: number;
     likes: number;

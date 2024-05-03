@@ -40,9 +40,7 @@ export declare const student_include: {
             };
             roles: {
                 include: {
-                    admin_permissions: true;
-                    general_permissions: true;
-                    profile_permissions: true;
+                    permissions: true;
                 };
             };
             lessons: {

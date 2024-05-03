@@ -57,9 +57,7 @@ export declare const user_include: {
                     };
                     roles: {
                         include: {
-                            admin_permissions: true;
-                            general_permissions: true;
-                            profile_permissions: true;
+                            permissions: true;
                         };
                     };
                     lessons: {
@@ -92,9 +90,7 @@ export declare const user_include: {
     payment_cards: true;
     role: {
         include: {
-            admin_permissions: true;
-            general_permissions: true;
-            profile_permissions: true;
+            permissions: true;
         };
     };
     plan: {
@@ -116,7 +112,7 @@ export interface UserImageForm {
     image?: FileUpload | null;
     cover?: FileUpload | null;
 }
-export type UserForm = Omit<WithoutFunctions<User>, "id" | "plan" | "plan_history" | "admin" | "favorite_creators" | "favorite_courses" | "payment_cards" | "creator" | "student" | "role" | "cover" | "image" | "payment_cards" | "liked_lessons"> & {
+export type UserForm = Omit<WithoutFunctions<User>, "id" | "plan" | "plan_history" | "admin" | "favorite_creators" | "favorite_courses" | "payment_cards" | "creator" | "student" | "role" | "cover" | "image" | "payment_cards" | "liked_lessons" | "created_at"> & {
     image: FileUpload | null;
     cover: FileUpload | null;
     student: boolean;
@@ -137,6 +133,7 @@ export declare class User {
     phone: string;
     pronoun: string;
     uf: string;
+    created_at: string;
     admin: boolean;
     instagram: string | null;
     tiktok: string | null;
@@ -162,8 +159,8 @@ export declare class User {
     static updateImage(data: UserImageForm & {
         id: string;
     }, socket: Socket): Promise<void>;
+    static list(): Promise<User[]>;
     static signup(data: UserForm, socket?: Socket): Promise<string | User | undefined>;
-    static list(socket: Socket): Promise<void>;
     static login(data: LoginForm & {
         admin?: boolean;
     }, socket?: Socket): Promise<User | null>;

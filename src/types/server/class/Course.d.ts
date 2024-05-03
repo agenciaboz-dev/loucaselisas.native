@@ -9,6 +9,7 @@ import { Socket } from "socket.io";
 import { Role } from "./Role";
 import { Message } from "./Chat/Message";
 import { User } from "./User";
+export type Status = "active" | "pending" | "disabled" | "declined";
 export declare const course_include: {
     categories: true;
     chat: {
@@ -47,9 +48,7 @@ export declare const course_include: {
     };
     roles: {
         include: {
-            admin_permissions: true;
-            general_permissions: true;
-            profile_permissions: true;
+            permissions: true;
         };
     };
     lessons: {
@@ -78,7 +77,7 @@ export type CoverForm = {
     type: "image" | "video";
     url?: string;
 };
-export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by" | "cover" | "cover_type" | "owner" | "gallery" | "creators" | "chat" | "published" | "lessons" | "students" | "views" | "">> & {
+export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by" | "cover" | "cover_type" | "owner" | "gallery" | "creators" | "chat" | "published" | "lessons" | "students" | "views">> & {
     id: string;
     cover?: CoverForm;
     gallery: GalleryForm;
@@ -86,7 +85,7 @@ export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by
         id: string;
     }[];
 };
-export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles" | "likes" | "downloads"> & {
+export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles" | "likes" | "downloads" | "status" | "declined_reason"> & {
     lessons: LessonForm[];
     cover?: CoverForm;
     gallery: GalleryForm;
@@ -98,6 +97,7 @@ export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | 
     }[];
     owner_id: string;
     id?: string;
+    declined_reason?: string;
 };
 export declare class Course {
     id: string;
@@ -121,6 +121,8 @@ export declare class Course {
     favorited_by: {
         id: string;
     }[];
+    status: Status;
+    declined_reason: string | null;
     likes: number;
     lessons: number;
     students: number;

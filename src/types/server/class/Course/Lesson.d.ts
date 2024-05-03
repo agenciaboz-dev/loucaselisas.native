@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { Media, MediaForm } from "../Gallery/Media";
 import { FileUpload, WithoutFunctions } from "../helpers";
+import { Status } from "../Course";
 export declare const lesson_include: {
     media: true;
     likes: true;
@@ -16,9 +17,10 @@ export declare const lesson_include: {
 export type LessonPrisma = Prisma.LessonGetPayload<{
     include: typeof lesson_include;
 }>;
-export type LessonForm = Omit<WithoutFunctions<Lesson>, "id" | "published" | "thumb" | "views" | "likes" | "downloads" | "active" | "course" | "favorited_by" | "media"> & {
+export type LessonForm = Omit<WithoutFunctions<Lesson>, "id" | "published" | "thumb" | "views" | "likes" | "downloads" | "active" | "course" | "favorited_by" | "media" | "declined_reason" | "status"> & {
     thumb?: FileUpload;
     media?: MediaForm;
+    declined_reason?: string;
 };
 export type PartialLesson = Partial<Lesson> & {
     id: string;
@@ -40,6 +42,8 @@ export declare class Lesson {
         id: string;
     }[];
     pdf: string | null;
+    status: Status;
+    declined_reason: string | null;
     static new(data: LessonForm): Promise<Lesson>;
     constructor(id: string, data?: LessonPrisma);
     init(): Promise<void>;

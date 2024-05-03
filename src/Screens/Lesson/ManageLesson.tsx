@@ -8,10 +8,9 @@ import { Image, ImageStyle } from "expo-image"
 import { ResizeMode, Video } from "expo-av"
 import placeholders from "../../tools/placeholders"
 import { MiniStatistics } from "./MiniStatistics"
-import { TrianguloMiseravel } from "../../components/TrianguloMiseravel"
 import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
 import { api } from "../../backend/api"
-import { formatStatus } from "../../tools/formatStatus"
+import { StatusText } from "../../components/StatusText"
 
 interface ManageLessonProps {
     navigation: NavigationProp<any, any>
@@ -99,7 +98,7 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
                 <Text style={{ textDecorationLine: "underline" }}>ler {extendedDescription ? "menos" : "mais"}...</Text>
             </TouchableRipple>
 
-            <Text>Status: {formatStatus(lesson.status)}</Text>
+            <StatusText status={lesson.status} />
             <MiniStatistics lesson={lesson} />
         </ScrollView>
     ) : null

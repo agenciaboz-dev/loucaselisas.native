@@ -14,6 +14,7 @@ import { LessonsSkeletons } from "./LessonsSkeletons"
 import { useArray } from "burgos-array"
 import { OptionsMenu } from "../../../components/OptionsMenu/OptionsMenu"
 import { CourseGallery } from "../../../components/CourseGallery"
+import { StatusText } from "../../../components/StatusText"
 
 interface ManageCourseProps {
     navigation: NavigationProp<any, any>
@@ -112,7 +113,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                         <ScreenTitle
                             title={course.name}
                             right={
-                                <View style={{ flexDirection: "row", gap: -10, }}>
+                                <View style={{ flexDirection: "row", gap: -10 }}>
                                     <IconButton
                                         icon={"comment-text-outline"}
                                         style={{ margin: 0 }}
@@ -142,6 +143,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                             <Text style={{ textDecorationLine: "underline" }}>ler {extendedDescription ? "menos" : "mais"}...</Text>
                         </TouchableRipple>
 
+                        <StatusText status={course.status} />
                         <MiniStatistics course={course} />
                         <Button
                             icon={"plus-circle"}

@@ -13,15 +13,13 @@ interface LessonContainerProps {
     index: number
     course?: Course
     liked_variant?: boolean
-    is_creator?: boolean
 }
 
-export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index, course, liked_variant, is_creator }) => {
+export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index, course, liked_variant }) => {
     const { user } = useUser()
 
     const navigation = useNavigation<NavigationProp<any, any>>()
     const theme = useTheme()
-    const touchable = is_creator || lesson.status === "active"
 
     const [liking, setLiking] = useState(false)
     const [liked, setliked] = useState(!!lesson?.favorited_by.find((item) => item.id == user?.id))
@@ -55,12 +53,11 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
     }, [lesson])
 
     return user ? (
-        <Surface style={[{ backgroundColor: theme.colors.background, borderRadius: 15, opacity: !touchable ? 1 : 0.5 }]}>
+        <Surface style={[{ backgroundColor: theme.colors.background, borderRadius: 15 }]}>
             <TouchableRipple
                 borderless
                 style={{ flexDirection: "row", borderRadius: 15, padding: 5, gap: 5 }}
                 onPress={() => navigation.navigate("lesson", { lesson, course })}
-                disabled={!touchable}
             >
                 <>
                     <Image source={lesson.thumb} contentFit="cover" style={{ width: 100, aspectRatio: "1/1", borderRadius: 15 }} />

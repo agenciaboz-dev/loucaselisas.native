@@ -22,7 +22,7 @@ export const OptionsMenu: React.FC<OptionsMenuProps> = ({ visible, onDismiss, an
             <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} {...triangleProps} />
             <View style={{ paddingVertical: 0 }}>
                 {options.map((item) => (
-                    <OptionItem key={item.label} label={item.label} onPress={item.onPress} />
+                    <OptionItem key={item.label} label={item.label} onPress={item.onPress} disabled={item.disabled} />
                 ))}
             </View>
         </Menu>

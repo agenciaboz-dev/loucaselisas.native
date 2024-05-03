@@ -11,7 +11,7 @@ import { MiniStatistics } from "./MiniStatistics"
 import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
 import { api } from "../../backend/api"
 import { StatusText } from "../../components/StatusText"
-import { StatusForm } from "../../types/server/class/Course"
+import { Status, StatusForm } from "../../types/server/class/Course"
 
 interface ManageLessonProps {
     navigation: NavigationProp<any, any>
@@ -38,10 +38,10 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
         navigation.navigate(route, { lesson })
     }
 
-    const onDisable = async () => {
+    const onToggle = async (status: Status) => {
         setShowMenu(false)
         try {
-            const data: StatusForm = { id: lesson.id, status: "disabled" }
+            const data: StatusForm = { id: lesson.id, status: status == "active" ? "disabled" : "active" }
             const response = await api.patch("/lesson", data)
             setLesson(response.data)
         } catch (error) {
@@ -76,8 +76,12 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
                         visible={showMenu}
                         options={[
                             { label: "Editar Lição", onPress: () => onMenuItemNavigate("creator:lesson:form") },
-                            { label: "Desabilitar", onPress: onDisable },
                             { label: "Deletar", onPress: () => onMenuItemNavigate("creator:lesson:delete") },
+                            {
+                                label: lesson.status == "active" ? "Desativar" : lesson.status == "disabled" ? "Ativar" : "Pendente",
+                                onPress: () => onToggle(lesson.status),
+                                disabled: lesson.status !== "active" && lesson.status !== "disabled",
+                            },
                         ]}
                     />
                 }

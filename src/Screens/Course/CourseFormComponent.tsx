@@ -62,14 +62,6 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
     const courseSchema = Yup.object().shape({
         description: Yup.string().required(validationErrors.required),
         name: Yup.string().required(validationErrors.required).max(35, "Máximo de caracteres ultrapassado."),
-        price: Yup.string()
-            .required(validationErrors.required)
-            .test("is-decimal", "Preço inválido. Permitido apenas números e até 2 casas decimais.", (value) => {
-                // Replace comma with dot to validate as a number
-                const numberValue = value.toString().replace(",", ".")
-                // Validate only if the input can be converted to a valid number
-                return !isNaN(parseFloat(numberValue)) && /^\d+(\,\d{0,2}|\.\d{0,2})?$/.test(value.toString())
-            }),
     })
 
     const formik = useFormik<CourseForm>({
@@ -84,7 +76,6 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
             owner_id: creator.id,
             recorder: "",
             lessons: [],
-            price: 0,
         },
         async onSubmit(values, formikHelpers) {
             if (loading) return
@@ -96,7 +87,6 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                 recorder: participantsText,
                 cover,
                 gallery: { ...gallery, name: gallery.name || "Galeria 1" },
-                price: unmaskCurrency(values.price),
             }
             console.log(data)
             try {
@@ -236,7 +226,6 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
             if (course) {
                 formik.setFieldValue("id", course.id)
                 formik.setFieldValue("name", course.name)
-                formik.setFieldValue("price", course.price.toString())
                 formik.setFieldValue("language", course.language)
                 formik.setFieldValue("description", course.description)
                 setParticipantsText(course.recorder || "")
@@ -310,36 +299,23 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                     />
                 }
             />
-            <View style={{ flexDirection: "row", gap: 10 }}>
-                <FormText
-                    formik={formik}
-                    name="price"
-                    label={"Preço sugerido"}
-                    ref={input_refs[2]}
-                    onSubmitEditing={() => focusInput(3)}
-                    left={<PaperInput.Affix text="R$" />}
-                    keyboardType="decimal-pad"
-                    style={{ minWidth: 170 }}
-                    transparent
-                />
-                <LabeledComponent
-                    label="Idioma"
-                    Component={
-                        <Dropdown
-                            data={[
-                                { label: "Português", value: "pt-br" },
-                                { label: "Inglês", value: "en-us" },
-                            ]}
-                            labelField="label"
-                            onChange={(item) => formik.setFieldValue("language", item.value)}
-                            valueField="value"
-                            value={formik.values.language}
-                            style={dropdown_style}
-                            placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
-                        />
-                    }
-                />
-            </View>
+            <LabeledComponent
+                label="Idioma"
+                Component={
+                    <Dropdown
+                        data={[
+                            { label: "Português", value: "pt-br" },
+                            { label: "Inglês", value: "en-us" },
+                        ]}
+                        labelField="label"
+                        onChange={(item) => formik.setFieldValue("language", item.value)}
+                        valueField="value"
+                        value={formik.values.language}
+                        style={dropdown_style}
+                        placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
+                    />
+                }
+            />
             <LabeledComponent
                 label="Categorias"
                 Component={

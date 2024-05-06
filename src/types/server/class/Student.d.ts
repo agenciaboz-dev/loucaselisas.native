@@ -52,6 +52,7 @@ export declare const student_include: {
                     };
                 };
             };
+            plans: true;
             _count: {
                 select: {
                     lessons: true;

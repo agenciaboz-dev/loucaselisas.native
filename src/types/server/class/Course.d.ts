@@ -9,6 +9,7 @@ import { Socket } from "socket.io";
 import { Role } from "./Role";
 import { Message } from "./Chat/Message";
 import { User } from "./User";
+import { Plan } from "./Plan";
 export type Status = "active" | "pending" | "disabled" | "declined";
 export interface StatusForm {
     id: string;
@@ -66,6 +67,7 @@ export declare const course_include: {
             };
         };
     };
+    plans: true;
     _count: {
         select: {
             lessons: true;
@@ -91,7 +93,7 @@ export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by
         id: string;
     }[];
 };
-export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles" | "likes" | "downloads" | "status" | "declined_reason"> & {
+export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles" | "likes" | "downloads" | "status" | "declined_reason" | "plans" | "price"> & {
     lessons: LessonForm[];
     cover?: CoverForm;
     gallery: GalleryForm;
@@ -124,6 +126,7 @@ export declare class Course {
     creators: Partial<Creator>[];
     chat: Chat | null;
     roles: Role[];
+    plans: Plan[];
     favorited_by: {
         id: string;
     }[];

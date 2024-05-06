@@ -69,6 +69,7 @@ export declare const user_include: {
                             };
                         };
                     };
+                    plans: true;
                     _count: {
                         select: {
                             lessons: true;

@@ -49,7 +49,7 @@ export const CategoryScreen: React.FC<CategoryScreenProps> = ({ navigation, rout
             <CategoryCourseList title={`Favoritos`} courses={[...courses].sort((a, b) => b.likes - a.likes).slice(0, 10)} loading={refreshing} />
             <CategoryCourseList
                 title={`Gratuitos`}
-                courses={courses
+                courses={[...courses]
                     .filter((item) => item.plans.find((plan) => plan.id == 1))
                     .sort((a, b) => Number(b.published) - Number(a.published))
                     .slice(0, 10)}

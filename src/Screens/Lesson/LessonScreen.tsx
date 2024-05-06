@@ -71,7 +71,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
     const refreshLesson = async () => {
         setRefreshing(true)
         try {
-            const response = await api.get("/lesson", { params: { lesson_id: lesson?.id } })
+            const response = await api.get("/lesson", { params: { lesson_id: lesson?.id, user_id: user?.id } })
             setLesson(response.data)
             await fetchLessonsList()
             await fetchCategoryCourses()

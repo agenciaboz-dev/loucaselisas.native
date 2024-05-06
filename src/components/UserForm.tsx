@@ -112,6 +112,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
     const handleDateChange = (date?: Date) => {
         formik.setFieldValue("birth", date?.getTime().toString() || "")
         setSelectDate(false)
+        setTimeout(() => formik.validateField("birth"), 500)
     }
 
     useEffect(() => {
@@ -183,40 +184,38 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                     secureTextEntry
                     onSubmitEditing={() => focusInput(5)}
                 />
-                <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
-                    <LabeledComponent
-                        label="Pronome"
-                        Component={
-                            <Dropdown
-                                ref={dropdown_refs[5]}
-                                data={[
-                                    { label: "Ele/dele", value: "him" },
-                                    { label: "Ela/dela", value: "her" },
-                                ]}
-                                placeholder=""
-                                labelField="label"
-                                onChange={(item) => formik.setFieldValue("pronoun", item.value)}
-                                valueField="value"
-                                value={formik.values.pronoun}
-                                style={dropdown_style}
-                                placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
-                            />
-                        }
-                    />
-                    <Pressable onPress={() => setSelectDate(true)} style={{ flex: 1.28 }}>
-                        <FormText
-                            ref={input_refs[6]}
-                            label={"Data de nascimento"}
-                            name="birth"
-                            formik={formik}
-                            onSubmitEditing={() => focusInput(6)}
-                            readOnly
-                            flex={1}
-                            right={<PaperInput.Icon icon={"calendar-range"} pointerEvents="none" />}
-                            value={formik.values.birth ? new Date(Number(formik.values.birth)).toLocaleDateString("pt-br") : ""}
+                <LabeledComponent
+                    label="Pronome"
+                    Component={
+                        <Dropdown
+                            ref={dropdown_refs[5]}
+                            data={[
+                                { label: "Ele/dele", value: "him" },
+                                { label: "Ela/dela", value: "her" },
+                            ]}
+                            placeholder=""
+                            labelField="label"
+                            onChange={(item) => formik.setFieldValue("pronoun", item.value)}
+                            valueField="value"
+                            value={formik.values.pronoun}
+                            style={dropdown_style}
+                            placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
                         />
-                    </Pressable>
-                </View>
+                    }
+                />
+                <Pressable onPress={() => setSelectDate(true)} style={{ flex: 1.28 }}>
+                    <FormText
+                        ref={input_refs[6]}
+                        label={"Data de nascimento"}
+                        name="birth"
+                        formik={formik}
+                        onSubmitEditing={() => focusInput(6)}
+                        readOnly
+                        flex={1}
+                        right={<PaperInput.Icon icon={"calendar-range"} pointerEvents="none" />}
+                        value={formik.values.birth ? new Date(Number(formik.values.birth)).toLocaleDateString("pt-br") : ""}
+                    />
+                </Pressable>
                 <FormText ref={input_refs[7]} name="profession" formik={formik} label={"Profissão"} onSubmitEditing={() => focusInput(8)} />
                 <View style={{ flexDirection: "row", gap: 10, width: "100%" }}>
                     <FormText
@@ -290,7 +289,6 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                 cancelText="Cancelar"
                 confirmText="Confirmar"
                 theme="light"
-                maximumDate={eighteen_years_behind}
             />
         </View>
     )

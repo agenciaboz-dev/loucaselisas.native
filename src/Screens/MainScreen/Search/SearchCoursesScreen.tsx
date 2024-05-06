@@ -63,7 +63,7 @@ export const SearchCoursesScreen: React.FC<SearchCoursesScreenProps> = ({ naviga
             <CategoryCourseList title="Favoritos" courses={[...courses].sort((a, b) => b.likes - a.likes)} loading={loading} />
             <CategoryCourseList
                 title="Gratuitos"
-                courses={courses.filter((item) => item.price === 0).sort((a, b) => b.views - a.views)}
+                courses={courses.filter((item) => item.plans.find((plan) => plan.id == 1)).sort((a, b) => b.views - a.views)}
                 loading={loading}
             />
         </ScrollView>

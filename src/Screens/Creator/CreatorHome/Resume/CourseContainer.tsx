@@ -30,7 +30,8 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course, route 
     }
 
     const onCoursePress = () => {
-        navigation.navigate(route, { course })
+        // @ts-ignore
+        navigation.push(route, { course })
     }
 
     return (

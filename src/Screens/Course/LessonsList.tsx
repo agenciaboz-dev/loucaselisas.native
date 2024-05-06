@@ -22,7 +22,7 @@ export const LessonsList: React.FC<LessonsListProps> = ({ lessons, course, refre
             {refreshing && !!quantity && !lessons.length && skeletons.map((index) => <LessonsSkeletons key={index} />)}
             {quantity ? (
                 lessons
-                    // .filter((lesson) => lesson.status == "active")
+                    .filter((lesson) => lesson.status == "active")
                     .sort((a, b) => Number(b.published) - Number(a.published))
                     .map((item, index) => <LessonContainer key={item.id} lesson={item} index={lessons.length - index} course={course} />)
             ) : (

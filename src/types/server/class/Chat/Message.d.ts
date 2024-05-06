@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { Socket } from "socket.io";
-import { WithoutFunctions } from "../helpers";
+import { FilterPrimitive, WithoutFunctions } from "../helpers";
+import { User } from "../User";
 export declare const message_include: {
     user: true;
 };
@@ -15,7 +16,7 @@ export declare class Message {
     text: string;
     datetime: string;
     user_id: string | null;
-    user: any | null;
+    user: FilterPrimitive<User> | null;
     chat_id: string;
     video_id: string | null;
     video_timestamp: string | null;

@@ -42,7 +42,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
                             <Image source={require("../../../assets/logo_without_text.svg")} style={{ width: 20, height: 20 }} tintColor={"black"} />
                         )}
                         <Text variant="bodySmall" style={{ paddingHorizontal: 5 }}>
-                            {you ? "Você" : message.user?.name}
+                            {you ? "Você" : message.user?.name || "Usuário indisponível"}
                         </Text>
                     </View>
                 )}

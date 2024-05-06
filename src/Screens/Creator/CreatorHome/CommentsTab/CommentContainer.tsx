@@ -83,13 +83,13 @@ export const CommentContainer: React.FC<CommentContainerProps> = ({ course }) =>
                     {message ? (
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
                             <Image
-                                source={message.user.image}
+                                source={message.user?.image || placeholders.avatar}
                                 contentFit={"cover"}
                                 placeholder={placeholders.avatar}
                                 style={{ width: image_size, aspectRatio: "1/1", borderRadius: 100 }}
                             />
                             <View style={{ gap: 5, maxWidth: 210, flex: 1 }}>
-                                <Text variant="bodyLarge">{message.user.name}</Text>
+                                <Text variant="bodyLarge">{message.user?.name || "Usuário indisponível"}</Text>
                                 <Text numberOfLines={3}>{message.text}</Text>
                                 <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceDisabled }}>
                                     {new Date(Number(message.datetime)).toLocaleString("pt-br")}

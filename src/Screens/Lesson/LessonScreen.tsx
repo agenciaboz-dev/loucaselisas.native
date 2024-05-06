@@ -1,7 +1,7 @@
 import ImageView from "react-native-image-viewing"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useState } from "react"
-import { Dimensions, RefreshControl, ScrollView, View } from "react-native"
+import { Dimensions, FlatList, RefreshControl, ScrollView, View } from "react-native"
 import { Lesson } from "../../types/server/class/Course/Lesson"
 import { useUser } from "../../hooks/useUser"
 import { ScreenTitle } from "../../components/ScreenTItle"
@@ -14,6 +14,9 @@ import { Image, ImageStyle } from "expo-image"
 import { ResizeMode, Video } from "expo-av"
 import placeholders from "../../tools/placeholders"
 import { ExtendableText } from "../../components/ExtendableText"
+import { LesonSquareComponent } from "./LessonSquareComponent"
+import { CourseSkeletons } from "../../components/CourseSkeletons"
+import { CourseContainer } from "../Creator/CreatorHome/Resume/CourseContainer"
 
 interface LessonScreenProps {
     navigation: NavigationProp<any, any>
@@ -36,12 +39,42 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
     const liked = !!lesson?.favorited_by.find((item) => item.id == user?.id)
     const [showChatDenied, setShowChatDenied] = useState(false)
     const [showMenu, setShowMenu] = useState(false)
+    const [LessonsList, setLessonsList] = useState<Lesson[]>([])
+    const [refreshingLessonsList, setRefreshingLessonsList] = useState(true)
+    const [sameCategoryCourses, setSameCategoryCourses] = useState<Course[]>([])
+    const [refreshingCourses, setRefreshingCourses] = useState(true)
+
+    const fetchCategoryCourses = async () => {
+        setRefreshingCourses(true)
+        try {
+            const response = await api.get("/course/categories", { params: { categories: course?.categories } })
+            setSameCategoryCourses(response.data)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setRefreshingCourses(false)
+        }
+    }
+
+    const fetchLessonsList = async () => {
+        setRefreshingLessonsList(true)
+        try {
+            const response = await api.get("/lesson/course", { params: { course_id: course?.id } })
+            setLessonsList(response.data)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setRefreshingLessonsList(false)
+        }
+    }
 
     const refreshLesson = async () => {
         setRefreshing(true)
         try {
             const response = await api.get("/lesson", { params: { lesson_id: lesson?.id } })
             setLesson(response.data)
+            await fetchLessonsList()
+            await fetchCategoryCourses()
         } catch (error) {
             console.log(error)
         } finally {
@@ -89,7 +122,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
         <ScrollView
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshLesson} />}
             style={{ flex: 1 }}
-            contentContainerStyle={{ flex: 1, padding: 20, gap: 10 }}
+            contentContainerStyle={{ padding: 20, gap: 10 }}
         >
             <ScreenTitle
                 title={lesson.name}
@@ -162,6 +195,26 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
             )}
 
             <ExtendableText minLines={3} text={lesson.info} />
+            <Text variant="bodyLarge">Próximos</Text>
+            <FlatList
+                horizontal
+                data={LessonsList.filter((item) => item.id != lesson.id)}
+                renderItem={({ item }) => <LesonSquareComponent lesson={item} />}
+                style={{ margin: -20 }}
+                contentContainerStyle={{ padding: 20, gap: 10 }}
+                showsHorizontalScrollIndicator={false}
+            />
+            <Text variant="bodyLarge">Veja também</Text>
+            <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={sameCategoryCourses.filter((item) => item.id != course.id)}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => <CourseContainer course={item} route="course:profile" />}
+                style={{ margin: -20 }}
+                contentContainerStyle={{ gap: 10, padding: 20 }}
+                ListEmptyComponent={refreshingCourses ? <CourseSkeletons /> : <Text>Nenhum curso encontrado</Text>}
+            />
         </ScrollView>
     ) : null
 }

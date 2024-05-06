@@ -59,12 +59,11 @@ export const FavoriteContainer: React.FC<FavoriteContainerProps> = ({ lesson, co
     }
 
     return (
-        <Surface style={[{ backgroundColor: theme.colors.background, borderRadius: 15, opacity: lesson.active ? 1 : 0.5 }]}>
+        <Surface style={[{ backgroundColor: theme.colors.background, borderRadius: 15 }]}>
             <TouchableRipple
                 borderless
-                style={{ padding: 10, gap: 5 }}
+                style={{ padding: 10, gap: 5, borderRadius: 15 }}
                 onPress={() => navigation.navigate("lesson", { lesson, course })}
-                disabled={!lesson.active}
             >
                 <>
                     <View style={{ flexDirection: "row", borderRadius: 15, gap: 5 }}>

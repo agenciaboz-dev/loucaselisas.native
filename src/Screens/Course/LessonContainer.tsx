@@ -13,9 +13,10 @@ interface LessonContainerProps {
     index: number
     course?: Course
     liked_variant?: boolean
+    blocked?: boolean
 }
 
-export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index, course, liked_variant }) => {
+export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index, course, liked_variant, blocked }) => {
     const { user } = useUser()
 
     const navigation = useNavigation<NavigationProp<any, any>>()
@@ -53,7 +54,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
     }, [lesson])
 
     return user ? (
-        <Surface style={[{ backgroundColor: theme.colors.background, borderRadius: 15 }]}>
+        <Surface style={[{ backgroundColor: theme.colors.background, borderRadius: 15 }, blocked && { opacity: 0.5, pointerEvents: "none" }]}>
             <TouchableRipple
                 borderless
                 style={{ flexDirection: "row", borderRadius: 15, padding: 5, gap: 5 }}

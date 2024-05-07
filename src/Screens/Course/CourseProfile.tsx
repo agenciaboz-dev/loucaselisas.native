@@ -14,6 +14,7 @@ import { DownloadedList } from "./DownloadedList"
 import { useUser } from "../../hooks/useUser"
 import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
 import { TrianguloMiseravel } from "../../components/TrianguloMiseravel"
+import { BuyCourse } from "./BuyCourse"
 
 interface CourseProfileProps {
     navigation: NavigationProp<any, any>
@@ -26,6 +27,11 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
 
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
     const is_favorited = course?.favorited_by?.find((item) => item.id == user?.id)
+
+    const isAvailable = !!(
+        course?.plans.find((plan) => plan.id == 1 || (plan.id == user?.plan?.plan_data.id && Number(user.plan.end_date) > new Date().getTime())) ||
+        user?.student?.courses.find((item) => item.id == course?.id)
+    )
 
     const [lessons, setLessons] = useState<Lesson[]>([])
     const [loadingLessons, setLoadingLessons] = useState(true)
@@ -49,7 +55,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     > = ({ route }) => {
         switch (route.key) {
             case "lessons":
-                return <LessonsList lessons={lessons} refreshing={loadingLessons} course={course} />
+                return <LessonsList lessons={lessons} refreshing={loadingLessons} course={course} blocked={!isAvailable} />
             case "downloaded":
                 return <DownloadedList />
             default:
@@ -164,6 +170,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
                 }
             />
             <CourseGallery course={course} />
+            {!isAvailable && <BuyCourse course={course} />}
             <ExtendableText minLines={3} text={course.description} />
 
             <TabView

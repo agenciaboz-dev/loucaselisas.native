@@ -1,12 +1,12 @@
 import { NavigationProp, useFocusEffect, useRoute } from "@react-navigation/native"
-import React, { useCallback, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { RadioButton, Surface, Text, useTheme } from "react-native-paper"
 import { ScreenTitle } from "../../../../components/ScreenTItle"
 import { useFormik } from "formik"
 import { PaymentCard, PaymentCardForm } from "../../../../types/server/class/PaymentCard"
 import * as Yup from "yup"
 import { FormText } from "../../../../components/FormText"
-import { Alert, ScrollView, TextInput, View } from "react-native"
+import { Alert, Keyboard, LayoutAnimation, Platform, ScrollView, TextInput, View } from "react-native"
 import { Button } from "../../../../components/Button"
 import { useUser } from "../../../../hooks/useUser"
 import { PartialUser } from "../../../../types/server/class/User"
@@ -127,12 +127,28 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
             }
         }, [])
     )
+    const [keyboardOpen, setKeyboardOpen] = useState(false)
+    const iosKeyboard = Platform.OS == "ios" && keyboardOpen
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setKeyboardOpen(true)
+        })
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setKeyboardOpen(false)
+        })
 
+        return () => {
+            showSubscription.remove()
+            hideSubscription.remove()
+        }
+    }, [])
     return (
         <ScrollView
             keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
-            contentContainerStyle={{ gap: 10, padding: 20 }}
+            contentContainerStyle={{ gap: 10, padding: 20, bottom: iosKeyboard ? 30 : 0 }}
             showsVerticalScrollIndicator={false}
         >
             <ScreenTitle title={card ? "Atualizar cartão" : "Novo cartão"} />
@@ -192,7 +208,13 @@ export const CardForm: React.FC<CardFormProps> = ({ navigation }) => {
 
             <View style={{ flexDirection: "row", alignItems: "center", gap: 10, marginTop: 10 }}>
                 {card && (
-                    <Button mode="outlined" rippleColor={theme.colors.error} onPress={onDelete} disabled={loading} style={{ flex: 1 }}>
+                    <Button
+                        mode="outlined"
+                        rippleColor={theme.colors.error}
+                        onPress={onDelete}
+                        disabled={loading}
+                        style={{ flex: 1 }}
+                    >
                         Deletar
                     </Button>
                 )}

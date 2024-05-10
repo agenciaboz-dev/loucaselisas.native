@@ -1,5 +1,5 @@
 import React from "react"
-import { View } from "react-native"
+import { Platform, View } from "react-native"
 import { Category } from "../../../types/server/class/Category"
 import { Surface, Text, TouchableRipple } from "react-native-paper"
 import { Image } from "expo-image"
@@ -25,6 +25,7 @@ export const CategoryContainer: React.FC<CategoryContainerProps> = ({ category }
                     <Image
                         source={category.cover}
                         contentFit="cover"
+                        placeholderContentFit="cover"
                         style={{ width: 75, aspectRatio: 1, borderRadius: 15 }}
                         placeholder={placeholders.square}
                     />

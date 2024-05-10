@@ -25,7 +25,18 @@ interface ManageProfileCardProps {
 }
 
 export const ManageProfileCard: React.FC<ManageProfileCardProps> = (props) => {
-    const { cover, picture, onUpdatePicture, onUpdateCover, name, description, onUpdateDescription, instagram, tiktok, readOnly } = props
+    const {
+        cover,
+        picture,
+        onUpdatePicture,
+        onUpdateCover,
+        name,
+        description,
+        onUpdateDescription,
+        instagram,
+        tiktok,
+        readOnly,
+    } = props
     const theme = useTheme()
 
     const [uploadingPicuture, setUploadingPicuture] = useState<"cover" | "profile">()
@@ -100,7 +111,12 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = (props) => {
                 }}
             >
                 <Surface style={{ borderRadius: 15, position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
-                    <Image source={cover || placeholders.cover} style={{ width: "100%", height: "100%", borderRadius: 15 }} contentFit="cover" />
+                    <Image
+                        source={cover || placeholders.cover}
+                        style={{ width: "100%", height: "100%", borderRadius: 15 }}
+                        contentFit="cover"
+                        placeholderContentFit="cover"
+                    />
                 </Surface>
                 {editing && (
                     <IconButton
@@ -180,11 +196,18 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = (props) => {
                 />
             ) : (
                 <View style={{ position: "relative", marginBottom: -10 }}>
-                    <Text numberOfLines={!extendedDescription ? 3 : undefined} style={{ position: "relative", marginTop: 10 }}>
-                        {description || <Button labelStyle={{ textDecorationLine: "underline" }}>Inserir uma descrição</Button>}
+                    <Text
+                        numberOfLines={!extendedDescription ? 3 : undefined}
+                        style={{ position: "relative", marginTop: 10 }}
+                    >
+                        {description || (
+                            <Button labelStyle={{ textDecorationLine: "underline" }}>Inserir uma descrição</Button>
+                        )}
                     </Text>
                     <TouchableRipple onPress={extendDescription} style={{ bottom: -10, right: 0, position: "absolute" }}>
-                        <Text style={{ textDecorationLine: "underline" }}>ler {extendedDescription ? "menos" : "mais"}...</Text>
+                        <Text style={{ textDecorationLine: "underline" }}>
+                            ler {extendedDescription ? "menos" : "mais"}...
+                        </Text>
                     </TouchableRipple>
                 </View>
             )}

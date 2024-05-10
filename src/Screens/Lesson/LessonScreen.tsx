@@ -128,7 +128,12 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                 title={lesson.name}
                 right={
                     <View style={{ flexDirection: "row", gap: -5 }}>
-                        <IconButton icon={liked ? "heart" : "heart-outline"} style={{ margin: 0 }} loading={liking} onPress={onLikePress} />
+                        <IconButton
+                            icon={liked ? "heart" : "heart-outline"}
+                            style={{ margin: 0 }}
+                            loading={liking}
+                            onPress={onLikePress}
+                        />
                         <Menu
                             visible={showChatDenied}
                             onDismiss={() => setShowChatDenied(false)}
@@ -144,7 +149,13 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
 
                         <OptionsMenu
                             options={[{ label: "Compartilhar", onPress: () => null }]}
-                            Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
+                            Anchor={
+                                <IconButton
+                                    icon={"dots-vertical"}
+                                    style={{ margin: 0 }}
+                                    onPress={() => setShowMenu((show) => !show)}
+                                />
+                            }
                             onDismiss={() => setShowMenu(false)}
                             visible={showMenu}
                         />
@@ -169,6 +180,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                             transition={1000}
                             priority={"high"}
                             placeholder={placeholders.video}
+                            placeholderContentFit="cover"
                             contentFit="cover"
                             style={media_style}
                         />

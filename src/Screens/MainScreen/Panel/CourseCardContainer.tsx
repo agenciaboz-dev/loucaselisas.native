@@ -25,6 +25,7 @@ export const CourseCardContainer: React.FC<CourseCardContainerProps> = ({ course
                     <Image
                         source={course.cover}
                         placeholder={placeholders.square}
+                        placeholderContentFit="cover"
                         contentFit="cover"
                         style={{ width: 100, aspectRatio: "1/1", borderRadius: 15 }}
                     />

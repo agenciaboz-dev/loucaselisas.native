@@ -44,9 +44,14 @@ export const LessonMediaForm: React.FC<LessonMediaFormProps> = ({ thumb, media, 
                 <View style={{ position: "relative" }}>
                     {thumb || media.type == "image" ? (
                         <Image
-                            source={{ uri: thumb ? media.uri || media : media.url || media.uri || "data:image/png;base64," + media.base64 }}
+                            source={{
+                                uri: thumb
+                                    ? media.uri || media
+                                    : media.url || media.uri || "data:image/png;base64," + media.base64,
+                            }}
                             style={media_style}
                             contentFit="cover"
+                            placeholderContentFit="cover"
                         />
                     ) : (
                         <Video

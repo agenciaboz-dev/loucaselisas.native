@@ -14,7 +14,7 @@ export const CategoryContainer: React.FC<CategoryContainerProps> = ({ category }
     const navigation = useNavigation<NavigationProp<any, any>>()
 
     return (
-        <Surface style={{ flex: 1, borderRadius: 15 }}>
+        <Surface style={{ flex: 1 / 2, borderRadius: 15 }}>
             <TouchableRipple
                 borderless
                 style={{

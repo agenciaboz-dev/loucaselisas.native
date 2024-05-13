@@ -230,6 +230,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                 style={{ margin: -20 }}
                 contentContainerStyle={{ padding: 20, gap: 10 }}
                 showsHorizontalScrollIndicator={false}
+                ListEmptyComponent={refreshingLessonsList ? <CourseSkeletons /> : <Text>Nenhuma lição a seguir</Text>}
             />
             <Text variant="bodyLarge">Veja também</Text>
             <FlatList

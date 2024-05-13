@@ -1,6 +1,15 @@
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { ScrollView, TextInput, View, ViewStyle } from "react-native"
+import {
+    Keyboard,
+    KeyboardAvoidingView,
+    LayoutAnimation,
+    Platform,
+    ScrollView,
+    TextInput,
+    View,
+    ViewStyle,
+} from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { useFormik } from "formik"
 import { Course, CourseForm, CoverForm } from "../../types/server/class/Course"
@@ -164,7 +173,13 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                         <TouchableRipple
                             key={item.id}
                             onPress={() => onCreatorPress(item)}
-                            style={{ paddingHorizontal: 10, paddingVertical: 5, flexDirection: "row", gap: 10, alignItems: "center" }}
+                            style={{
+                                paddingHorizontal: 10,
+                                paddingVertical: 5,
+                                flexDirection: "row",
+                                gap: 10,
+                                alignItems: "center",
+                            }}
                         >
                             <>
                                 <Image
@@ -236,130 +251,181 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
         }, [])
     )
 
-    return (
-        <ScrollView
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-            style={{ flex: 1 }}
-            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 20, gap: 10 }}
-        >
-            <ScreenTitle title={course ? course.name : "Novo Curso"} />
-            {cover ? (
-                <View style={{ position: "relative" }}>
-                    {cover.type == "image" ? (
-                        <Image source={{ uri: cover.url || "data:image/png;base64," + cover.file.base64 }} style={image_style} />
-                    ) : (
-                        <Video
-                            source={{ uri: cover.url || "data:video/mp4;base64," + cover.file.base64 }}
-                            style={image_style}
-                            resizeMode={ResizeMode.COVER}
-                            shouldPlay
-                            isLooping
-                            useNativeControls={false}
-                            isMuted
-                        />
-                    )}
-                    <IconButton
-                        icon={"image-edit"}
-                        style={{ position: "absolute", right: 0, top: 0, backgroundColor: colors.secondary }}
-                        iconColor={colors.primary}
-                        onPress={pickCover}
-                    />
-                </View>
-            ) : (
-                <Button mode="outlined" style={add_media_button_style} contentStyle={image_style} onPress={pickCover}>
-                    Capa
-                </Button>
-            )}
-            <GalleryFormComponent gallery={gallery} setGallery={setGallery} cover={cover} setCover={setCover} />
-            <FormText formik={formik} name="name" label={"Nome do curso"} ref={input_refs[0]} onSubmitEditing={() => focusInput(1)} transparent />
-            <LabeledComponent
-                label={"Participantes"}
-                Component={
-                    <MentionInput
-                        inputRef={input_refs[1]}
-                        placeholder="Participantes"
-                        placeholderTextColor={theme.colors.primary}
-                        value={participantsText}
-                        onChange={setParticipantsText}
-                        multiline={false}
-                        style={[dropdown_style, { flex: 0 }]}
-                        keyboardType="email-address"
-                        partTypes={[
-                            {
-                                trigger: "@",
-                                renderSuggestions,
-                                textStyle: { fontWeight: "bold", color: theme.colors.tertiary },
-                                isBottomMentionSuggestionsRender: true,
-                                isInsertSpaceAfterMention: true,
-                            },
-                        ]}
-                        onSubmitEditing={() => focusInput(2)}
-                        returnKeyType={"next"}
-                    />
-                }
-            />
-            <LabeledComponent
-                label="Idioma"
-                Component={
-                    <Dropdown
-                        data={[
-                            { label: "Português", value: "pt-br" },
-                            { label: "Inglês", value: "en-us" },
-                        ]}
-                        labelField="label"
-                        onChange={(item) => formik.setFieldValue("language", item.value)}
-                        valueField="value"
-                        value={formik.values.language}
-                        style={dropdown_style}
-                        placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
-                    />
-                }
-            />
-            <LabeledComponent
-                label="Categorias"
-                Component={
-                    <Dropdown
-                        data={availableCategories}
-                        labelField="name"
-                        onChange={(item) => handleCategoryPress(item)}
-                        valueField="id"
-                        value={categories.map((item) => item.name).join(", ")}
-                        style={[dropdown_style]}
-                        placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
-                        containerStyle={{ paddingVertical: 10 }}
-                        placeholder=""
-                        renderItem={(category, selected) => (
-                            <TouchableRipple
-                                style={{ flex: 1, paddingHorizontal: 10, paddingVertical: 10, flexDirection: "row", alignItems: "center", gap: 5 }}
-                                onPress={(ev) => {
-                                    ev.preventDefault()
-                                    handleCategoryPress(category)
-                                }}
-                            >
-                                <>
-                                    <Checkbox status={categories.find((item) => item.id == category.id) ? "checked" : "unchecked"} />
-                                    <Text style={{}}>{category.name}</Text>
-                                </>
-                            </TouchableRipple>
-                        )}
-                    />
-                }
-            />
-            <FormText
-                formik={formik}
-                name="description"
-                label={"Descrição"}
-                ref={input_refs[5]}
-                onSubmitEditing={() => focusInput(6)}
-                multiline
-                numberOfLines={5}
-                transparent
-            />
+    const [keyboardOpen, setKeyboardOpen] = useState(false)
+    const iosKeyboard = Platform.OS == "ios" && keyboardOpen
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setKeyboardOpen(true)
+        })
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setKeyboardOpen(false)
+        })
 
-            <Button mode="contained" style={{}} loading={loading} onPress={() => formik.handleSubmit()}>
-                Enviar para análise
-            </Button>
-        </ScrollView>
+        return () => {
+            showSubscription.remove()
+            hideSubscription.remove()
+        }
+    }, [])
+    return (
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "height" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? -500 : 0}
+        >
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+                style={{ flex: 1 }}
+                contentContainerStyle={{
+                    paddingHorizontal: 20,
+                    paddingVertical: 20,
+                    gap: 10,
+                    paddingBottom: 10,
+                    // position: iosKeyboard ? "relative" : "relative",
+                    bottom: iosKeyboard ? 190 : 0,
+                }}
+            >
+                <ScreenTitle title={course ? course.name : "Novo Curso"} />
+                {cover ? (
+                    <View style={{ position: "relative" }}>
+                        {cover.type == "image" ? (
+                            <Image
+                                source={{ uri: cover.url || "data:image/png;base64," + cover.file.base64 }}
+                                style={image_style}
+                            />
+                        ) : (
+                            <Video
+                                source={{ uri: cover.url || "data:video/mp4;base64," + cover.file.base64 }}
+                                style={image_style}
+                                resizeMode={ResizeMode.COVER}
+                                shouldPlay
+                                isLooping
+                                useNativeControls={false}
+                                isMuted
+                            />
+                        )}
+                        <IconButton
+                            icon={"image-edit"}
+                            style={{ position: "absolute", right: 0, top: 0, backgroundColor: colors.secondary }}
+                            iconColor={colors.primary}
+                            onPress={pickCover}
+                        />
+                    </View>
+                ) : (
+                    <Button mode="outlined" style={add_media_button_style} contentStyle={image_style} onPress={pickCover}>
+                        Capa
+                    </Button>
+                )}
+                <GalleryFormComponent gallery={gallery} setGallery={setGallery} cover={cover} setCover={setCover} />
+                <FormText
+                    formik={formik}
+                    name="name"
+                    label={"Nome do curso"}
+                    ref={input_refs[0]}
+                    onSubmitEditing={() => focusInput(1)}
+                    transparent
+                />
+                <LabeledComponent
+                    label={"Participantes"}
+                    Component={
+                        <MentionInput
+                            inputRef={input_refs[1]}
+                            placeholder="Participantes"
+                            placeholderTextColor={theme.colors.primary}
+                            value={participantsText}
+                            onChange={setParticipantsText}
+                            multiline={false}
+                            style={[dropdown_style, { flex: 0 }]}
+                            keyboardType="email-address"
+                            partTypes={[
+                                {
+                                    trigger: "@",
+                                    renderSuggestions,
+                                    textStyle: { fontWeight: "bold", color: theme.colors.tertiary },
+                                    isBottomMentionSuggestionsRender: true,
+                                    isInsertSpaceAfterMention: true,
+                                },
+                            ]}
+                            onSubmitEditing={() => focusInput(2)}
+                            returnKeyType={"next"}
+                        />
+                    }
+                />
+                <LabeledComponent
+                    label="Idioma"
+                    Component={
+                        <Dropdown
+                            data={[
+                                { label: "Português", value: "pt-br" },
+                                { label: "Inglês", value: "en-us" },
+                            ]}
+                            labelField="label"
+                            onChange={(item) => formik.setFieldValue("language", item.value)}
+                            valueField="value"
+                            value={formik.values.language}
+                            style={dropdown_style}
+                            placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
+                        />
+                    }
+                />
+                <LabeledComponent
+                    label="Categorias"
+                    Component={
+                        <Dropdown
+                            data={availableCategories}
+                            labelField="name"
+                            onChange={(item) => handleCategoryPress(item)}
+                            valueField="id"
+                            value={categories.map((item) => item.name).join(", ")}
+                            style={[dropdown_style]}
+                            placeholderStyle={{ color: theme.colors.onSurfaceVariant }}
+                            containerStyle={{ paddingVertical: 10 }}
+                            placeholder=""
+                            renderItem={(category, selected) => (
+                                <TouchableRipple
+                                    style={{
+                                        flex: 1,
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 10,
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: 5,
+                                    }}
+                                    onPress={(ev) => {
+                                        ev.preventDefault()
+                                        handleCategoryPress(category)
+                                    }}
+                                >
+                                    <>
+                                        <Checkbox
+                                            status={
+                                                categories.find((item) => item.id == category.id) ? "checked" : "unchecked"
+                                            }
+                                        />
+                                        <Text style={{}}>{category.name}</Text>
+                                    </>
+                                </TouchableRipple>
+                            )}
+                        />
+                    }
+                />
+                <FormText
+                    formik={formik}
+                    name="description"
+                    label={"Descrição"}
+                    ref={input_refs[5]}
+                    onSubmitEditing={() => focusInput(6)}
+                    multiline
+                    numberOfLines={5}
+                    transparent
+                />
+
+                <Button mode="contained" style={{}} loading={loading} onPress={() => formik.handleSubmit()}>
+                    Enviar para análise
+                </Button>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }

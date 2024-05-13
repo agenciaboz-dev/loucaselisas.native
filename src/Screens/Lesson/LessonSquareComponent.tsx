@@ -16,8 +16,22 @@ export const LesonSquareComponent: React.FC<LesonSquareComponentProps> = ({ less
         <Surface style={{ borderRadius: 15, height: image_size }}>
             <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => console.log()}>
                 <View style={{ position: "relative" }}>
-                    <Image source={lesson.thumb} contentFit="cover" style={{ width: image_size, aspectRatio: 1 }} />
-                    <Surface style={{ width: "80%", position: "absolute", bottom: 20, alignSelf: "center", padding: 5, borderRadius: 5 }}>
+                    <Image
+                        source={lesson.thumb}
+                        contentFit="cover"
+                        style={{ width: image_size, aspectRatio: 1 }}
+                        placeholderContentFit="cover"
+                    />
+                    <Surface
+                        style={{
+                            width: "80%",
+                            position: "absolute",
+                            bottom: 20,
+                            alignSelf: "center",
+                            padding: 5,
+                            borderRadius: 5,
+                        }}
+                    >
                         <Text numberOfLines={1}>{lesson.name}</Text>
                         <Text variant="labelMedium" style={{ color: theme.colors.backdrop }}>
                             {lesson.views} visualizações

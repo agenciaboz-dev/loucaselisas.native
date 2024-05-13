@@ -1,6 +1,15 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import React, { useEffect, useRef, useState } from "react"
-import { Dimensions, FlatList, ScrollView, View } from "react-native"
+import {
+    Dimensions,
+    FlatList,
+    Keyboard,
+    KeyboardAvoidingView,
+    LayoutAnimation,
+    Platform,
+    ScrollView,
+    View,
+} from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { useFormik } from "formik"
 import { Lesson, LessonForm } from "../../types/server/class/Course/Lesson"
@@ -135,37 +144,72 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
         }
     }, [lesson])
 
+    const [keyboardOpen, setKeyboardOpen] = useState(false)
+    const iosKeyboard = Platform.OS == "ios" && keyboardOpen
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setKeyboardOpen(true)
+        })
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setKeyboardOpen(false)
+        })
+
+        return () => {
+            showSubscription.remove()
+            hideSubscription.remove()
+        }
+    }, [])
+
     return (
-        <ScrollView
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
+        <KeyboardAvoidingView
             style={{ flex: 1 }}
-            contentContainerStyle={{ padding: 20, gap: 10 }}
+            behavior={Platform.OS === "ios" ? "height" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
-            <ScreenTitle title={lesson ? "Ediar lição" : "Nova lição"} />
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+                style={{ flex: 1 }}
+                contentContainerStyle={{
+                    padding: 20,
+                    gap: 10,
+                    paddingBottom: 10,
+                    // position: iosKeyboard ? "relative" : "relative",
+                    bottom: iosKeyboard ? 190 : 0,
+                }}
+            >
+                <ScreenTitle title={lesson ? "Ediar lição" : "Nova lição"} />
 
-            <FlatList
-                ref={mediasRef}
-                horizontal
-                data={[
-                    { media: media || lesson?.media, setMedia: setMedia, thumb: false, previousUri: lesson?.media.url },
-                    { media: thumb || lesson?.thumb, setMedia: setThumb, thumb: true, previousUri: lesson?.thumb },
-                ]}
-                renderItem={({ item }) => (
-                    <LessonMediaForm media={item.media} setMedia={item.setMedia} thumb={item.thumb} previousUri={item.previousUri} />
-                )}
-                style={{ marginHorizontal: -20 }}
-                contentContainerStyle={{ gap: 10, height: max_image_height, paddingHorizontal: 20 }}
-                showsHorizontalScrollIndicator={false}
-                onLayout={flashMediaScroll}
-            />
-            {mediaError && <Text style={{ color: "red" }}>{mediaError}</Text>}
+                <FlatList
+                    ref={mediasRef}
+                    horizontal
+                    data={[
+                        { media: media || lesson?.media, setMedia: setMedia, thumb: false, previousUri: lesson?.media.url },
+                        { media: thumb || lesson?.thumb, setMedia: setThumb, thumb: true, previousUri: lesson?.thumb },
+                    ]}
+                    renderItem={({ item }) => (
+                        <LessonMediaForm
+                            media={item.media}
+                            setMedia={item.setMedia}
+                            thumb={item.thumb}
+                            previousUri={item.previousUri}
+                        />
+                    )}
+                    style={{ marginHorizontal: -20 }}
+                    contentContainerStyle={{ gap: 10, height: max_image_height, paddingHorizontal: 20 }}
+                    showsHorizontalScrollIndicator={false}
+                    onLayout={flashMediaScroll}
+                />
+                {mediaError && <Text style={{ color: "red" }}>{mediaError}</Text>}
 
-            <FormText formik={formik} name="name" label={"Título"} />
-            <FormText formik={formik} name="info" label={"Descrição"} multiline numberOfLines={5} />
-            <Button loading={loading} mode="contained" onPress={() => preSubmit()} disabled={loading}>
-                Enviar
-            </Button>
-        </ScrollView>
+                <FormText formik={formik} name="name" label={"Título"} />
+                <FormText formik={formik} name="info" label={"Descrição"} multiline numberOfLines={5} />
+                <Button loading={loading} mode="contained" onPress={() => preSubmit()} disabled={loading}>
+                    Enviar
+                </Button>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }

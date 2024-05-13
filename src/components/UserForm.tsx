@@ -7,7 +7,7 @@ import unmask from "../tools/unmask"
 import { api } from "../backend/api"
 import { AxiosError } from "axios"
 import { useSnackbar } from "../hooks/useSnackbar"
-import { Keyboard, Pressable, ScrollView, TextInput, View } from "react-native"
+import { Keyboard, LayoutAnimation, Platform, Pressable, ScrollView, TextInput, View } from "react-native"
 import { Dropdown, IDropdownRef } from "react-native-element-dropdown"
 import { colors } from "../style/colors"
 import { FormText } from "./FormText"
@@ -132,8 +132,25 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
         }
     }, [])
 
+    const [keyboardOpen, setKeyboardOpen] = useState(false)
+    const iosKeyboard = Platform.OS == "ios" && keyboardOpen
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setKeyboardOpen(true)
+        })
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setKeyboardOpen(false)
+        })
+
+        return () => {
+            showSubscription.remove()
+            hideSubscription.remove()
+        }
+    }, [])
     return (
-        <View style={{ flex: 1, gap: 20, marginHorizontal: -20, paddingHorizontal: 20 }}>
+        <View style={{ flex: 1, gap: 20, marginHorizontal: -20, paddingHorizontal: 20, bottom: iosKeyboard ? 120 : 0 }}>
             <Surface elevation={2} style={{ padding: 10, borderRadius: 20, gap: 10 }}>
                 <FormText
                     ref={input_refs[0]}
@@ -216,7 +233,13 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                         value={formik.values.birth ? new Date(Number(formik.values.birth)).toLocaleDateString("pt-br") : ""}
                     />
                 </Pressable>
-                <FormText ref={input_refs[7]} name="profession" formik={formik} label={"Profissão"} onSubmitEditing={() => focusInput(8)} />
+                <FormText
+                    ref={input_refs[7]}
+                    name="profession"
+                    formik={formik}
+                    label={"Profissão"}
+                    onSubmitEditing={() => focusInput(8)}
+                />
                 <View style={{ flexDirection: "row", gap: 10, width: "100%" }}>
                     <FormText
                         ref={input_refs[8]}

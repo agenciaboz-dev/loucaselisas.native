@@ -47,6 +47,7 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ course }) => {
                                     transition={1000}
                                     priority={"high"}
                                     placeholder={placeholders.video}
+                                    placeholderContentFit="cover"
                                     contentFit="cover"
                                     style={media_style}
                                 />
@@ -66,11 +67,16 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ course }) => {
                 renderItem={({ item, index }) => (
                     <Surface style={{ borderRadius: 15 }}>
                         {item.type == "image" ? (
-                            <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => setViewingMedia(index + 1)}>
+                            <TouchableRipple
+                                borderless
+                                style={{ borderRadius: 15 }}
+                                onPress={() => setViewingMedia(index + 1)}
+                            >
                                 <Image
                                     source={item.url}
                                     placeholder={placeholders.square}
                                     contentFit="contain"
+                                    placeholderContentFit="cover"
                                     style={[media_style, { aspectRatio: item.width / item.height, width: undefined }]}
                                 />
                             </TouchableRipple>

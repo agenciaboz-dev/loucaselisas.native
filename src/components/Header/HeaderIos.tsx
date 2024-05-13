@@ -20,7 +20,7 @@ export const HeaderIos: React.FC<HeaderIosProps> = ({}) => {
     return user ? (
         <View
             style={{
-                // backgroundColor: theme.colors.background,
+                backgroundColor: "white",
                 flexDirection: "row",
                 paddingTop: 35,
                 paddingBottom: 15,
@@ -28,6 +28,10 @@ export const HeaderIos: React.FC<HeaderIosProps> = ({}) => {
                 justifyContent: "space-between",
                 width: "100%",
                 paddingHorizontal: 20,
+                shadowColor: "gray", // Cor da sombra: preto para alto contraste
+                shadowOffset: { width: 0, height: 0 }, // Deslocamento da sombra
+                shadowOpacity: 0.4, // Opacidade da sombra
+                shadowRadius: 3.84,
             }}
         >
             <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>

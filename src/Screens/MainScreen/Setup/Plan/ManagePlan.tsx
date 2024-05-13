@@ -42,8 +42,8 @@ export const ManagePlan: React.FC<ManagePlanProps> = ({ navigation }) => {
                 renderItem={({ item }) => <PlanContainer plan={item} />}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item) => item.id.toString()}
-                style={{ width: "100%" }}
-                contentContainerStyle={{ gap: 20, paddingVertical: 20, paddingHorizontal: 5 }}
+                style={{ margin: -20, marginTop: 0 }}
+                contentContainerStyle={{ gap: 20, padding: 20 }}
                 onRefresh={refreshPlans}
                 refreshing={loading}
             />

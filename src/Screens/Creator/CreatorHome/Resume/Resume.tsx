@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { FlatList, LayoutAnimation, Platform, ScrollView, View } from "react-native"
+import { FlatList, LayoutAnimation, Platform, RefreshControl, ScrollView, View } from "react-native"
 import { Text, TextInput, useTheme } from "react-native-paper"
 import { useUser } from "../../../../hooks/useUser"
 import { Button } from "../../../../components/Button"
@@ -55,6 +55,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
     }
 
     const refreshCourses = async () => {
+        setOwnedCourses([])
         setRefreshing(true)
         setTimeout(async () => {
             try {
@@ -100,6 +101,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
             style={{ flex: 1 }}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10 }}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshCourses} />}
         >
             <IosAvoidKeyboard style={{ gap: 10 }}>
                 <ManageProfileCard

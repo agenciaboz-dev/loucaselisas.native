@@ -1,6 +1,6 @@
 import ImageView from "react-native-image-viewing"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, RefreshControl, ScrollView, View } from "react-native"
 import { Lesson } from "../../types/server/class/Course/Lesson"
 import { useUser } from "../../hooks/useUser"
@@ -25,14 +25,15 @@ interface LessonScreenProps {
 
 export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route }) => {
     const { user } = useUser()
-    const course = route.params?.course as Course | undefined
     const theme = useTheme()
     const image_width = Dimensions.get("screen").width * 0.9
     const max_image_height = (image_width / 16) * 9
     const media_style: ImageStyle = { width: image_width, height: max_image_height, borderRadius: 15 }
+    const videoRef = useRef<Video>(null)
 
     const [viewingMedia, setViewingMedia] = useState<number | null>(null)
 
+    const [course, setCourse] = useState(route.params?.course as Course | undefined)
     const [lesson, setLesson] = useState(route.params?.lesson as Lesson | undefined)
     const [refreshing, setRefreshing] = useState(false)
     const [liking, setLiking] = useState(false)
@@ -65,6 +66,18 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
             console.log(error)
         } finally {
             setRefreshingLessonsList(false)
+        }
+    }
+
+    const fetchCourse = async () => {
+        console.log("a")
+        if (!lesson) return
+
+        try {
+            const response = await api.get("/course", { params: { course_id: lesson.course_id } })
+            setCourse(response.data)
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -112,9 +125,21 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
         navigation.navigate("course:chat", { course })
     }
 
+    useEffect(() => {
+        fetchCategoryCourses()
+        fetchLessonsList()
+    }, [course])
+
     useFocusEffect(
         useCallback(() => {
             refreshLesson()
+            if (!course) {
+                fetchCourse()
+            }
+
+            return () => {
+                videoRef.current?.stopAsync()
+            }
         }, [])
     )
 
@@ -128,12 +153,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                 title={lesson.name}
                 right={
                     <View style={{ flexDirection: "row", gap: -5 }}>
-                        <IconButton
-                            icon={liked ? "heart" : "heart-outline"}
-                            style={{ margin: 0 }}
-                            loading={liking}
-                            onPress={onLikePress}
-                        />
+                        <IconButton icon={liked ? "heart" : "heart-outline"} style={{ margin: 0 }} loading={liking} onPress={onLikePress} />
                         <Menu
                             visible={showChatDenied}
                             onDismiss={() => setShowChatDenied(false)}
@@ -149,13 +169,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
 
                         <OptionsMenu
                             options={[{ label: "Compartilhar", onPress: () => null }]}
-                            Anchor={
-                                <IconButton
-                                    icon={"dots-vertical"}
-                                    style={{ margin: 0 }}
-                                    onPress={() => setShowMenu((show) => !show)}
-                                />
-                            }
+                            Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
                             onDismiss={() => setShowMenu(false)}
                             visible={showMenu}
                         />
@@ -187,6 +201,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                     </TouchableRipple>
                 ) : (
                     <Video
+                        ref={videoRef}
                         source={{ uri: lesson.media.url }}
                         resizeMode={ResizeMode.COVER}
                         style={media_style}
@@ -210,7 +225,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
             <Text variant="bodyLarge">Próximos</Text>
             <FlatList
                 horizontal
-                data={LessonsList.filter((item) => item.id != lesson.id)}
+                data={LessonsList.filter((item) => item.id != lesson.id).sort((a, b) => Number(a.published) - Number(b.published))}
                 renderItem={({ item }) => <LesonSquareComponent lesson={item} />}
                 style={{ margin: -20 }}
                 contentContainerStyle={{ padding: 20, gap: 10 }}

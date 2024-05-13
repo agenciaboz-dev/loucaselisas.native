@@ -6,6 +6,7 @@ import { api } from "../../../backend/api"
 import { Course } from "../../../types/server/class/Course"
 import { CategoryCourseList } from "./CategoryCourseList"
 import { TextInput, useTheme } from "react-native-paper"
+import { useUser } from "../../../hooks/useUser"
 
 interface SearchCoursesScreenProps {
     navigation: NavigationProp<any, any>
@@ -14,6 +15,7 @@ interface SearchCoursesScreenProps {
 
 export const SearchCoursesScreen: React.FC<SearchCoursesScreenProps> = ({ navigation, route }) => {
     const theme = useTheme()
+    const { user } = useUser()
 
     const [searchText, setSearchText] = useState(route.params?.text as string | undefined)
     const [loading, setLoading] = useState(true)
@@ -25,7 +27,7 @@ export const SearchCoursesScreen: React.FC<SearchCoursesScreenProps> = ({ naviga
         Keyboard.dismiss()
         setLoading(true)
         try {
-            const response = await api.get("/course/search", { params: { text: searchText } })
+            const response = await api.get("/course/search", { params: { text: searchText, user_id: user?.id } })
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             setCourses(response.data)
         } catch (error) {

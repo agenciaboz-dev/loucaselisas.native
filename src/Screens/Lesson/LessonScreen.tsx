@@ -86,8 +86,6 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
         try {
             const response = await api.get("/lesson", { params: { lesson_id: lesson?.id, user_id: user?.id } })
             setLesson(response.data)
-            await fetchLessonsList()
-            await fetchCategoryCourses()
         } catch (error) {
             console.log(error)
         } finally {
@@ -129,6 +127,10 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
         fetchCategoryCourses()
         fetchLessonsList()
     }, [course])
+
+    useEffect(() => {
+        fetchCourse()
+    }, [lesson])
 
     useFocusEffect(
         useCallback(() => {

@@ -169,7 +169,7 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = (props) => {
                     <View style={{ flex: 1, alignItems: "flex-end" }}>
                         {!readOnly && (
                             <IconButton
-                                icon={"pencil"}
+                                icon={editing ? "check" : "pencil"}
                                 iconColor={editing ? theme.colors.background : theme.colors.primary}
                                 containerColor={editing ? theme.colors.primary : theme.colors.background}
                                 onPress={toggleEditing}
@@ -196,18 +196,11 @@ export const ManageProfileCard: React.FC<ManageProfileCardProps> = (props) => {
                 />
             ) : (
                 <View style={{ position: "relative", marginBottom: -10 }}>
-                    <Text
-                        numberOfLines={!extendedDescription ? 3 : undefined}
-                        style={{ position: "relative", marginTop: 10 }}
-                    >
-                        {description || (
-                            <Button labelStyle={{ textDecorationLine: "underline" }}>Inserir uma descrição</Button>
-                        )}
+                    <Text numberOfLines={!extendedDescription ? 3 : undefined} style={{ position: "relative", marginTop: 10 }}>
+                        {description || <Button labelStyle={{ textDecorationLine: "underline" }}>Inserir uma descrição</Button>}
                     </Text>
                     <TouchableRipple onPress={extendDescription} style={{ bottom: -10, right: 0, position: "absolute" }}>
-                        <Text style={{ textDecorationLine: "underline" }}>
-                            ler {extendedDescription ? "menos" : "mais"}...
-                        </Text>
+                        <Text style={{ textDecorationLine: "underline" }}>ler {extendedDescription ? "menos" : "mais"}...</Text>
                     </TouchableRipple>
                 </View>
             )}

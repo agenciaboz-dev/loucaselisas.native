@@ -3826,6 +3826,11 @@ expo-video-thumbnails@^7.9.0:
   resolved "https://registry.yarnpkg.com/expo-video-thumbnails/-/expo-video-thumbnails-7.9.0.tgz#7ec03759ae169a9a585d94b15c9de96dffae8851"
   integrity sha512-KP7ZlIu83xXXIFx24bzjScwLns6b93f3eHPDUOnT5UtOScbIV3guXA6P9pRBnyxJe0K5+NhR11wX1wf+QCk9+g==
 
+expo-video@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/expo-video/-/expo-video-1.1.9.tgz#4213d60abb029f1520053c3126c8535a98e867f8"
+  integrity sha512-Q5JOz5RfwcdsI1giLLixO6PrGy/Dnaa/+bwRxr2MDPUKcI7iHXyNx9/lcuU1YDnpVAC01gfkhR9iDy/tdMeFjQ==
+
 expo@~50.0.14:
   version "50.0.15"
   resolved "https://registry.yarnpkg.com/expo/-/expo-50.0.15.tgz#18c5c3ee0125fd42fe828b6791410eed68f7e74a"

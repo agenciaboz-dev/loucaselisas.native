@@ -17,7 +17,6 @@ import { ExtendableText } from "../../components/ExtendableText"
 import { LesonSquareComponent } from "./LessonSquareComponent"
 import { CourseSkeletons } from "../../components/CourseSkeletons"
 import { CourseContainer } from "../Creator/CreatorHome/Resume/CourseContainer"
-import { VideoPlayer } from "../../components/VideoPlayer/VideoPlayer"
 
 interface LessonScreenProps {
     navigation: NavigationProp<any, any>
@@ -203,7 +202,15 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                         />
                     </TouchableRipple>
                 ) : (
-                    <VideoPlayer source={{ uri: lesson.media.url }} />
+                    <Video
+                        ref={videoRef}
+                        source={{ uri: lesson.media.url }}
+                        resizeMode={ResizeMode.COVER}
+                        style={media_style}
+                        useNativeControls
+                        shouldPlay
+                        onError={(error) => console.log(`course cover error: ${error}`)}
+                    />
                 )}
             </Surface>
             {lesson.media.type == "image" && (

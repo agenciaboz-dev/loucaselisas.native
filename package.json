@@ -34,7 +34,6 @@
         "expo-notifications": "^0.27.6",
         "expo-splash-screen": "^0.26.4",
         "expo-status-bar": "^1.11.1",
-        "expo-video": "^1.1.9",
         "expo-video-thumbnails": "^7.9.0",
         "formik": "^2.4.5",
         "lodash": "^4.17.21",

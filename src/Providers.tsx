@@ -6,6 +6,7 @@ import { PaperProvider, Text } from "react-native-paper"
 import { UserProvider } from "./contexts/userContext"
 import { NavigationContainer } from "@react-navigation/native"
 import constants from "expo-constants"
+import { VideoPlayerProvider } from "./contexts/videoplayerContext"
 
 interface ProvidersProps {
     children?: React.ReactNode
@@ -16,11 +17,13 @@ export const Providers: React.FC<ProvidersProps> = ({ children }) => {
         <NavigationContainer theme={navigation_theme}>
             <PaperProvider theme={paper_theme}>
                 <SnackbarProvider>
-                    <UserProvider>
-                        {children}
-                        <Snackbar />
-                        <Text style={{ position: "absolute", bottom: 5, right: 5, color: "red" }}>{constants.expoConfig?.version}</Text>
-                    </UserProvider>
+                    <VideoPlayerProvider>
+                        <UserProvider>
+                            {children}
+                            <Snackbar />
+                            <Text style={{ position: "absolute", bottom: 5, right: 5, color: "red" }}>{constants.expoConfig?.version}</Text>
+                        </UserProvider>
+                    </VideoPlayerProvider>
                 </SnackbarProvider>
             </PaperProvider>
         </NavigationContainer>

@@ -24,6 +24,7 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status }) =>
     return (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <Text style={{ color: theme.colors.background, flex: 0.11, textAlign: "center" }}>
+                {/* @ts-ignore */}
                 {moment.duration(value).format("mm:ss", { trim: false })}
             </Text>
             <Slider
@@ -39,6 +40,7 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status }) =>
                 step={1}
             />
             <Text style={{ color: theme.colors.background, flex: 0.11, textAlign: "center" }}>
+                {/* @ts-ignore */}
                 {moment.duration(status.durationMillis).format("mm:ss", { trim: false })}
             </Text>
         </View>

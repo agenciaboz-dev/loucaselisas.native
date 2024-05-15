@@ -5,6 +5,7 @@ import { useVideoPlayer } from "../../hooks/useVideoplayer"
 import { IconButton, useTheme } from "react-native-paper"
 import { VideoProgressBar } from "./VideoProgressBar"
 import { PlayPause } from "./PlayPause"
+import { LinearGradient } from "expo-linear-gradient"
 
 interface ControlsContainerProps {
     status: AVPlaybackStatusSuccess
@@ -92,6 +93,7 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
                 style={{ position: "absolute", width: "100%", height: "100%", opacity }}
                 // pointerEvents={showingControls ? undefined : "none"}
             >
+                {/* <LinearGradient style={{ position: "absolute", width: "100%", height: "100%" }} colors={["rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)"]} /> */}
                 <View
                     style={{
                         position: "absolute",

@@ -22,7 +22,7 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status }) =>
     }, [status.positionMillis])
 
     return (
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 10 }}>
             <Text style={{ color: theme.colors.background, flex: 0.11, textAlign: "center" }}>
                 {/* @ts-ignore */}
                 {moment.duration(value).format("mm:ss", { trim: false })}
@@ -33,10 +33,10 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status }) =>
                 onSlidingComplete={(value) => ref.current?.setPositionAsync(value[0])}
                 maximumValue={status.durationMillis}
                 minimumValue={0}
-                containerStyle={{ flex: 0.78 }}
-                trackStyle={{ backgroundColor: theme.colors.background, borderRadius: 100, height: 6 }}
+                containerStyle={{ flex: 0.78, height: 20 }}
+                trackStyle={{ backgroundColor: theme.colors.background, borderRadius: 100 }}
                 thumbStyle={{ backgroundColor: theme.colors.primary, width: 15, height: 15 }}
-                minimumTrackStyle={{ backgroundColor: theme.colors.primary, borderRadius: 100, height: 8 }}
+                minimumTrackStyle={{ backgroundColor: theme.colors.primary, borderRadius: 100 }}
                 step={1}
             />
             <Text style={{ color: theme.colors.background, flex: 0.11, textAlign: "center" }}>

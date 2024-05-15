@@ -6,6 +6,7 @@ import { IconButton, useTheme } from "react-native-paper"
 import { VideoProgressBar } from "./VideoProgressBar"
 import { PlayPause } from "./PlayPause"
 import { LinearGradient } from "expo-linear-gradient"
+import { VolumeControls } from "./VolumeControls"
 
 interface ControlsContainerProps {
     status: AVPlaybackStatusSuccess
@@ -108,7 +109,13 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
                     <PlayPause onPress={handleContainerPress} playing={playing} setPlaying={setPlaying} status={status} />
                     <IconButton icon="fast-forward-10" iconColor={theme.colors.background} size={40} onPress={() => handleTimeChange(10)} />
                 </View>
-                <View style={{ height: 60, marginTop: "auto", paddingHorizontal: 10 }}>{status && <VideoProgressBar status={status} />}</View>
+                <View style={{ height: 65, marginTop: "auto" }}>
+                    <VideoProgressBar status={status} />
+                    <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+                        <PlayPause onPress={handleContainerPress} playing={playing} setPlaying={setPlaying} status={status} size={30} />
+                        <VolumeControls status={status} />
+                    </View>
+                </View>
             </Animated.View>
         </TouchableWithoutFeedback>
     )

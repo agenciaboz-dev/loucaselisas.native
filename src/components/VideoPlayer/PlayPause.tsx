@@ -8,9 +8,10 @@ interface PlayPauseProps {
     playing: boolean
     setPlaying: React.Dispatch<React.SetStateAction<boolean>>
     status: AVPlaybackStatusSuccess
+    size?: number
 }
 
-export const PlayPause: React.FC<PlayPauseProps> = ({ onPress, playing, setPlaying, status }) => {
+export const PlayPause: React.FC<PlayPauseProps> = ({ onPress, playing, setPlaying, status, size = 60 }) => {
     const { ref } = useVideoPlayer()
     const theme = useTheme()
 
@@ -29,9 +30,10 @@ export const PlayPause: React.FC<PlayPauseProps> = ({ onPress, playing, setPlayi
 
     return (
         <IconButton
+            style={{ margin: 0 }}
             icon={playing ? "pause-circle-outline" : "play-circle-outline"}
             iconColor={theme.colors.background}
-            size={60}
+            size={size}
             onPress={togglePlayPause}
         />
     )

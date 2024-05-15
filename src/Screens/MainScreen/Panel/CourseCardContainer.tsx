@@ -18,7 +18,7 @@ export const CourseCardContainer: React.FC<CourseCardContainerProps> = ({ course
         <Surface style={{ flex: 1, borderRadius: 15 }}>
             <TouchableRipple
                 borderless
-                style={{ flexDirection: "row", borderRadius: 15, padding: 5, gap: 5 }}
+                style={{ flexDirection: "row", borderRadius: 15, padding: 5, gap: 5, alignItems: "center" }}
                 onPress={() => navigation.navigate("course:profile", { course })}
             >
                 <>
@@ -29,7 +29,7 @@ export const CourseCardContainer: React.FC<CourseCardContainerProps> = ({ course
                         contentFit="cover"
                         style={{ width: 100, aspectRatio: "1/1", borderRadius: 15 }}
                     />
-                    <View style={{ padding: 5, gap: 2, paddingRight: 140 }}>
+                    <View style={{ padding: 5, gap: 2, paddingRight: 140, flexDirection: "column", height: "100%", justifyContent: "space-between" }}>
                         <Text variant="bodyLarge" style={{ fontFamily: "Founders-Grotesk-Bold" }} numberOfLines={1}>
                             {course.name}
                         </Text>

@@ -6,5 +6,5 @@ interface FilterButtonProps extends ButtonProps {
 }
 
 export const FilterButton: React.FC<FilterButtonProps> = (props) => {
-    return <Button mode={props.active ? "contained" : "outlined"} {...props} />
+    return <Button mode={props.active ? "contained" : "outlined"} {...props} style={{ height: "100%" }} />
 }

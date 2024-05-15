@@ -24,7 +24,7 @@ export const ExtendableText: React.FC<ExtendableTextProps> = (props) => {
             <Text numberOfLines={!extendedText ? props.minLines : undefined} style={[props.textStyle]}>
                 {props.text}
             </Text>
-            <TouchableRipple onPress={extendText} style={[{ bottom: -10, right: 0, position: "absolute" }, props.pressableStyle]}>
+            <TouchableRipple onPress={extendText} style={[{ marginTop: 5, marginLeft: "auto" }, props.pressableStyle]}>
                 <Text style={[{ textDecorationLine: "underline" }, props.pressableTextStyle]}>ler {extendedText ? "menos" : "mais"}...</Text>
             </TouchableRipple>
         </View>

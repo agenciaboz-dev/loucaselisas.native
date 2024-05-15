@@ -20,7 +20,7 @@ export const ScreenTitle: React.FC<ScreenTitleProps> = ({ title, hideBackArrow, 
                         <IconButton icon={"chevron-left"} onPress={() => navigation.goBack()} style={{ margin: 0 }} />
                     </Surface>
                 )}
-                <Text variant="titleLarge" style={{ alignSelf: "center", maxWidth: 230 }} numberOfLines={2}>
+                <Text variant="titleLarge" style={{ alignSelf: "center", maxWidth: 200 }} numberOfLines={2}>
                     {title}
                 </Text>
             </View>

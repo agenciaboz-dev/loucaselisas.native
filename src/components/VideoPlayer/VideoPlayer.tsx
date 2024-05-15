@@ -20,6 +20,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ source }) => {
 
     const [status, setStatus] = useState<AVPlaybackStatusSuccess>()
     const [videoError, setVideoError] = useState<AVPlaybackStatusError>()
+    const [playing, setPlaying] = useState(false)
 
     const resetFadeout = (timer = 3000) => {
         if (timeoutRef.current) {
@@ -32,11 +33,13 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ source }) => {
 
     const togglePlayPause = async () => {
         if (status?.isPlaying) {
+            setPlaying(false)
             await ref.current?.pauseAsync()
         } else {
             if (status?.positionMillis == status?.durationMillis) {
                 await ref.current?.setPositionAsync(0)
             }
+            setPlaying(true)
             await ref.current?.playAsync()
         }
         handleContainerPress()
@@ -100,7 +103,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ source }) => {
                     >
                         <IconButton icon="rewind-10" iconColor={theme.colors.background} size={40} onPress={() => handleTimeChange(-10)} />
                         <IconButton
-                            icon={status?.isPlaying ? "pause-circle-outline" : "play-circle-outline"}
+                            icon={playing ? "pause-circle-outline" : "play-circle-outline"}
                             iconColor={theme.colors.background}
                             size={60}
                             onPress={togglePlayPause}

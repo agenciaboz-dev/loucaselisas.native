@@ -15,21 +15,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ source }) => {
     const max_image_height = (image_width / 16) * 9
     const media_style: ImageStyle = { width: image_width, height: max_image_height, borderRadius: 15 }
 
-    const opacity = new Animated.Value(1)
+    const opacity = useRef(new Animated.Value(1)).current
     const timeoutRef = useRef<NodeJS.Timeout>()
+    const lastInteraction = useRef(new Date().getTime())
 
     const [status, setStatus] = useState<AVPlaybackStatusSuccess>()
     const [videoError, setVideoError] = useState<AVPlaybackStatusError>()
     const [playing, setPlaying] = useState(false)
-
-    const resetFadeout = (timer = 3000) => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current)
-        }
-
-        timeoutRef.current = setTimeout(() => fadeControls(0, 300), timer)
-        console.log("resetting timeout")
-    }
+    const [showingControls, setShowingControls] = useState(true)
 
     const togglePlayPause = async () => {
         if (status?.isPlaying) {
@@ -59,25 +52,58 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ source }) => {
     }
 
     const fadeControls = (toValue: number, duration: number) => {
-        console.log({ toValue, duration })
         Animated.timing(opacity, {
             toValue,
             duration,
             useNativeDriver: true,
         }).start(() => {
-            if (toValue === 1) {
-                resetFadeout()
-            }
+            setShowingControls(!!toValue)
         })
     }
 
     const handleContainerPress = () => {
         fadeControls(1, 300)
+        if (status?.isPlaying) {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+            }
+            timeoutRef.current = setTimeout(() => fadeControls(0, 300), 2000)
+        }
     }
 
     useEffect(() => {
-        // console.log(status)
-    }, [status])
+        const setupFadeOut = () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+            }
+            timeoutRef.current = setTimeout(() => {
+                if (playing) fadeControls(0, 300)
+            }, 1000)
+        }
+
+        if (status?.isPlaying) {
+            setupFadeOut()
+        } else {
+            fadeControls(1, 300)
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+            }
+        }
+
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+            }
+        }
+    }, [playing, status?.isPlaying])
+
+    useEffect(() => {
+        if (status) {
+            if (status.positionMillis === status.durationMillis) {
+                setPlaying(false)
+            }
+        }
+    }, [status?.positionMillis])
 
     return (
         <TouchableWithoutFeedback onPress={handleContainerPress}>
@@ -90,7 +116,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ source }) => {
                     onError={(error) => console.log(`error loading video: ${error}`)}
                     onPlaybackStatusUpdate={(status) => (status.isLoaded ? setStatus(status) : setVideoError(status))}
                 />
-                <Animated.View style={{ position: "absolute", width: "100%", height: "100%", opacity }}>
+                <Animated.View
+                    style={{ position: "absolute", width: "100%", height: "100%", opacity }}
+                    pointerEvents={showingControls ? undefined : "none"}
+                >
                     <View
                         style={{
                             position: "absolute",

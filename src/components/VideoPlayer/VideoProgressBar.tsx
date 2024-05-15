@@ -35,7 +35,7 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status }) =>
                 containerStyle={{ flex: 0.78 }}
                 trackStyle={{ backgroundColor: theme.colors.background, borderRadius: 100, height: 6 }}
                 thumbStyle={{ backgroundColor: theme.colors.primary, width: 15, height: 15 }}
-                minimumTrackStyle={{ backgroundColor: theme.colors.primary }}
+                minimumTrackStyle={{ backgroundColor: theme.colors.primary, borderRadius: 100, height: 8 }}
                 step={1}
             />
             <Text style={{ color: theme.colors.background, flex: 0.11, textAlign: "center" }}>

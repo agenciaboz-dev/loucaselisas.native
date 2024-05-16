@@ -113,7 +113,7 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
                     <VideoProgressBar status={status} />
                     <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
                         <PlayPause onPress={handleContainerPress} playing={playing} setPlaying={setPlaying} status={status} size={30} />
-                        <VolumeControls status={status} />
+                        <VolumeControls status={status} onContainerPress={handleContainerPress} />
                     </View>
                 </View>
             </Animated.View>

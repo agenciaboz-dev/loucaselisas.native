@@ -1,5 +1,5 @@
 import { AVPlaybackStatusSuccess, Video } from "expo-av"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { View } from "react-native"
 import { Slider } from "@miblanchard/react-native-slider"
 import { useVideoPlayer } from "../../hooks/useVideoplayer"
@@ -9,13 +9,25 @@ import "moment-duration-format"
 
 interface VideoProgressBarProps {
     status: AVPlaybackStatusSuccess
+    onContainerPress: () => void
 }
 
-export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status }) => {
+export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status, onContainerPress }) => {
     const { ref } = useVideoPlayer()
     const theme = useTheme()
+    const intervalRef = useRef<NodeJS.Timeout>()
 
     const [value, setValue] = useState(status.positionMillis)
+
+    const handleSlideStart = () => {
+        intervalRef.current = setInterval(() => onContainerPress(), 1000)
+    }
+
+    const handleSlideFinish = async (value: number) => {
+        ref.current?.setPositionAsync(value)
+
+        if (intervalRef.current) clearInterval(intervalRef.current)
+    }
 
     useEffect(() => {
         setValue(status.positionMillis)
@@ -30,7 +42,8 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status }) =>
             <Slider
                 value={value}
                 onValueChange={(value) => setValue(value[0])}
-                onSlidingComplete={(value) => ref.current?.setPositionAsync(value[0])}
+                onSlidingStart={handleSlideStart}
+                onSlidingComplete={(value) => handleSlideFinish(value[0])}
                 maximumValue={status.durationMillis}
                 minimumValue={0}
                 containerStyle={{ flex: 0.78, height: 20 }}

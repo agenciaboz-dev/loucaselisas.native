@@ -32,7 +32,6 @@ export const VolumeControls: React.FC<VolumeControlsProps> = ({ status, onContai
         if (intervalRef.current) clearInterval(intervalRef.current)
     }
 
-    // todo: setVolumeAsync on slider change
 
     return (
         <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>

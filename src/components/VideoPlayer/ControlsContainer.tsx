@@ -54,6 +54,10 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
         }
     }
 
+    const handleFullscreenPress = async () => {
+        await ref.current?.presentFullscreenPlayer()
+    }
+
     useEffect(() => {
         const setupFadeOut = () => {
             if (timeoutRef.current) {
@@ -110,10 +114,21 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
                     <IconButton icon="fast-forward-10" iconColor={theme.colors.background} size={40} onPress={() => handleTimeChange(10)} />
                 </View>
                 <View style={{ height: 65, marginTop: "auto" }}>
-                    <VideoProgressBar status={status} />
+                    <VideoProgressBar status={status} onContainerPress={handleContainerPress} />
                     <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
                         <PlayPause onPress={handleContainerPress} playing={playing} setPlaying={setPlaying} status={status} size={30} />
                         <VolumeControls status={status} onContainerPress={handleContainerPress} />
+
+                        <View style={{ flexDirection: "row", marginLeft: "auto", alignItems: "center" }}>
+                            <IconButton icon="share-variant" style={{ margin: 0 }} size={25} iconColor={theme.colors.background} />
+                            <IconButton
+                                icon="fullscreen"
+                                style={{ margin: 0 }}
+                                size={30}
+                                iconColor={theme.colors.background}
+                                onPress={handleFullscreenPress}
+                            />
+                        </View>
                     </View>
                 </View>
             </Animated.View>

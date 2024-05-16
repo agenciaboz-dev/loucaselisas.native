@@ -92,7 +92,7 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
         <TouchableWithoutFeedback onPress={handleContainerPress}>
             <Animated.View
                 style={{ position: "absolute", width: "100%", height: "100%", opacity }}
-                // pointerEvents={showingControls ? undefined : "none"}
+                pointerEvents={showingControls ? undefined : "box-only"}
             >
                 {/* <LinearGradient style={{ position: "absolute", width: "100%", height: "100%" }} colors={["rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)"]} /> */}
                 <View

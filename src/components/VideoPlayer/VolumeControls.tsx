@@ -50,8 +50,8 @@ export const VolumeControls: React.FC<VolumeControlsProps> = ({ status, onContai
                 minimumValue={0}
                 containerStyle={{ width: 80, height: 20 }}
                 trackStyle={{ backgroundColor: theme.colors.background, borderRadius: 100 }}
-                thumbStyle={{ backgroundColor: theme.colors.primary, width: 15, height: 15 }}
-                minimumTrackStyle={{ backgroundColor: theme.colors.primary, borderRadius: 100 }}
+                thumbStyle={{ backgroundColor: theme.colors.outlineVariant, width: 15, height: 15 }}
+                minimumTrackStyle={{ backgroundColor: theme.colors.outlineVariant, borderRadius: 100 }}
             />
         </View>
     )

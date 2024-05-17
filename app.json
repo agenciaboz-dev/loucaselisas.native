@@ -52,6 +52,12 @@
                       "assets/fonts/FoundersGroteskXCond-Bold.otf"
                   ]
               }
+          ],
+          [
+              "expo-screen-orientation",
+              {
+                  "initialOrientation": "DEFAULT"
+              }
           ]
       ],
       "extra": {

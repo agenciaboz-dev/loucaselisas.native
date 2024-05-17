@@ -13,7 +13,7 @@ interface ControlsContainerProps {
 }
 
 export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) => {
-    const { ref } = useVideoPlayer()
+    const { ref, toggleFullscreen: toggleHeader } = useVideoPlayer()
     const opacity = useRef(new Animated.Value(1)).current
     const timeoutRef = useRef<NodeJS.Timeout>()
     const theme = useTheme()
@@ -55,7 +55,8 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
     }
 
     const handleFullscreenPress = async () => {
-        await ref.current?.presentFullscreenPlayer()
+        // await ref.current?.presentFullscreenPlayer()
+        toggleHeader()
     }
 
     useEffect(() => {
@@ -100,7 +101,7 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
             >
                 <LinearGradient
                     style={{ position: "absolute", width: "100%", height: "100%", borderRadius: 15 }}
-                    colors={["rgba(0, 0, 0, 0)", "rgba(50, 50, 50, 1)"]}
+                    colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
                     // locations={[0, 0.5]}
                     start={{ x: 0.5, y: 0.5 }}
                 />

@@ -7,6 +7,7 @@ import { Header } from "./components/Header/Header"
 import { default_navigator_options } from "./tools/default_navigator_options"
 import { Platform } from "react-native"
 import { HeaderIos } from "./components/Header/HeaderIos"
+import { useVideoPlayer } from "./hooks/useVideoplayer"
 
 interface RoutesProps {}
 
@@ -22,13 +23,15 @@ const Stack = createNativeStackNavigator<HomeStackParams>()
 
 export const Routes: React.FC<RoutesProps> = ({}) => {
     const ios = Platform.OS == "ios"
+    const { showHeader } = useVideoPlayer()
+
     return (
         <Stack.Navigator
             screenOptions={{
                 ...default_navigator_options,
                 headerTitle: ios ? undefined : () => <Header />,
                 header: ios ? () => <HeaderIos /> : undefined,
-                headerShown: true,
+                headerShown: showHeader,
             }}
         >
             <Stack.Screen name="home" component={Home} options={{ headerShown: false }} />

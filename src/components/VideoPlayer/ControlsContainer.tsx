@@ -13,7 +13,7 @@ interface ControlsContainerProps {
 }
 
 export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) => {
-    const { ref } = useVideoPlayer()
+    const { ref, toggleFullscreen: toggleHeader } = useVideoPlayer()
     const opacity = useRef(new Animated.Value(1)).current
     const timeoutRef = useRef<NodeJS.Timeout>()
     const theme = useTheme()
@@ -55,7 +55,8 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
     }
 
     const handleFullscreenPress = async () => {
-        await ref.current?.presentFullscreenPlayer()
+        // await ref.current?.presentFullscreenPlayer()
+        toggleHeader()
     }
 
     useEffect(() => {

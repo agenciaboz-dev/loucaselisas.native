@@ -9,6 +9,8 @@ import { Setup } from "../Screens/MainScreen/Setup/Setup"
 import { useUser } from "../hooks/useUser"
 import { CreatorStack } from "../Screens/Creator/CreatorStack"
 import { SearchStack } from "../Screens/MainScreen/Search/SearchStack"
+import { useVideoPlayer } from "../hooks/useVideoplayer"
+
 
 interface BottomTabsProps {}
 
@@ -18,6 +20,8 @@ const getIcon = (name: string, focused: boolean) => <Icon color={focused ? color
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
     const { user } = useUser()
+    const { showAppBar } = useVideoPlayer()
+
     return user ? (
         <Tab.Navigator
             theme={paper_theme}
@@ -27,6 +31,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
             activeIndicatorStyle={{ backgroundColor: colors.primary }}
             sceneAnimationEnabled={true}
             sceneAnimationType="shifting"
+            barStyle={{ display: showAppBar ? "flex" : "none" }}
         >
             <Tab.Screen
                 name="panel"

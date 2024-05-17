@@ -18,6 +18,7 @@ import { LesonSquareComponent } from "./LessonSquareComponent"
 import { CourseSkeletons } from "../../components/CourseSkeletons"
 import { CourseContainer } from "../Creator/CreatorHome/Resume/CourseContainer"
 import { VideoPlayer } from "../../components/VideoPlayer/VideoPlayer"
+import { useVideoPlayer } from "../../hooks/useVideoplayer"
 
 interface LessonScreenProps {
     navigation: NavigationProp<any, any>
@@ -26,6 +27,7 @@ interface LessonScreenProps {
 
 export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route }) => {
     const { user } = useUser()
+    const { isFullscreen } = useVideoPlayer()
     const theme = useTheme()
     const image_width = Dimensions.get("screen").width * 0.9
     const max_image_height = (image_width / 16) * 9
@@ -151,43 +153,47 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshLesson} />}
             style={{ flex: 1 }}
             contentContainerStyle={{ padding: 20, gap: 10 }}
+            scrollEnabled={!isFullscreen}
         >
-            <ScreenTitle
-                title={lesson.name}
-                right={
-                    <View style={{ flexDirection: "row", gap: -5 }}>
-                        <IconButton icon={liked ? "heart" : "heart-outline"} style={{ margin: 0 }} loading={liking} onPress={onLikePress} />
-                        <Menu
-                            visible={showChatDenied}
-                            onDismiss={() => setShowChatDenied(false)}
-                            anchorPosition={"bottom"}
-                            anchor={<IconButton icon={"comment-text-outline"} style={{ margin: 0 }} onPress={onChatPress} />}
-                            contentStyle={[{ borderRadius: 15 }]}
-                        >
-                            <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} />
-                            <View style={{ paddingHorizontal: 15 }}>
-                                <Text variant="bodyLarge">Favorite o curso para acessar o chat</Text>
+            {!isFullscreen && (
+                <>
+                    <ScreenTitle
+                        title={lesson.name}
+                        right={
+                            <View style={{ flexDirection: "row", gap: -5 }}>
+                                <IconButton icon={liked ? "heart" : "heart-outline"} style={{ margin: 0 }} loading={liking} onPress={onLikePress} />
+                                <Menu
+                                    visible={showChatDenied}
+                                    onDismiss={() => setShowChatDenied(false)}
+                                    anchorPosition={"bottom"}
+                                    anchor={<IconButton icon={"comment-text-outline"} style={{ margin: 0 }} onPress={onChatPress} />}
+                                    contentStyle={[{ borderRadius: 15 }]}
+                                >
+                                    <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} />
+                                    <View style={{ paddingHorizontal: 15 }}>
+                                        <Text variant="bodyLarge">Favorite o curso para acessar o chat</Text>
+                                    </View>
+                                </Menu>
+
+                                <OptionsMenu
+                                    options={[{ label: "Compartilhar", onPress: () => null }]}
+                                    Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
+                                    onDismiss={() => setShowMenu(false)}
+                                    visible={showMenu}
+                                />
                             </View>
-                        </Menu>
-
-                        <OptionsMenu
-                            options={[{ label: "Compartilhar", onPress: () => null }]}
-                            Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
-                            onDismiss={() => setShowMenu(false)}
-                            visible={showMenu}
-                        />
+                        }
+                    />
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 2 }}>
+                        <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
+                            {course.owner.nickname}
+                        </Text>
+                        <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
+                            {course.lessons} lições
+                        </Text>
                     </View>
-                }
-            />
-
-            <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 2 }}>
-                <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
-                    {course.owner.nickname}
-                </Text>
-                <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
-                    {course.lessons} lições
-                </Text>
-            </View>
+                </>
+            )}
 
             <Surface style={{ borderRadius: 15 }}>
                 {lesson.media.type == "image" ? (

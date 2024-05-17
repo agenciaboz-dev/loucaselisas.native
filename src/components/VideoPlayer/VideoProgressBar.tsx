@@ -13,7 +13,7 @@ interface VideoProgressBarProps {
 }
 
 export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status, onContainerPress }) => {
-    const { ref } = useVideoPlayer()
+    const { ref, isFullscreen } = useVideoPlayer()
     const theme = useTheme()
     const intervalRef = useRef<NodeJS.Timeout>()
 
@@ -35,7 +35,7 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status, onCo
 
     return (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 10 }}>
-            <Text style={{ color: theme.colors.background, flex: 0.11, textAlign: "center" }}>
+            <Text style={[{ color: theme.colors.background, flex: 0.11, textAlign: "center" }, isFullscreen && { flex: 0.05 }]}>
                 {/* @ts-ignore */}
                 {moment.duration(value).format("mm:ss", { trim: false })}
             </Text>
@@ -46,13 +46,13 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status, onCo
                 onSlidingComplete={(value) => handleSlideFinish(value[0])}
                 maximumValue={status.durationMillis}
                 minimumValue={0}
-                containerStyle={{ flex: 0.78, height: 20 }}
+                containerStyle={{ flex: isFullscreen ? 0.95 : 0.78, height: 20 }}
                 trackStyle={{ backgroundColor: theme.colors.background, borderRadius: 100 }}
                 thumbStyle={{ backgroundColor: theme.colors.outlineVariant, width: 15, height: 15 }}
                 minimumTrackStyle={{ backgroundColor: theme.colors.outlineVariant, borderRadius: 100 }}
                 step={1}
             />
-            <Text style={{ color: theme.colors.background, flex: 0.11, textAlign: "center" }}>
+            <Text style={[{ color: theme.colors.background, flex: 0.11, textAlign: "center" }, isFullscreen && { flex: 0.05 }]}>
                 {/* @ts-ignore */}
                 {moment.duration(status.durationMillis).format("mm:ss", { trim: false })}
             </Text>

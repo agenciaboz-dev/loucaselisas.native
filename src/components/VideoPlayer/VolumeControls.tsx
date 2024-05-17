@@ -11,7 +11,7 @@ interface VolumeControlsProps {
 }
 
 export const VolumeControls: React.FC<VolumeControlsProps> = ({ status, onContainerPress }) => {
-    const { ref } = useVideoPlayer()
+    const { ref, isFullscreen } = useVideoPlayer()
     const theme = useTheme()
     const intervalRef = useRef<NodeJS.Timeout>()
 
@@ -32,7 +32,6 @@ export const VolumeControls: React.FC<VolumeControlsProps> = ({ status, onContai
         if (intervalRef.current) clearInterval(intervalRef.current)
     }
 
-
     return (
         <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
             <IconButton
@@ -48,7 +47,7 @@ export const VolumeControls: React.FC<VolumeControlsProps> = ({ status, onContai
                 onSlidingStart={handleStartVolumeSlide}
                 maximumValue={1}
                 minimumValue={0}
-                containerStyle={{ width: 80, height: 20 }}
+                containerStyle={{ width: isFullscreen ? 160 : 80, height: 20 }}
                 trackStyle={{ backgroundColor: theme.colors.background, borderRadius: 100 }}
                 thumbStyle={{ backgroundColor: theme.colors.outlineVariant, width: 15, height: 15 }}
                 minimumTrackStyle={{ backgroundColor: theme.colors.outlineVariant, borderRadius: 100 }}

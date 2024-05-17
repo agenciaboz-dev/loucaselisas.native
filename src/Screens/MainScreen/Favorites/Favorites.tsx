@@ -1,7 +1,7 @@
 import { NavigationProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { View, TextInput as OriginalInput, FlatList } from "react-native"
-import { Text, TextInput, useTheme } from "react-native-paper"
+import { Surface, Text, TextInput, useTheme } from "react-native-paper"
 import { ScreenTitle } from "../../../components/ScreenTItle"
 import { Course } from "../../../types/server/class/Course"
 import { Lesson } from "../../../types/server/class/Course/Lesson"
@@ -58,7 +58,7 @@ export const Favorites: React.FC<FavoritesProps> = ({ navigation }) => {
     }, [lessons])
 
     return user ? (
-        <View style={{ flex: 1, padding: 20, gap: 10, paddingBottom: 0 }}>
+        <View style={{ flex: 1, padding: 20, paddingTop: 10, paddingBottom: 0 }}>
             <ScreenTitle title="Seus Favoritos" hideBackArrow />
             <TextInput
                 ref={searchRef}
@@ -73,6 +73,29 @@ export const Favorites: React.FC<FavoritesProps> = ({ navigation }) => {
                 disabled={refreshing}
             />
 
+            <Surface
+                style={{
+                    width: "120%",
+                    height: 1,
+                    backgroundColor: "transparent",
+                    marginTop: 20,
+                    marginLeft: -20,
+                    elevation: 1,
+                }}
+            >
+                <View
+                    style={{
+                        width: "100%",
+                        height: 1,
+                        shadowColor: "#000",
+                        shadowOpacity: 0.1,
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowRadius: 1,
+                        backgroundColor: "#ddd",
+                    }}
+                />
+            </Surface>
+
             {refreshing && !lessons.length && skeletons.map((index) => <LessonsSkeletons key={index} />)}
 
             <FlatList
@@ -84,7 +107,7 @@ export const Favorites: React.FC<FavoritesProps> = ({ navigation }) => {
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 ListEmptyComponent={!refreshing && !lessons.length ? <Text variant="bodyLarge">Nenhuma lição favoritada</Text> : null}
-                style={{ margin: -20 }}
+                style={{ margin: -20, marginTop: 0 }}
                 contentContainerStyle={{ padding: 20, gap: 15 }}
                 ListFooterComponent={
                     <Button mode="outlined" onPress={() => navigation.navigate("search")}>

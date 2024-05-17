@@ -55,7 +55,7 @@ export const CommentContainer: React.FC<CommentContainerProps> = ({ course }) =>
                             alignItems: "center",
                         }}
                     >
-                        <View style={{ gap: 5, maxWidth: 290 }}>
+                        <View style={{ gap: 5, maxWidth: 250 }}>
                             <Text variant="bodyLarge" numberOfLines={1}>
                                 {course.name}
                             </Text>

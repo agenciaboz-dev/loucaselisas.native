@@ -1,7 +1,7 @@
 import { NavigationProp, useFocusEffect, useNavigation } from "@react-navigation/native"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { FlatList, LayoutAnimation, Platform, View } from "react-native"
-import { TextInput, useTheme } from "react-native-paper"
+import { Surface, TextInput, useTheme } from "react-native-paper"
 import { useUser } from "../../../../hooks/useUser"
 import { Course } from "../../../../types/server/class/Course"
 import { api } from "../../../../backend/api"
@@ -74,6 +74,29 @@ export const CommentsTab: React.FC<CommentsTabProps> = ({}) => {
                 right={<TextInput.Icon icon="magnify" />}
                 onFocus={() => setTimeout(() => Platform.OS == "android" && scrollRef.current?.scrollToOffset({ offset: 0 }), 500)}
             />
+
+            <Surface
+                style={{
+                    width: "120%",
+                    height: 1,
+                    backgroundColor: "transparent",
+                    marginTop: 10,
+                    marginLeft: -20,
+                    elevation: 1,
+                }}
+            >
+                <View
+                    style={{
+                        width: "100%",
+                        height: 1,
+                        shadowColor: "#000",
+                        shadowOpacity: 0.1,
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowRadius: 1,
+                        backgroundColor: "#ddd",
+                    }}
+                />
+            </Surface>
 
             <FlatList
                 data={ownedCourses.filter((item) => !!item.chat?.messages)}

@@ -22,7 +22,7 @@ export const StatsCourseList: React.FC<StatsCourseListProps> = ({ navigation, ro
         setRefreshing(true)
         try {
             const response = await api.get("/course/owner", { params: { owner_id: creator?.id } })
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             setCourses(response.data)
         } catch (error) {
             console.log(error)

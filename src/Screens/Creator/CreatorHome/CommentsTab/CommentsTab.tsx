@@ -27,7 +27,7 @@ export const CommentsTab: React.FC<CommentsTabProps> = ({}) => {
         setTimeout(async () => {
             try {
                 const response = await api.get("/course/owner", { params: { owner_id: creator?.id } })
-                LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
+                // LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
                 setOwnedCourses(response.data)
             } catch (error) {
                 console.log(error)

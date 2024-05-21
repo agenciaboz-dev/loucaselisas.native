@@ -21,7 +21,7 @@ export const StatsLessonList: React.FC<StatsLessonListProps> = ({ navigation, ro
         setRefreshing(true)
         try {
             const response = await api.get("/creator/lessons", { params: { creator_id: creator?.id } })
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             setLessons(response.data)
         } catch (error) {
             console.log(error)

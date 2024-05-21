@@ -20,7 +20,7 @@ export const TrianguloMiseravel: React.FC<TrianguloMiseravelProps> = (props) => 
                 height: 0,
                 position: "absolute",
                 right: props.right || 15,
-                top: props.top || -11,
+                top: props.top || -10,
                 left: props.left || undefined,
                 bottom: props.bottom || undefined,
                 borderBottomColor: props.color || theme.colors.elevation.level2,

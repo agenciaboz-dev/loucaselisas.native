@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 anchorPosition="bottom"
                 anchor={<IconButton icon={"bell-outline"} onPress={() => setShowNotifications(true)} />}
                 contentStyle={{ width: "100%" }}
-                style={{ width: "93%" }}
+                style={{ width: "93%", marginTop: 30 }}
             >
                 <TrianguloMiseravel />
                 <NotificationItem />

@@ -7,11 +7,10 @@ import { Course } from "../../../types/server/class/Course"
 import { Lesson } from "../../../types/server/class/Course/Lesson"
 import { useArray } from "burgos-array"
 import { useUser } from "../../../hooks/useUser"
-import { LessonsSkeletons } from "../../Creator/ManageCourse/LessonsSkeletons"
-import { LessonContainer } from "../../Course/LessonContainer"
 import { api } from "../../../backend/api"
 import { FavoriteContainer } from "./FavoriteContainer"
 import { Button } from "../../../components/Button"
+import { FavoritesSkeletons } from "../../Creator/ManageCourse/FavoritesSkeletons"
 
 interface FavoritesProps {
     navigation: NavigationProp<any, any>
@@ -58,7 +57,7 @@ export const Favorites: React.FC<FavoritesProps> = ({ navigation }) => {
     }, [lessons])
 
     return user ? (
-        <View style={{ flex: 1, padding: 20, paddingTop: 10, paddingBottom: 0 }}>
+        <View style={{ flex: 1, padding: 20, paddingTop: 10 }}>
             <ScreenTitle title="Seus Favoritos" hideBackArrow />
             <TextInput
                 ref={searchRef}
@@ -96,7 +95,13 @@ export const Favorites: React.FC<FavoritesProps> = ({ navigation }) => {
                 />
             </Surface>
 
-            {refreshing && !lessons.length && skeletons.map((index) => <LessonsSkeletons key={index} />)}
+            {refreshing && !lessons.length && (
+                <View style={{ flex: 1, paddingTop: 20, gap: 15 }}>
+                    {skeletons.map((index) => (
+                        <FavoritesSkeletons key={index} />
+                    ))}
+                </View>
+            )}
 
             <FlatList
                 data={lessonList.sort((a, b) => Number(b.published) - Number(a.published))}
@@ -110,9 +115,11 @@ export const Favorites: React.FC<FavoritesProps> = ({ navigation }) => {
                 style={{ margin: -20, marginTop: 0 }}
                 contentContainerStyle={{ padding: 20, gap: 15 }}
                 ListFooterComponent={
-                    <Button mode="outlined" onPress={() => navigation.navigate("search")}>
-                        Adicionar conteúdo
-                    </Button>
+                    !refreshing ? (
+                        <Button mode="outlined" onPress={() => navigation.navigate("search")}>
+                            Adicionar conteúdo
+                        </Button>
+                    ) : null
                 }
             />
         </View>

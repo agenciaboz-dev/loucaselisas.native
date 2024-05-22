@@ -100,7 +100,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
             keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10 }}
+            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 20 }}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshCourses} />}
         >
             <IosAvoidKeyboard style={{ gap: 10 }}>

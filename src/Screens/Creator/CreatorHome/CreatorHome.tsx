@@ -6,7 +6,7 @@ import { Resume } from "./Resume/Resume"
 import { CommentsTab } from "./CommentsTab/CommentsTab"
 import { Statistics } from "./Statistics/Statistics"
 import { colors } from "../../../style/colors"
-import { View } from "react-native"
+import { View, Animated } from "react-native"
 import { CreatorStackList } from "../CreatorStack"
 
 interface CreatorHomeProps {
@@ -31,28 +31,43 @@ export const CreatorHome: React.FC<CreatorHomeProps> = ({ navigation }) => {
                 navigationState={{ index, routes }}
                 onIndexChange={setIndex}
                 renderScene={renderScene}
-                renderTabBar={(props) => (
-                    <TabBar
-                        {...props}
-                        style={{
-                            backgroundColor: theme.colors.background,
-                            elevation: 0,
-                            shadowOpacity: 0,
-                            paddingBottom: routes[index].key === "resume" ? 10 : 0,
-                            borderBottomColor: routes[index].key === "resume" ? "#ddd" : "transparent",
-                            borderBottomWidth: routes[index].key === "resume" ? 1 : 0,
-                        }}
-                        labelStyle={{ color: colors.primary, textTransform: "none" }}
-                        indicatorStyle={{
-                            backgroundColor: "black",
-                            borderRadius: 5,
-                            height: 5,
-                            width: 50,
-                            marginBottom: routes[index].key === "resume" ? 10 : 0,
-                        }}
-                        indicatorContainerStyle={{ marginHorizontal: "10.7%" }}
-                    />
-                )}
+                renderTabBar={(props) => {
+                    // const borderBottomColor = props.position.interpolate({
+                    //     inputRange: [0, 0.75, 1],
+                    //     outputRange: ["#ddd", "transparent", "transparent"],
+                    // })
+
+                    return (
+                        // <Animated.View
+                        //     style={{
+                        //         borderBottomColor: borderBottomColor,
+                        //         borderBottomWidth: 1,
+                        //     }}
+                        // >
+                        <TabBar
+                            {...props}
+                            style={{
+                                backgroundColor: theme.colors.background,
+                                elevation: 0,
+                                shadowOpacity: 0,
+                                paddingBottom: 5,
+                                marginTop: 5,
+                                borderBottomColor: "#ddd",
+                                borderBottomWidth: 1,
+                            }}
+                            labelStyle={{ color: colors.primary, textTransform: "none" }}
+                            indicatorStyle={{
+                                backgroundColor: "black",
+                                borderRadius: 5,
+                                height: 5,
+                                width: 50,
+                                marginBottom: 10,
+                            }}
+                            indicatorContainerStyle={{ marginHorizontal: "10.7%" }}
+                        />
+                        // </Animated.View>
+                    )
+                }}
             />
         </View>
     )

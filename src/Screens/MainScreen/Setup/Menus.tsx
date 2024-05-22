@@ -21,7 +21,7 @@ export const Menus: React.FC<MenusProps> = ({ navigation }) => {
     const other_menus: SetupMenu[] = [
         { icon: "face-agent", label: "Suporte", route: "support" },
         { icon: "download", label: "Baixados", route: "downloaded" },
-        { icon: "shield-alert", label: "Privacidade", route: "privacy" },
+        { icon: "shield-alert", label: "Privacidade", route: "setup:privacy" },
         { icon: "wifi", label: "Termos", route: "setup:terms" },
     ]
 

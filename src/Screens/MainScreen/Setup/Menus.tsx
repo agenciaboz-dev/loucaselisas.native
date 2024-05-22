@@ -22,7 +22,7 @@ export const Menus: React.FC<MenusProps> = ({ navigation }) => {
         { icon: "face-agent", label: "Suporte", route: "support" },
         { icon: "download", label: "Baixados", route: "downloaded" },
         { icon: "shield-alert", label: "Privacidade", route: "privacy" },
-        { icon: "wifi", label: "Termos", route: "terms" },
+        { icon: "wifi", label: "Termos", route: "setup:terms" },
     ]
 
     const wrapper_style: ViewStyle = { borderRadius: 15 }

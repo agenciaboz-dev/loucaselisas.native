@@ -12,6 +12,7 @@ import { SavedCards } from "./SavedCards/SavedCards"
 import { CardForm } from "./SavedCards/CardForm"
 import { Profile } from "../../Profile/Profile"
 import { Profile as EditProfile } from "./Profile"
+import { TermsScreen } from "./Terms"
 
 interface SetupProps {
     navigation: NavigationProp<any, any>
@@ -32,6 +33,8 @@ export const Setup: React.FC<SetupProps> = ({ navigation }) => {
             <Stack.Screen name="setup:plan:history" component={PlanHistory} />
             <Stack.Screen name="setup:cards" component={SavedCards} />
             <Stack.Screen name="setup:cards:form" component={CardForm} />
+
+            <Stack.Screen name="setup:terms" component={TermsScreen} />
         </Stack.Navigator>
     )
 }

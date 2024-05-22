@@ -160,12 +160,12 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
                             </View>
                         </Menu>
 
-                        <OptionsMenu
+                        {/* <OptionsMenu
                             options={[{ label: "Compartilhar", onPress: () => null }]}
                             Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
                             onDismiss={() => setShowMenu(false)}
                             visible={showMenu}
-                        />
+                        /> */}
                     </View>
                 }
             />

@@ -14,6 +14,7 @@ import { Profile } from "../../Profile/Profile"
 import { Profile as EditProfile } from "./Profile"
 import { TermsScreen } from "./TermsScreen"
 import { PrivacyScreen } from "./PrivacyScreen"
+import { SupportScreen } from "./SupportScren"
 
 interface SetupProps {
     navigation: NavigationProp<any, any>
@@ -37,6 +38,7 @@ export const Setup: React.FC<SetupProps> = ({ navigation }) => {
 
             <Stack.Screen name="setup:terms" component={TermsScreen} />
             <Stack.Screen name="setup:privacy" component={PrivacyScreen} />
+            <Stack.Screen name="setup:support" component={SupportScreen} />
         </Stack.Navigator>
     )
 }

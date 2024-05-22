@@ -62,7 +62,7 @@ export const CommentsTab: React.FC<CommentsTabProps> = ({}) => {
     )
 
     return (
-        <View style={{ flex: 1, padding: 20, gap: 10, paddingTop: 0 }}>
+        <View style={{ flex: 1, padding: 20, gap: 10, paddingTop: 10 }}>
             <TextInput
                 placeholder={"Pesquisar Cursos"}
                 mode="outlined"

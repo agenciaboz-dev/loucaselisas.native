@@ -63,18 +63,18 @@ export const Account: React.FC<AccountProps> = ({ navigation }) => {
             <MenuGroup
                 title="Conta"
                 menuItems={[
-                    { title: "Gerenciar seu plano", icon: "currency-usd", route: "setup:plan" },
+                    // { title: "Gerenciar seu plano", icon: "currency-usd", route: "setup:plan" },
                     { title: "Editar perfil", icon: "account", route: "setup:profile:edit" },
                     { title: "Deletar conta", icon: "alpha-x-circle-outline", route: "setup:delete" },
                 ]}
             />
-            <MenuGroup
+            {/* <MenuGroup
                 title="Pagamento"
                 menuItems={[
                     { title: "Histórico de pedidos", icon: "refresh", route: "setup:plan:history" },
                     { title: "Cartões de pagamento salvos", icon: "credit-card", route: "setup:cards" },
                 ]}
-            />
+            /> */}
         </ScrollView>
     ) : null
 }

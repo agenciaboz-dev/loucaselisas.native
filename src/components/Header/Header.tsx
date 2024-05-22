@@ -40,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 </Pressable>
                 <Text variant="titleLarge">{user.name}</Text>
             </View>
-            <Menu
+            {/* <Menu
                 visible={showNotifications}
                 onDismiss={() => setShowNotifications(false)}
                 anchorPosition="bottom"
@@ -52,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 <NotificationItem />
                 <NotificationItem />
                 <NotificationItem />
-            </Menu>
+            </Menu> */}
         </View>
     ) : null
 }

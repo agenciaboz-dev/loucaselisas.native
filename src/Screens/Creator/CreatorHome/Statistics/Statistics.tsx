@@ -43,7 +43,7 @@ export const Statistics: React.FC<StatisticsProps> = ({}) => {
     )
 
     return (
-        <View style={{ flex: 1, padding: 20, gap: 10 }}>
+        <View style={{ flex: 1, padding: 20, paddingTop: 10, gap: 10 }}>
             <View style={{ flexDirection: "row", gap: 10 }}>
                 <StatContainer value={statistics?.views} title="Visualizações" skeleton={!statistics} />
                 <StatContainer value={statistics?.downloads} title="Downloads" skeleton={!statistics} />

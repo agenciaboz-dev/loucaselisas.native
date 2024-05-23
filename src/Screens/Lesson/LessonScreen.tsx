@@ -150,7 +150,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
 
     return lesson && course ? (
         <ScrollView
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshLesson} />}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshLesson} enabled={!isFullscreen} />}
             style={{ flex: 1 }}
             contentContainerStyle={{ padding: 20, gap: 10 }}
             scrollEnabled={!isFullscreen}

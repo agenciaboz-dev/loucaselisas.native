@@ -1,7 +1,7 @@
 import React from "react"
 import { View } from "react-native"
 import { Message } from "../../types/server/class/Chat/Message"
-import { Surface, Text, useTheme } from "react-native-paper"
+import { Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
 import { Creator } from "../../types/server/class"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
@@ -12,9 +12,10 @@ interface MessageContainerProps {
     list: Message[]
     creators: Partial<Creator>[]
     refreshing?: boolean
+    showImage: (position: number) => void
 }
 
-export const MessageContainer: React.FC<MessageContainerProps> = ({ message, list, creators, refreshing }) => {
+export const MessageContainer: React.FC<MessageContainerProps> = ({ message, list, creators, refreshing, showImage }) => {
     const { user } = useUser()
     const you = message.user_id == user?.id
     const theme = useTheme()
@@ -48,14 +49,22 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
                 )}
                 <Surface
                     style={[
-                        { padding: 10, borderRadius: 15, maxWidth: 300 },
+                        { padding: 10, borderRadius: 15, maxWidth: 300, gap: 10 },
                         you && { backgroundColor: theme.colors.surfaceVariant },
                         you && !same_message_bellow && { borderBottomRightRadius: 0 },
 
                         !you && !same_message_bellow && { borderBottomLeftRadius: 0, alignSelf: "flex-start" },
                     ]}
                 >
-                    <Text>{message.text}</Text>
+                    {message.media && (
+                        <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => showImage(message.media!.position)}>
+                            <Image
+                                source={{ uri: message.media.url }}
+                                style={{ width: 270, aspectRatio: message.media.width / message.media.height, maxHeight: 500, borderRadius: 15 }}
+                            />
+                        </TouchableRipple>
+                    )}
+                    {message.text && <Text>{message.text}</Text>}
                 </Surface>
             </View>
         ) : (

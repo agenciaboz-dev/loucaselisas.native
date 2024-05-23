@@ -1,7 +1,9 @@
+import ImageView from "react-native-image-viewing"
 import { RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import {
     FlatList,
+    GestureResponderEvent,
     Keyboard,
     LayoutAnimation,
     NativeSyntheticEvent,
@@ -15,9 +17,12 @@ import { Course } from "../../types/server/class/Course"
 import { Message, MessageForm } from "../../types/server/class/Chat/Message"
 import { useUser } from "../../hooks/useUser"
 import { MessageContainer } from "./MessageContainer"
-import { TextInput, useTheme } from "react-native-paper"
+import { Modal, TextInput, useTheme } from "react-native-paper"
 import { Socket, io } from "socket.io-client"
 import { url } from "../../backend/backend"
+import { getFilename, pickMedia } from "../../tools/pickMedia"
+import { ImagePickerAsset, MediaTypeOptions } from "expo-image-picker"
+import { Image } from "expo-image"
 
 interface ChatProps {
     route: RouteProp<any, any>
@@ -27,16 +32,19 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
     const theme = useTheme()
     const { user } = useUser()
     const course = route.params?.course as Course | undefined
-    const [chat, setChat] = useState(course?.chat as Chat | undefined)
-    const [messages, setMessages] = useState<Message[]>([])
-    const [refreshing, setRefreshing] = useState(true)
     const socket = useRef<Socket | null>(null)
     const scrollRef = useRef<FlatList>(null)
 
+    const [chat, setChat] = useState(course?.chat as Chat | undefined)
+    const [messages, setMessages] = useState<Message[]>([])
+    const [refreshing, setRefreshing] = useState(true)
+    const [viewingMedia, setViewingMedia] = useState<number | null>(null)
+
+    const [media, setMedia] = useState<ImagePickerAsset>()
     const [text, setText] = useState("")
 
     const onSubmitText = () => {
-        if (!chat || !socket.current || !user || !text) return
+        if (!chat || !socket.current || !user || (!text && !media)) return
         console.log(text)
 
         const data: MessageForm = {
@@ -46,8 +54,29 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             video_id: null,
             video_timestamp: null,
         }
+
+        if (media) {
+            data.media = {
+                ...media,
+                position: messages.filter((item) => item.media).length + 1,
+                name: getFilename(media),
+                height: media.height,
+                width: media.width,
+                type: media.type || "image",
+            }
+        }
+
         socket.current?.emit("chat:message", data)
+        setMedia(undefined)
         setText("")
+    }
+
+    const onAddMediaPres = async (event: GestureResponderEvent) => {
+        event.preventDefault()
+        const result = await pickMedia(undefined, false, MediaTypeOptions.Images)
+        if (result) {
+            setMedia(result[0])
+        }
     }
 
     const addMessage = (message: Message) => {
@@ -142,12 +171,13 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             <FlatList
                 ref={scrollRef}
                 data={messages.sort((a, b) => Number(a.datetime) - Number(b.datetime))}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                     <MessageContainer
                         message={item}
                         list={messages}
                         creators={[course.owner, ...course.creators]}
                         refreshing={refreshing}
+                        showImage={(position: number) => setViewingMedia(position - 1)}
                     />
                 )}
                 style={{ marginHorizontal: -20 }}
@@ -163,6 +193,15 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                 initialScrollIndex={0}
             />
 
+            <Modal visible={!!media} onDismiss={() => setMedia(undefined)} contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
+                {media && (
+                    <Image
+                        source={{ uri: media.uri }}
+                        style={{ width: 300, aspectRatio: media.width / media.height, maxHeight: 500, borderRadius: 15 }}
+                    />
+                )}
+            </Modal>
+
             <TextInput
                 placeholder="Envie uma mensagem"
                 value={text}
@@ -176,12 +215,20 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                     alignSelf: "center",
                 }}
                 outlineStyle={{ borderRadius: 10, borderWidth: 0 }}
-                left={<TextInput.Icon icon={"image-plus"} />}
+                left={<TextInput.Icon icon={"image-plus"} onPress={onAddMediaPres} />}
                 right={<TextInput.Icon icon="chevron-right" onPress={onSubmitText} />}
                 onSubmitEditing={onSubmitText}
                 blurOnSubmit={false}
                 returnKeyType="send"
                 keyboardType="twitter"
+            />
+
+            <ImageView
+                images={messages.filter((item) => item.media).map((item) => ({ uri: item.media!.url }))}
+                imageIndex={viewingMedia ?? 0}
+                visible={viewingMedia !== null}
+                onRequestClose={() => setViewingMedia(null)}
+                animationType="slide"
             />
         </View>
     ) : null

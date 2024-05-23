@@ -19,7 +19,8 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
     const { user } = useUser()
     const you = message.user_id == user?.id
     const theme = useTheme()
-    const skeletonWidth = message.text.length * 14 * 0.55 + 20
+    const skeletonWidth = message.media ? 500 : message.text.length * 14 * 0.55 + 20
+    const skeletonHeight = message.media ? (270 * message.media.height) / message.media.width : (Math.floor(skeletonWidth / 300) + 1) * 30
 
     const index = list.findIndex((item) => item.id == message.id)
     const previous_message = index > 0 ? list[index - 1] : null
@@ -57,10 +58,10 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
                     ]}
                 >
                     {message.media && (
-                        <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => showImage(message.media!.position)}>
+                        <TouchableRipple borderless style={{ borderRadius: 10 }} onPress={() => showImage(message.media!.position)}>
                             <Image
                                 source={{ uri: message.media.url }}
-                                style={{ width: 270, aspectRatio: message.media.width / message.media.height, maxHeight: 500, borderRadius: 15 }}
+                                style={{ width: 270, aspectRatio: message.media.width / message.media.height, maxHeight: 500, borderRadius: 10 }}
                             />
                         </TouchableRipple>
                     )}
@@ -72,7 +73,8 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
                 <SkeletonPlaceholder.Item
                     width={skeletonWidth}
                     maxWidth={300}
-                    height={(Math.floor(skeletonWidth / 300) + 1) * 30}
+                    height={skeletonHeight}
+                    maxHeight={500}
                     borderRadius={15}
                     alignSelf={you ? "flex-end" : "flex-start"}
                 />

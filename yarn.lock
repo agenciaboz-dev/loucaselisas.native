@@ -3458,10 +3458,10 @@ expo-notifications@~0.28.2:
     expo-constants "~16.0.0"
     fs-extra "^9.1.0"
 
-expo-screen-orientation@7.0.5:
-  version "7.0.5"
-  resolved "https://registry.yarnpkg.com/expo-screen-orientation/-/expo-screen-orientation-7.0.5.tgz#0a517982151c6519fa4b10ce27047de39c1f92cf"
-  integrity sha512-1j0MzVzYpjKQo4BWowQ3ZYwC3OnddX/8k06C8VYTAxMyd8ou1k+rG4tm+GIV2n2RSzc3g7cfPlQwSYr3/SGmbg==
+expo-screen-orientation@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/expo-screen-orientation/-/expo-screen-orientation-7.0.4.tgz#772bc32f5261b8f4826741cb329706dc0bf07ea5"
+  integrity sha512-wvPR1hAXOxJdRXaMP1g9nQ4oBush1SSKr+x5gEtsWkGkG/wdqALdCY0iibeb7yWjsH3+D+ooObZlzZIo80TTcw==
 
 expo-splash-screen@~0.27.4:
   version "0.27.4"

@@ -67,8 +67,8 @@ export const Favorites: React.FC<FavoritesProps> = ({ navigation }) => {
                 onChangeText={handleSearch}
                 style={{ backgroundColor: theme.colors.surfaceDisabled }}
                 outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
-                left={<TextInput.Icon icon={"menu"} />}
-                right={<TextInput.Icon icon="magnify" />}
+                // left={<TextInput.Icon icon={"menu"} />}
+                right={<TextInput.Icon icon="magnify" disabled />}
                 disabled={refreshing}
             />
 

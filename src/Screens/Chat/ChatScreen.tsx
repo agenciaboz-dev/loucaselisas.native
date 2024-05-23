@@ -216,7 +216,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                 }}
                 outlineStyle={{ borderRadius: 10, borderWidth: 0 }}
                 left={<TextInput.Icon icon={"image-plus"} onPress={onAddMediaPres} />}
-                right={<TextInput.Icon icon="chevron-right" onPress={onSubmitText} />}
+                right={<TextInput.Icon icon="send" onPress={onSubmitText} />}
                 onSubmitEditing={onSubmitText}
                 blurOnSubmit={false}
                 returnKeyType="send"

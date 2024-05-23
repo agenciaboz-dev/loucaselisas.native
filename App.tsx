@@ -6,12 +6,19 @@ import { View } from "react-native"
 import { useFonts } from "expo-font"
 import * as SplashScreen from "expo-splash-screen"
 import { useCallback } from "react"
+import { useVideoPlayer } from "./src/hooks/useVideoplayer"
 
 SplashScreen.preventAutoHideAsync()
 
 // if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
 //     UIManager.setLayoutAnimationEnabledExperimental(true)
 // }
+
+const StatusBarContainer = () => {
+    const { isFullscreen } = useVideoPlayer()
+
+    return <StatusBar animated translucent hidden={isFullscreen} />
+}
 
 export default function App() {
     useKeepAwake()
@@ -38,8 +45,8 @@ export default function App() {
 
     return (
         <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-            <StatusBar animated translucent />
             <Providers>
+                <StatusBarContainer />
                 <Routes />
             </Providers>
         </View>

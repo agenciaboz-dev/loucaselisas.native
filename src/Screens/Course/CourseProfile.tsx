@@ -42,7 +42,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     const [tabIndex, setTabIndex] = useState(0)
     const [tabStates] = useState([
         { key: "lessons", title: "Lições" },
-        { key: "downloaded", title: "Baixados" },
+        // { key: "downloaded", title: "Baixados" },
     ])
 
     const renderScene: React.FC<
@@ -187,7 +187,8 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
                             backgroundColor: "black",
                             borderRadius: 5,
                             height: 5,
-                            width: 50,
+                            width: 250,
+                            // width: 50,
                         }}
                         indicatorContainerStyle={{ marginHorizontal: "19%" }}
                     />

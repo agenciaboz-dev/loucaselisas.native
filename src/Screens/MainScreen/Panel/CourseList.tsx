@@ -5,6 +5,7 @@ import { TextInput, useTheme } from "react-native-paper"
 import { CourseCardContainer } from "./CourseCardContainer"
 import { useArray } from "burgos-array"
 import { LessonsSkeletons } from "../../Creator/ManageCourse/LessonsSkeletons"
+import { NavigationProp, useNavigation } from "@react-navigation/native"
 
 interface CourseListProps {
     courses: Course[]
@@ -17,31 +18,15 @@ export const CourseList: React.FC<CourseListProps> = ({ courses, scrollRef, refr
     const theme = useTheme()
     const searchRef = useRef<OriginalText>(null)
     const skeletons = useArray().newArray(5)
+    const navigation = useNavigation<NavigationProp<any, any>>()
 
-    const [searchValue, setSearchValue] = useState("")
-    const [courseList, setCourseList] = useState(courses)
+    const [searchText, setSearchValue] = useState("")
 
-    const handleSearch = (value: string) => {
-        setSearchValue(value)
-        setCourseList(courses.filter((item) => item.name.toLocaleLowerCase().includes(value.toLocaleLowerCase())))
-    }
-
-    const onSearchFocus = () => {
-        // searchRef.current?.measure((x, y, w, h, px, py) => {
-        //     console.log({ y, py })
-        //     scrollRef.current?.scrollTo({ y: py - h * 2 - 20 })
-        // })
-    }
-
-    useEffect(() => {
-        setCourseList(courses)
-    }, [courses])
-
-    useEffect(() => {
-        if (searchValue) {
-            onSearchFocus()
+    const handleSearch = () => {
+        if (searchText) {
+            navigation.navigate("search:courses", { text: searchText })
         }
-    }, [searchValue])
+    }
 
     return (
         <>
@@ -49,19 +34,19 @@ export const CourseList: React.FC<CourseListProps> = ({ courses, scrollRef, refr
                 ref={searchRef}
                 placeholder={"Pesquisar Cursos"}
                 mode="outlined"
-                value={searchValue}
-                onChangeText={handleSearch}
+                value={searchText}
+                onChangeText={setSearchValue}
                 style={{ backgroundColor: theme.colors.surfaceDisabled }}
                 outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
-                left={<TextInput.Icon icon={"menu"} />}
-                right={<TextInput.Icon icon="magnify" />}
-                onFocus={onSearchFocus}
+                // left={<TextInput.Icon icon={"menu"} />}
+                right={<TextInput.Icon icon="magnify" onPress={handleSearch} />}
                 disabled={refreshing}
+                onSubmitEditing={handleSearch}
             />
 
             {refreshing && !courses.length && skeletons.map((index) => <LessonsSkeletons key={index} />)}
 
-            {courseList
+            {courses
                 .sort((a, b) => Number(b.published) - Number(a.published))
                 .map((item) => (
                     <CourseCardContainer key={item.id} course={item} />

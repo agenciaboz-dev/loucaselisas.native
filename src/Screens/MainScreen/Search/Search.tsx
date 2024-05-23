@@ -52,7 +52,7 @@ export const Search: React.FC<SearchProps> = ({ navigation }) => {
                 onChangeText={setSearchText}
                 style={{ backgroundColor: theme.colors.surfaceDisabled }}
                 outlineStyle={{ borderRadius: 100, borderWidth: 0 }}
-                left={<TextInput.Icon icon={"menu"} />}
+                // left={<TextInput.Icon icon={"menu"} />}
                 right={<TextInput.Icon icon="magnify" onPress={searchCourses} />}
                 onSubmitEditing={searchCourses}
             />

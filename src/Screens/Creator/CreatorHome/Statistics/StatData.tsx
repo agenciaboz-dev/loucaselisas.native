@@ -12,7 +12,7 @@ export const StatData: React.FC<StatDataProps> = ({ icon, value }) => {
     return (
         <View style={{ alignItems: "center", gap: -5 }}>
             <Text variant="titleLarge">{numeral(value).format("0.[00]a").toUpperCase()}</Text>
-            <Icon size={25} source={icon} />
+            <Icon size={20} source={icon} />
         </View>
     )
 }

@@ -50,7 +50,7 @@ export const FilteredCourses: React.FC<FilteredCoursesProps> = ({ courses, refre
                 keyExtractor={(item) => item.id}
                 style={{ marginHorizontal: -20, minHeight: 75 }}
                 contentContainerStyle={{ gap: 10, paddingHorizontal: 20, paddingBottom: 10 }}
-                ListEmptyComponent={<CourseSkeletons />}
+                ListEmptyComponent={refreshing ? <CourseSkeletons /> : <Text style={{ alignSelf: "center" }}>Nenhum curso encontrado</Text>}
                 // ListEmptyComponent={refreshing ? <CourseSkeletons /> : <Text style={{ flex: 1, textAlign: "center" }}>Nenhum curso encontrado</Text>}
             />
         </>

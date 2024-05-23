@@ -78,7 +78,7 @@ export const FavoriteContainer: React.FC<FavoriteContainerProps> = ({ lesson, co
 
                     <View style={{ flexDirection: "row", marginLeft: "auto", alignSelf: "center", gap: 10 }}>
                         <IconData icon="heart" text="Favoritado" onPress={onLikePress} loading={disliking} />
-                        <IconData icon="download" text="Baixar" onPress={() => null} />
+                        {/* <IconData icon="download" text="Baixar" onPress={() => null} /> */}
                         <IconData icon="comment-text" text="Chat" onPress={onChatPress} />
                     </View>
                 </>

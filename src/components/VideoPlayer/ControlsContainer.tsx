@@ -92,6 +92,15 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
                 style={{ position: "absolute", width: "100%", height: "100%", opacity }}
                 // pointerEvents={showingControls ? undefined : "none"}
             >
+<<<<<<< HEAD
+=======
+                <LinearGradient
+                    style={{ position: "absolute", width: "100%", height: "100%", borderRadius: 15 }}
+                    colors={["rgba(0, 0, 0, 0)", "rgba(50, 50, 50, 1)"]}
+                    // locations={[0, 0.5]}
+                    start={{ x: 0.5, y: 0.5 }}
+                />
+>>>>>>> 4b48409 (feat: gradient on controls)
                 <View
                     style={{
                         position: "absolute",

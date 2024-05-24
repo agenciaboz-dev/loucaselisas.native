@@ -1,19 +1,17 @@
 import { AVPlaybackStatusSuccess } from "expo-av"
 import React, { useEffect, useRef, useState } from "react"
-import { Animated, Dimensions, TouchableWithoutFeedback, View } from "react-native"
+import { Animated, TouchableWithoutFeedback, View } from "react-native"
 import { useVideoPlayer } from "../../hooks/useVideoplayer"
 import { IconButton, useTheme } from "react-native-paper"
 import { VideoProgressBar } from "./VideoProgressBar"
 import { PlayPause } from "./PlayPause"
-import { LinearGradient } from "expo-linear-gradient"
-import { VolumeControls } from "./VolumeControls"
 
 interface ControlsContainerProps {
     status: AVPlaybackStatusSuccess
 }
 
 export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) => {
-    const { ref, toggleFullscreen, isFullscreen } = useVideoPlayer()
+    const { ref } = useVideoPlayer()
     const opacity = useRef(new Animated.Value(1)).current
     const timeoutRef = useRef<NodeJS.Timeout>()
     const theme = useTheme()
@@ -50,13 +48,8 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current)
             }
-            timeoutRef.current = setTimeout(() => fadeControls(0, 300), 3000)
+            timeoutRef.current = setTimeout(() => fadeControls(0, 300), 2000)
         }
-    }
-
-    const handleFullscreenPress = async () => {
-        // await ref.current?.presentFullscreenPlayer()
-        toggleFullscreen()
     }
 
     useEffect(() => {
@@ -66,7 +59,7 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
             }
             timeoutRef.current = setTimeout(() => {
                 if (playing) fadeControls(0, 300)
-            }, 2000)
+            }, 1000)
         }
 
         if (status?.isPlaying) {
@@ -97,64 +90,23 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
         <TouchableWithoutFeedback onPress={handleContainerPress}>
             <Animated.View
                 style={{ position: "absolute", width: "100%", height: "100%", opacity }}
-                pointerEvents={showingControls ? undefined : "box-only"}
+                // pointerEvents={showingControls ? undefined : "none"}
             >
-                <LinearGradient
-                    style={[
-                        {
-                            position: "absolute",
-                            width: "100%",
-                            height: "100%",
-                            borderRadius: 15,
-                        },
-                        isFullscreen && { width: Dimensions.get("screen").width, marginLeft: -21, borderRadius: 0 },
-                    ]}
-                    colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
-                    // locations={[0, 0.5]}
-                    start={{ x: 0.5, y: 0.5 }}
-                />
                 <View
-                    style={[
-                        {
-                            position: "absolute",
-                            width: "100%",
-                            height: "100%",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "row",
-                        },
-                        isFullscreen && { gap: 20 },
-                    ]}
+                    style={{
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                    }}
                 >
-                    <IconButton icon="rewind-10" iconColor={theme.colors.background} size={35} onPress={() => handleTimeChange(-10)} />
-                    <PlayPause
-                        onPress={handleContainerPress}
-                        playing={playing}
-                        setPlaying={setPlaying}
-                        status={status}
-                        size={isFullscreen ? 100 : undefined}
-                    />
-                    <IconButton icon="fast-forward-10" iconColor={theme.colors.background} size={35} onPress={() => handleTimeChange(10)} />
+                    <IconButton icon="rewind-10" iconColor={theme.colors.background} size={40} onPress={() => handleTimeChange(-10)} />
+                    <PlayPause onPress={handleContainerPress} playing={playing} setPlaying={setPlaying} status={status} />
+                    <IconButton icon="fast-forward-10" iconColor={theme.colors.background} size={40} onPress={() => handleTimeChange(10)} />
                 </View>
-
-                <View style={[{ height: 65, marginTop: "auto" }, isFullscreen && { marginBottom: 10 }]}>
-                    <VideoProgressBar status={status} onContainerPress={handleContainerPress} />
-                    <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-                        <PlayPause onPress={handleContainerPress} playing={playing} setPlaying={setPlaying} status={status} size={30} />
-                        <VolumeControls status={status} onContainerPress={handleContainerPress} />
-
-                        <View style={{ flexDirection: "row", marginLeft: "auto", alignItems: "center" }}>
-                            <IconButton icon="share-variant" style={{ margin: 0 }} size={25} iconColor={theme.colors.background} />
-                            <IconButton
-                                icon="fullscreen"
-                                style={{ margin: 0 }}
-                                size={30}
-                                iconColor={theme.colors.background}
-                                onPress={handleFullscreenPress}
-                            />
-                        </View>
-                    </View>
-                </View>
+                <View style={{ height: 60, marginTop: "auto", paddingHorizontal: 10 }}>{status && <VideoProgressBar status={status} />}</View>
             </Animated.View>
         </TouchableWithoutFeedback>
     )

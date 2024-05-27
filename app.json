@@ -1,6 +1,6 @@
 {
   "expo": {
-      "name": "Loucas & Co.",
+      "name": "Loucas & Co",
       "slug": "loucaselisasnative",
       "owner": "agenciaboz-dev",
       "version": "1.0.130",
@@ -51,12 +51,6 @@
                       "assets/fonts/FoundersGrotesk-Bold.otf",
                       "assets/fonts/FoundersGroteskXCond-Bold.otf"
                   ]
-              }
-          ],
-          [
-              "expo-screen-orientation",
-              {
-                  "initialOrientation": "DEFAULT"
               }
           ]
       ],

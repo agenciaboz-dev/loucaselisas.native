@@ -48,7 +48,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             contentContainerStyle={{ padding: 20, gap: 10 }}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshCourses} />}
         >
-            <FilteredCourses courses={courses} refreshing={refreshing} />
+            <FilteredCourses courses={courses}  />
             <Text variant="titleLarge">Explorar</Text>
             <CourseList courses={courses} scrollRef={scrollRef} refreshing={refreshing} />
         </ScrollView>

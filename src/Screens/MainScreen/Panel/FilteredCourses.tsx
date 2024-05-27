@@ -8,23 +8,21 @@ import { Filters } from "./Filters/Filters"
 
 interface FilteredCoursesProps {
     courses: Course[]
-    refreshing?: boolean
 }
 
-export const FilteredCourses: React.FC<FilteredCoursesProps> = ({ courses, refreshing }) => {
+export const FilteredCourses: React.FC<FilteredCoursesProps> = ({ courses }) => {
     const scrollRef = useRef<FlatList>(null)
     const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses)
     const [active, setActive] = useState("popular")
+    const [refreshing, setRefreshing] = useState(true)
 
     const onFilterCourses = (filtered_courses: Course[]) => {
-        console.log("PRIMEIRO DA LISTA")
-        console.log(JSON.stringify(filtered_courses[0], null, 4))
-        console.log("PRIMEIRO DA LISTA")
-        // TODO: ACTIVATE ON BUILD
+        setRefreshing(true)
         setFilteredCourses([])
         setTimeout(() => {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             setFilteredCourses(filtered_courses)
+            setRefreshing(false)
         }, 200)
     }
 
@@ -50,7 +48,7 @@ export const FilteredCourses: React.FC<FilteredCoursesProps> = ({ courses, refre
                 keyExtractor={(item) => item.id}
                 style={{ marginHorizontal: -20, minHeight: 75 }}
                 contentContainerStyle={{ gap: 10, paddingHorizontal: 20, paddingBottom: 10 }}
-                ListEmptyComponent={refreshing ? <CourseSkeletons /> : <Text style={{ alignSelf: "center" }}>Nenhum curso encontrado</Text>}
+                ListEmptyComponent={refreshing ? <CourseSkeletons /> : <Text>Nenhum curso encontrado</Text>}
                 // ListEmptyComponent={refreshing ? <CourseSkeletons /> : <Text style={{ flex: 1, textAlign: "center" }}>Nenhum curso encontrado</Text>}
             />
         </>

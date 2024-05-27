@@ -6,12 +6,17 @@ import { IconButton, useTheme } from "react-native-paper"
 import { VideoProgressBar } from "./VideoProgressBar"
 import { ControlsContainer } from "./ControlsContainer"
 import { useFocusEffect } from "@react-navigation/native"
+import { Course } from "../../types/server/class/Course"
+import { Lesson } from "../../types/server/class/Course/Lesson"
 
 interface VideoPlayerProps {
     source: string
+    course?: Course
+    lesson?: Lesson
+    initialPosition?: number
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({ source }) => {
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, course, lesson, initialPosition }) => {
     const { ref, isFullscreen, setIsFullscreen } = useVideoPlayer()
     const image_width = Dimensions.get("screen").width * 0.9
     const max_image_height = (image_width / 16) * 9
@@ -44,7 +49,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ source }) => {
                 onError={(error) => console.log(`error loading video: ${error}`)}
                 onPlaybackStatusUpdate={(status) => (status.isLoaded ? setStatus(status) : setVideoError(status))}
             />
-            {status && <ControlsContainer status={status} />}
+            {status && <ControlsContainer status={status} course={course} lesson={lesson} initialPosition={initialPosition} />}
         </View>
     )
 }

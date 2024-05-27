@@ -17,12 +17,15 @@ import { Course } from "../../types/server/class/Course"
 import { Message, MessageForm } from "../../types/server/class/Chat/Message"
 import { useUser } from "../../hooks/useUser"
 import { MessageContainer } from "./MessageContainer"
-import { Modal, TextInput, useTheme } from "react-native-paper"
+import { IconButton, Modal, Text, TextInput, useTheme } from "react-native-paper"
 import { Socket, io } from "socket.io-client"
 import { url } from "../../backend/backend"
 import { getFilename, pickMedia } from "../../tools/pickMedia"
 import { ImagePickerAsset, MediaTypeOptions } from "expo-image-picker"
 import { Image } from "expo-image"
+import { Lesson } from "../../types/server/class/Course/Lesson"
+import moment from "moment"
+import "moment-duration-format"
 
 interface ChatProps {
     route: RouteProp<any, any>
@@ -35,6 +38,9 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
     const socket = useRef<Socket | null>(null)
     const scrollRef = useRef<FlatList>(null)
 
+    const [sharingLesson, setSharingLesson] = useState(
+        route.params?.sharingLesson as { lesson: Lesson; timestamp: number; thumb: string } | undefined
+    )
     const [chat, setChat] = useState(course?.chat as Chat | undefined)
     const [messages, setMessages] = useState<Message[]>([])
     const [refreshing, setRefreshing] = useState(true)
@@ -66,8 +72,13 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             }
         }
 
+        if (sharingLesson) {
+            data.video_id = sharingLesson.lesson.id
+            data.video_timestamp = sharingLesson.timestamp.toString()
+        }
+
         socket.current?.emit("chat:message", data)
-        setMedia(undefined)
+        dismissMediaModal()
         setText("")
     }
 
@@ -82,6 +93,11 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
     const addMessage = (message: Message) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         setMessages((messages) => [...messages, message])
+    }
+
+    const dismissMediaModal = () => {
+        setMedia(undefined)
+        setSharingLesson(undefined)
     }
 
     const listenToEvents = () => {
@@ -193,12 +209,35 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                 initialScrollIndex={0}
             />
 
-            <Modal visible={!!media} onDismiss={() => setMedia(undefined)} contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
-                {media && (
-                    <Image
-                        source={{ uri: media.uri }}
-                        style={{ width: 300, aspectRatio: media.width / media.height, maxHeight: 500, borderRadius: 15 }}
-                    />
+            <Modal
+                visible={!!sharingLesson || !!media}
+                onDismiss={dismissMediaModal}
+                contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}
+            >
+                <Image
+                    source={{ uri: sharingLesson?.thumb || media?.uri }}
+                    style={{ width: 300, aspectRatio: media ? media.width / media.height : 16 / 9, maxHeight: 500, borderRadius: 15 }}
+                />
+                {sharingLesson && (
+                    <View
+                        style={{
+                            position: "absolute",
+                            width: 300,
+                            height: "100%",
+                            alignItems: "center",
+                            padding: 10,
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <Text variant="headlineMedium" style={{ color: theme.colors.secondary }} numberOfLines={1}>
+                            {sharingLesson.lesson.name}
+                        </Text>
+                        <IconButton icon={"play-circle-outline"} iconColor={theme.colors.secondary} size={50} />
+                        <Text style={{ color: theme.colors.secondary }} variant="headlineMedium">
+                            {/* @ts-ignore */}
+                            {moment.duration(sharingLesson.timestamp).format("mm:ss", { trim: false })}
+                        </Text>
+                    </View>
                 )}
             </Modal>
 
@@ -215,7 +254,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                     alignSelf: "center",
                 }}
                 outlineStyle={{ borderRadius: 10, borderWidth: 0 }}
-                left={<TextInput.Icon icon={"image-plus"} onPress={onAddMediaPres} />}
+                left={<TextInput.Icon icon={"image-plus"} onPress={onAddMediaPres} disabled={!!sharingLesson || !!media} />}
                 right={<TextInput.Icon icon="send" onPress={onSubmitText} />}
                 onSubmitEditing={onSubmitText}
                 blurOnSubmit={false}

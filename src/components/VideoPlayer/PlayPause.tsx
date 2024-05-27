@@ -9,9 +9,10 @@ interface PlayPauseProps {
     setPlaying: React.Dispatch<React.SetStateAction<boolean>>
     status: AVPlaybackStatusSuccess
     size?: number
+    loading?: boolean
 }
 
-export const PlayPause: React.FC<PlayPauseProps> = ({ onPress, playing, setPlaying, status, size = 60 }) => {
+export const PlayPause: React.FC<PlayPauseProps> = ({ onPress, playing, setPlaying, status, loading, size = 60 }) => {
     const { ref } = useVideoPlayer()
     const theme = useTheme()
 
@@ -35,6 +36,7 @@ export const PlayPause: React.FC<PlayPauseProps> = ({ onPress, playing, setPlayi
             iconColor={theme.colors.background}
             size={size}
             onPress={togglePlayPause}
+            loading={loading}
         />
     )
 }

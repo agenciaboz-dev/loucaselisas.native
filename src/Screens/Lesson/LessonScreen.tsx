@@ -33,6 +33,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
     const max_image_height = (image_width / 16) * 9
     const media_style: ImageStyle = { width: image_width, height: max_image_height, borderRadius: 15 }
     const videoRef = useRef<Video>(null)
+    const startingTime = route.params?.startingTime as number | undefined
 
     const [viewingMedia, setViewingMedia] = useState<number | null>(null)
 
@@ -209,7 +210,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                         />
                     </TouchableRipple>
                 ) : (
-                    <VideoPlayer source={lesson.media.url} />
+                    <VideoPlayer source={lesson.media.url} course={course} lesson={lesson} initialPosition={startingTime} />
                 )}
             </Surface>
             {lesson.media.type == "image" && (

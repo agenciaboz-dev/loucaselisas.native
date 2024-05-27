@@ -2,24 +2,36 @@ import { AVPlaybackStatusSuccess } from "expo-av"
 import React, { useEffect, useRef, useState } from "react"
 import { Animated, Dimensions, TouchableWithoutFeedback, View } from "react-native"
 import { useVideoPlayer } from "../../hooks/useVideoplayer"
-import { IconButton, useTheme } from "react-native-paper"
+import { IconButton, Menu, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { VideoProgressBar } from "./VideoProgressBar"
 import { PlayPause } from "./PlayPause"
 import { LinearGradient } from "expo-linear-gradient"
 import { VolumeControls } from "./VolumeControls"
+import { Course } from "../../types/server/class/Course"
+import { useUser } from "../../hooks/useUser"
+import { NavigationProp, useNavigation } from "@react-navigation/native"
+import { Lesson } from "../../types/server/class/Course/Lesson"
+import * as VideoThumbnails from "expo-video-thumbnails"
 
 interface ControlsContainerProps {
     status: AVPlaybackStatusSuccess
+    course?: Course
+    lesson?: Lesson
+    initialPosition?: number
 }
 
-export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) => {
+export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status, course, lesson, initialPosition }) => {
+    const navigation = useNavigation<NavigationProp<any, any>>()
+    const { user } = useUser()
     const { ref, toggleFullscreen, isFullscreen } = useVideoPlayer()
     const opacity = useRef(new Animated.Value(1)).current
     const timeoutRef = useRef<NodeJS.Timeout>()
     const theme = useTheme()
 
     const [playing, setPlaying] = useState(false)
+    const [shareModal, setShareModal] = useState(false)
     const [showingControls, setShowingControls] = useState(true)
+    const [loading, setLoading] = useState(false)
 
     const handleTimeChange = async (value: number) => {
         const position = status?.positionMillis
@@ -45,6 +57,7 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
     }
 
     const handleContainerPress = () => {
+        console.log("asdasd")
         fadeControls(1, 300)
         if (status?.isPlaying) {
             if (timeoutRef.current) {
@@ -57,6 +70,15 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
     const handleFullscreenPress = async () => {
         // await ref.current?.presentFullscreenPlayer()
         toggleFullscreen()
+    }
+
+    const onShareToChat = async () => {
+        if (!lesson) return
+        setLoading(true)
+        setShareModal(false)
+        const { uri } = await VideoThumbnails.getThumbnailAsync(lesson.media.url, { time: status.positionMillis })
+        setLoading(false)
+        navigation.navigate("course:chat", { course, sharingLesson: { lesson, timestamp: status.positionMillis, thumb: uri, course } })
     }
 
     useEffect(() => {
@@ -93,11 +115,17 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
         }
     }, [status?.positionMillis])
 
+    useEffect(() => {
+        if (initialPosition) {
+            ref.current?.setPositionAsync(initialPosition)
+        }
+    }, [initialPosition])
+
     return (
         <TouchableWithoutFeedback onPress={handleContainerPress}>
             <Animated.View
                 style={{ position: "absolute", width: "100%", height: "100%", opacity }}
-                pointerEvents={showingControls ? undefined : "box-only"}
+                pointerEvents={showingControls ? "auto" : "box-only"}
             >
                 <LinearGradient
                     style={[
@@ -133,6 +161,7 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
                         setPlaying={setPlaying}
                         status={status}
                         size={isFullscreen ? 100 : undefined}
+                        loading={loading}
                     />
                     <IconButton icon="fast-forward-10" iconColor={theme.colors.background} size={35} onPress={() => handleTimeChange(10)} />
                 </View>
@@ -144,7 +173,42 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status }) 
                         <VolumeControls status={status} onContainerPress={handleContainerPress} />
 
                         <View style={{ flexDirection: "row", marginLeft: "auto", alignItems: "center" }}>
-                            <IconButton icon="share-variant" style={{ margin: 0 }} size={25} iconColor={theme.colors.background} />
+                            <Menu
+                                anchor={
+                                    <IconButton
+                                        icon="share-variant"
+                                        style={{ margin: 0 }}
+                                        size={25}
+                                        iconColor={theme.colors.background}
+                                        onPress={() => setShareModal(true)}
+                                    />
+                                }
+                                visible={shareModal}
+                                onDismiss={() => setShareModal(false)}
+                                contentStyle={{
+                                    backgroundColor: theme.colors.primary,
+                                    borderRadius: 15,
+                                    position: "relative",
+                                    height: 135,
+                                    width: 200,
+                                    padding: 10,
+                                }}
+                                style={{ marginTop: -120, marginLeft: 35 }}
+                                anchorPosition="top"
+                            >
+                                {course?.favorited_by.find((item) => item.id == user?.id) && (
+                                    <TouchableRipple borderless style={{ padding: 5 }} onPress={onShareToChat}>
+                                        <Text style={{ color: theme.colors.secondary }}>Compartilhe via chat</Text>
+                                    </TouchableRipple>
+                                )}
+                                <IconButton
+                                    icon={"close-circle-outline"}
+                                    size={20}
+                                    iconColor={theme.colors.secondary}
+                                    style={{ position: "absolute", right: 0, top: 0 }}
+                                    onPress={() => setShareModal(false)}
+                                />
+                            </Menu>
                             <IconButton
                                 icon="fullscreen"
                                 style={{ margin: 0 }}

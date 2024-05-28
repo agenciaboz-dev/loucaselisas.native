@@ -45,7 +45,7 @@ export const HeaderIos: React.FC<HeaderIosProps> = ({}) => {
                 </Pressable>
                 <Text variant="titleLarge">{user.name}</Text>
             </View>
-            <Menu
+            {/* <Menu
                 visible={showNotifications}
                 onDismiss={() => setShowNotifications(false)}
                 anchorPosition="bottom"
@@ -57,7 +57,7 @@ export const HeaderIos: React.FC<HeaderIosProps> = ({}) => {
                 <NotificationItem />
                 <NotificationItem />
                 <NotificationItem />
-            </Menu>
+            </Menu> */}
         </View>
     ) : null
 }

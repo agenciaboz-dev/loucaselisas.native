@@ -3,7 +3,7 @@ import { Dimensions, View } from "react-native"
 import { Media, MediaForm } from "../../types/server/class/Gallery/Media"
 import { Image, ImageStyle } from "expo-image"
 import { ResizeMode, Video } from "expo-av"
-import { IconButton, useTheme } from "react-native-paper"
+import { IconButton, Surface, useTheme } from "react-native-paper"
 import { getFilename, pickMedia } from "../../tools/pickMedia"
 import * as FileSystem from "expo-file-system"
 import { ImagePickerAsset, MediaTypeOptions } from "expo-image-picker"
@@ -41,13 +41,11 @@ export const LessonMediaForm: React.FC<LessonMediaFormProps> = ({ thumb, media, 
     return (
         <View style={{ flex: 1 }}>
             {media ? (
-                <View style={{ position: "relative" }}>
+                <Surface style={{ position: "relative", borderRadius: 15 }}>
                     {thumb || media.type == "image" ? (
                         <Image
                             source={{
-                                uri: thumb
-                                    ? media.uri || media
-                                    : media.url || media.uri || "data:image/png;base64," + media.base64,
+                                uri: thumb ? media.uri || media : media.url || media.uri || "data:image/png;base64," + media.base64,
                             }}
                             style={media_style}
                             contentFit="cover"
@@ -69,7 +67,7 @@ export const LessonMediaForm: React.FC<LessonMediaFormProps> = ({ thumb, media, 
                         containerColor={theme.colors.background}
                         onPress={onUpdateMedia}
                     />
-                </View>
+                </Surface>
             ) : (
                 <Button
                     mode="outlined"

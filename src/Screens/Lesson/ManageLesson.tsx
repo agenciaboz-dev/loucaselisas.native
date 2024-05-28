@@ -12,6 +12,7 @@ import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
 import { api } from "../../backend/api"
 import { StatusText } from "../../components/StatusText"
 import { Status, StatusForm } from "../../types/server/class/Course"
+import { DeclinedWarning } from "../Creator/ManageCourse/DeclinedWarning"
 
 interface ManageLessonProps {
     navigation: NavigationProp<any, any>
@@ -86,6 +87,7 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
                     />
                 }
             />
+            {lesson.status == "declined" && <DeclinedWarning lesson onEditPress={() => onMenuItemNavigate("creator:lesson:form")} />}
             {lesson.media.type == "image" ? (
                 <Image source={lesson.media.url} style={media_style} placeholder={placeholders.video} />
             ) : (

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { Animated, LayoutAnimation, View } from "react-native"
 import { Lesson, PartialLesson } from "../../../types/server/class/Course/Lesson"
-import { ActivityIndicator, IconButton, Menu, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
+import { ActivityIndicator, Icon, IconButton, Menu, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Image } from "expo-image"
 import { TrianguloMiseravel } from "../../../components/TrianguloMiseravel"
 import { NavigationProp, useNavigation } from "@react-navigation/native"
 import { LessonsSkeletons } from "./LessonsSkeletons"
 import { api } from "../../../backend/api"
+import { formatStatus, formatStatusColor } from "../../../tools/formatStatus"
 
 interface LessonContainerProps {
     current_lesson: Lesson
@@ -21,7 +22,6 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
     const [lesson, setLesson] = useState(current_lesson)
     const [showMenu, setShowMenu] = useState(false)
     const [switchingActive, setSwitchingActive] = useState(false)
-
 
     const onDelete = () => {
         setShowMenu(false)
@@ -52,7 +52,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
     }, [current_lesson])
 
     return (
-        <Surface style={[{ flex: 1, backgroundColor: theme.colors.background, borderRadius: 15 }]}>
+        <Surface style={[{ flex: 1, backgroundColor: theme.colors.background, borderRadius: 15, position: "relative" }]}>
             <TouchableRipple
                 borderless
                 style={{ flexDirection: "row", borderRadius: 15, padding: 5, gap: 5 }}
@@ -86,6 +86,22 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
                             </View>
                         </Menu>
                     </View>
+                    <Surface
+                        style={{
+                            position: "absolute",
+                            right: 5,
+                            top: 5,
+                            padding: 5,
+                            paddingVertical: 2,
+                            borderRadius: 15,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 2,
+                        }}
+                    >
+                        <Text variant="labelSmall">{formatStatus(lesson.status)}</Text>
+                        <Icon size={12} source={"circle"} color={formatStatusColor(lesson.status)} />
+                    </Surface>
                 </>
             </TouchableRipple>
         </Surface>

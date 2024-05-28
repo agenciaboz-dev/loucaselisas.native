@@ -46,9 +46,14 @@ export declare const student_include: {
             };
             lessons: {
                 include: {
+                    media: true;
+                    likes: true;
+                    course: true;
                     _count: {
                         select: {
                             downloads: true;
+                            likes: true;
+                            views: true;
                         };
                     };
                 };

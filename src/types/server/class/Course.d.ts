@@ -62,9 +62,14 @@ export declare const course_include: {
     };
     lessons: {
         include: {
+            media: true;
+            likes: true;
+            course: true;
             _count: {
                 select: {
                     downloads: true;
+                    likes: true;
+                    views: true;
                 };
             };
         };
@@ -136,6 +141,7 @@ export declare class Course {
     }[];
     status: Status;
     declined_reason: string | null;
+    primitive_lessons: Lesson[];
     likes: number;
     lessons: number;
     students: number;

@@ -139,7 +139,7 @@ export const Resume: React.FC<ResumeProps> = ({}) => {
                 </Button>
                 <FlatList
                     data={filteredCourses.sort((a, b) => Number(b.published) - Number(a.published))}
-                    renderItem={({ item }) => <CourseContainer course={item} route="creator:course:manage" />}
+                    renderItem={({ item }) => <CourseContainer course={item} route="creator:course:manage" creatorInfo />}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.id}

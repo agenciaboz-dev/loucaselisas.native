@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Chip, Icon, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
+import { Chip, Icon, IconButton, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Course } from "../../../../types/server/class/Course"
 import { Image } from "expo-image"
 import placeholders from "../../../../tools/placeholders"
@@ -7,13 +7,15 @@ import { View } from "react-native"
 import { NavigationProp, useNavigation } from "@react-navigation/native"
 import * as VideoThumbnails from "expo-video-thumbnails"
 import { formatStatus, formatStatusColor } from "../../../../tools/formatStatus"
+import { colors } from "../../../../style/colors"
 
 interface CourseContainerProps {
     course: Course
     route: string
+    creatorInfo?: boolean
 }
 
-export const CourseContainer: React.FC<CourseContainerProps> = ({ course, route }) => {
+export const CourseContainer: React.FC<CourseContainerProps> = ({ course, route, creatorInfo }) => {
     const theme = useTheme()
     const navigation = useNavigation<NavigationProp<any, any>>()
 
@@ -73,22 +75,27 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course, route 
                             </>
                         </TouchableRipple>
                     </View>
-                    <Surface
-                        style={{
-                            position: "absolute",
-                            right: 5,
-                            top: 5,
-                            padding: 5,
-                            paddingVertical: 2,
-                            borderRadius: 15,
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 2,
-                        }}
-                    >
-                        <Text variant="labelSmall">{formatStatus(course.status)}</Text>
-                        <Icon size={12} source={"circle"} color={formatStatusColor(course.status)} />
-                    </Surface>
+                    {creatorInfo && course.primitive_lessons.some((item) => item.status == "declined") && (
+                        <IconButton icon={"alert"} size={16} style={{ position: "absolute", margin: 0 }} iconColor={colors.warning} />
+                    )}
+                    {creatorInfo && (
+                        <Surface
+                            style={{
+                                position: "absolute",
+                                right: 5,
+                                top: 5,
+                                padding: 5,
+                                paddingVertical: 2,
+                                borderRadius: 15,
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 2,
+                            }}
+                        >
+                            <Text variant="labelSmall">{formatStatus(course.status)}</Text>
+                            <Icon size={12} source={"circle"} color={formatStatusColor(course.status)} />
+                        </Surface>
+                    )}
                 </>
             </TouchableRipple>
         </Surface>

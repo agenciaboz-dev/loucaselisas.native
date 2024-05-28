@@ -15,7 +15,7 @@ import { useFormik } from "formik"
 import { Lesson, LessonForm } from "../../types/server/class/Course/Lesson"
 import { MediaForm } from "../../types/server/class/Gallery/Media"
 import { Button } from "../../components/Button"
-import { Text, useTheme } from "react-native-paper"
+import { Surface, Text, useTheme } from "react-native-paper"
 import { FormText } from "../../components/FormText"
 import { api } from "../../backend/api"
 import { useSnackbar } from "../../hooks/useSnackbar"
@@ -25,6 +25,7 @@ import { validationErrors } from "../../tools/validationErrors"
 import { ImagePickerAsset } from "expo-image-picker"
 import { getFilename } from "../../tools/pickMedia"
 import { AxiosError } from "axios"
+import { DeclinedWarning } from "../Creator/ManageCourse/DeclinedWarning"
 
 interface LessonFormComponentProps {
     navigation: NavigationProp<any, any>
@@ -180,7 +181,17 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
                     bottom: iosKeyboard ? 190 : 0,
                 }}
             >
-                <ScreenTitle title={lesson ? "Ediar lição" : "Nova lição"} />
+                <ScreenTitle title={lesson ? "Editar lição" : "Nova lição"} />
+                {lesson?.status == "declined" && (
+                    <Surface style={{ padding: 10, borderRadius: 20, gap: 10 }}>
+                        <DeclinedWarning lesson />
+                        <Text variant="headlineMedium" style={{ color: theme.colors.tertiary }}>
+                            Motivo da reprovação
+                        </Text>
+
+                        <Text style={{ color: theme.colors.tertiary }}>{lesson.declined_reason}</Text>
+                    </Surface>
+                )}
 
                 <FlatList
                     ref={mediasRef}
@@ -190,15 +201,10 @@ export const LessonFormComponent: React.FC<LessonFormComponentProps> = ({ naviga
                         { media: thumb || lesson?.thumb, setMedia: setThumb, thumb: true, previousUri: lesson?.thumb },
                     ]}
                     renderItem={({ item }) => (
-                        <LessonMediaForm
-                            media={item.media}
-                            setMedia={item.setMedia}
-                            thumb={item.thumb}
-                            previousUri={item.previousUri}
-                        />
+                        <LessonMediaForm media={item.media} setMedia={item.setMedia} thumb={item.thumb} previousUri={item.previousUri} />
                     )}
                     style={{ marginHorizontal: -20 }}
-                    contentContainerStyle={{ gap: 10, height: max_image_height, paddingHorizontal: 20 }}
+                    contentContainerStyle={{ gap: 10, height: max_image_height + 5, paddingHorizontal: 20 }}
                     showsHorizontalScrollIndicator={false}
                     onLayout={flashMediaScroll}
                 />

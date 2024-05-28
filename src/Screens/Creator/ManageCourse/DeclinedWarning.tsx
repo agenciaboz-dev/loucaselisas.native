@@ -4,9 +4,10 @@ import { Icon, Surface, Text, TouchableRipple, useTheme } from "react-native-pap
 
 interface ReprovedWarningProps {
     onEditPress?: () => void
+    lesson?: boolean
 }
 
-export const DeclinedWarning: React.FC<ReprovedWarningProps> = ({ onEditPress }) => {
+export const DeclinedWarning: React.FC<ReprovedWarningProps> = ({ onEditPress, lesson }) => {
     const theme = useTheme()
     return (
         <Surface
@@ -22,7 +23,8 @@ export const DeclinedWarning: React.FC<ReprovedWarningProps> = ({ onEditPress })
         >
             <Icon size={35} source={"alert-outline"} color={theme.colors.tertiary} />
             <Text style={{ color: theme.colors.tertiary, flex: 1, marginLeft: 15 }}>
-                Esse curso foi reprovado pelo administrador. Para enviar para análise novamente, por favor, revise as informações.
+                {lesson ? "Essa lição" : `Esse curso`} foi reprovad{lesson ? "a" : "o"} pelo administrador. Para enviar para análise novamente, por
+                favor, revise as informações.
             </Text>
             {onEditPress && (
                 <TouchableRipple

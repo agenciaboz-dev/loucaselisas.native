@@ -2,7 +2,7 @@ import { Video } from "expo-av"
 import { createContext, useEffect, useRef, useState } from "react"
 import React from "react"
 import * as ScreenOrientation from "expo-screen-orientation"
-import { LayoutAnimation } from "react-native"
+import { BackHandler, LayoutAnimation } from "react-native"
 
 interface VideoPlayerContextValue {
     ref: React.RefObject<Video>
@@ -41,6 +41,17 @@ export const VideoPlayerProvider: React.FC<VideoPlayerProviderProps> = ({ childr
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             reRender({})
         }, 500)
+
+        if (isFullscreen) {
+            const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
+                setIsFullscreen(false)
+                return true
+            })
+
+            return () => {
+                backHandler.remove()
+            }
+        }
     }, [isFullscreen])
 
     return (

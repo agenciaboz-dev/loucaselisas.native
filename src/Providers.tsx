@@ -21,7 +21,7 @@ export const Providers: React.FC<ProvidersProps> = ({ children }) => {
                         <UserProvider>
                             {children}
                             <Snackbar />
-                            <Text style={{ position: "absolute", bottom: 5, right: 5, color: "red" }}>{constants.expoConfig?.version}</Text>
+                            {/* <Text style={{ position: "absolute", bottom: 5, right: 5, color: "red" }}>{constants.expoConfig?.version}</Text> */}
                         </UserProvider>
                     </VideoPlayerProvider>
                 </SnackbarProvider>

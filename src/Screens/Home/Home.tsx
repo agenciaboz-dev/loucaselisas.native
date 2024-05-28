@@ -4,12 +4,22 @@ import { Surface, Text } from "react-native-paper"
 import { colors } from "../../style/colors"
 import { Logo } from "../../components/Logo"
 import { Button } from "./Button"
-import { BackHandler, Dimensions, LayoutAnimation, Pressable, ScrollView, TouchableOpacity } from "react-native"
+import {
+    BackHandler,
+    Dimensions,
+    LayoutAnimation,
+    Platform,
+    Pressable,
+    ScrollView,
+    TouchableOpacity,
+    View,
+} from "react-native"
 import { Login } from "./Login"
 import { ResizeMode, Video } from "expo-av"
 import { setStatusBarStyle } from "expo-status-bar"
 import * as SplashScreen from "expo-splash-screen"
 import { HomeStackParams } from "../../Routes"
+import constants from "expo-constants"
 
 interface HomeProps {
     navigation: NavigationProp<HomeStackParams, "home">
@@ -54,7 +64,13 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={"handled"}
             style={{ backgroundColor: colors.primary }}
-            contentContainerStyle={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 20, paddingHorizontal: 60 }}
+            contentContainerStyle={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 20,
+                paddingHorizontal: 60,
+            }}
         >
             <Video
                 ref={video}
@@ -75,10 +91,25 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                 </Surface>
             )}
             {form == "login" && <Login navigation={navigation} />}
-            <TouchableOpacity onPress={() => navigation.navigate("signup")}>
-                <Text style={{ color: colors.secondary }}>
-                    Ainda não tem uma conta? <Text style={{ color: colors.secondary, fontFamily: "Lato_700Bold" }}>Faça o cadastro</Text>{" "}
+            <TouchableOpacity onPress={() => navigation.navigate("signup")} style={{ gap: 50 }}>
+                <Text style={{ color: colors.secondary, fontSize: 13 }}>
+                    Ainda não tem uma conta?{" "}
+                    <Text style={{ color: colors.secondary, fontFamily: "Lato_700Bold" }}>Faça o cadastro</Text>{" "}
                 </Text>
+                <View
+                    style={{
+                        alignItems: "center",
+                        position: "absolute",
+                        top: Platform.OS == "ios" ? 180 : 190,
+                        right: Platform.OS == "ios" ? 30 : 25,
+                        flex: 1,
+                    }}
+                >
+                    <Text style={{ color: colors.secondary, fontSize: 11 }}>
+                        2024 © Direitos Reservados - v{constants.expoConfig?.version}
+                    </Text>
+                    <Text style={{ color: colors.secondary, fontSize: 11 }}>Powered by BOZ</Text>
+                </View>
             </TouchableOpacity>
         </ScrollView>
     )

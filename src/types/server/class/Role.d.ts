@@ -15,6 +15,7 @@ export declare class Role {
     static list(): Promise<Role[]>;
     static existsDefault(): Promise<boolean>;
     static createDefault(socket?: Socket): Promise<void>;
+    static new(role: Partial<Role>): Promise<void>;
     load(data: RolePrisma): void;
     update(data: Partial<Role>): Promise<void>;
 }

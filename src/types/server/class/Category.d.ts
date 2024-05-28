@@ -16,7 +16,7 @@ export declare class Category {
     name: string;
     cover: string;
     active: boolean;
-    static list(): Promise<Category[]>;
+    static list(all?: boolean): Promise<Category[]>;
     static new(data: CategoryForm): Promise<Category>;
     constructor(id: string, data?: CategoryPrisma);
     init(): Promise<void>;

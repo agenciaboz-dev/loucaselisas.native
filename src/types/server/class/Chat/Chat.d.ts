@@ -12,6 +12,7 @@ export declare const chat_include: {
             messages: true;
         };
     };
+    course: true;
 };
 export type ChatPrisma = Prisma.ChatGetPayload<{
     include: typeof chat_include;

@@ -42,6 +42,7 @@ import { pickMedia } from "../../tools/pickMedia"
 import placeholders from "../../tools/placeholders"
 import { LabeledComponent } from "../../components/LabeledComponent"
 import { validationErrors } from "../../tools/validationErrors"
+import { DeclinedWarning } from "../Creator/ManageCourse/DeclinedWarning"
 
 interface CourseFormProps {
     navigation: NavigationProp<any, any>
@@ -85,6 +86,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
             owner_id: creator.id,
             recorder: "",
             lessons: [],
+            status: "pending",
         },
         async onSubmit(values, formikHelpers) {
             if (loading) return
@@ -288,13 +290,20 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                 }}
             >
                 <ScreenTitle title={course ? course.name : "Novo Curso"} />
+                {course.status == "declined" && (
+                    <Surface style={{ padding: 10, borderRadius: 20, gap: 10 }}>
+                        <DeclinedWarning />
+                        <Text variant="headlineMedium" style={{ color: theme.colors.tertiary }}>
+                            Motivo da reprovação
+                        </Text>
+
+                        <Text style={{ color: theme.colors.tertiary }}>{course.declined_reason}</Text>
+                    </Surface>
+                )}
                 {cover ? (
-                    <View style={{ position: "relative" }}>
+                    <Surface style={{ position: "relative", borderRadius: 15 }}>
                         {cover.type == "image" ? (
-                            <Image
-                                source={{ uri: cover.url || "data:image/png;base64," + cover.file.base64 }}
-                                style={image_style}
-                            />
+                            <Image source={{ uri: cover.url || "data:image/png;base64," + cover.file.base64 }} style={image_style} />
                         ) : (
                             <Video
                                 source={{ uri: cover.url || "data:video/mp4;base64," + cover.file.base64 }}
@@ -312,21 +321,14 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                             iconColor={colors.primary}
                             onPress={pickCover}
                         />
-                    </View>
+                    </Surface>
                 ) : (
                     <Button mode="outlined" style={add_media_button_style} contentStyle={image_style} onPress={pickCover}>
                         Capa
                     </Button>
                 )}
                 <GalleryFormComponent gallery={gallery} setGallery={setGallery} cover={cover} setCover={setCover} />
-                <FormText
-                    formik={formik}
-                    name="name"
-                    label={"Nome do curso"}
-                    ref={input_refs[0]}
-                    onSubmitEditing={() => focusInput(1)}
-                    transparent
-                />
+                <FormText formik={formik} name="name" label={"Nome do curso"} ref={input_refs[0]} onSubmitEditing={() => focusInput(1)} transparent />
                 <LabeledComponent
                     label={"Participantes"}
                     Component={
@@ -399,11 +401,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                                     }}
                                 >
                                     <>
-                                        <Checkbox
-                                            status={
-                                                categories.find((item) => item.id == category.id) ? "checked" : "unchecked"
-                                            }
-                                        />
+                                        <Checkbox status={categories.find((item) => item.id == category.id) ? "checked" : "unchecked"} />
                                         <Text style={{}}>{category.name}</Text>
                                     </>
                                 </TouchableRipple>

@@ -8,6 +8,7 @@ import { Creator, CreatorForm, Student } from "./index";
 import { Role } from "./Role";
 import { PlanContract } from "./Plan";
 import { Lesson } from "./Course/Lesson";
+import { Message } from "./Chat/Message";
 export declare const user_include: {
     creator: {
         include: {
@@ -33,6 +34,7 @@ export declare const user_include: {
                                     messages: true;
                                 };
                             };
+                            course: true;
                         };
                     };
                     creators: {
@@ -172,4 +174,5 @@ export declare class User {
         lessons: Lesson[];
         courses: Course[];
     }>;
+    getMessages(): Promise<Message[]>;
 }

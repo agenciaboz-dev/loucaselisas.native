@@ -15,6 +15,7 @@ import { useArray } from "burgos-array"
 import { OptionsMenu } from "../../../components/OptionsMenu/OptionsMenu"
 import { CourseGallery } from "../../../components/CourseGallery"
 import { StatusText } from "../../../components/StatusText"
+import { DeclinedWarning } from "./DeclinedWarning"
 
 interface ManageCourseProps {
     navigation: NavigationProp<any, any>
@@ -134,6 +135,8 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                                 </View>
                             }
                         />
+
+                        {course.status == "declined" && <DeclinedWarning onEditPress={() => onMenuItemPress("creator:course:form")} />}
                         <CourseGallery course={course} />
 
                         <Text variant="bodyLarge">Valor: {currencyMask(course.price)}</Text>

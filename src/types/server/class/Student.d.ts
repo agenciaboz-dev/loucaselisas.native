@@ -16,6 +16,7 @@ export declare const student_include: {
                             messages: true;
                         };
                     };
+                    course: true;
                 };
             };
             creators: {

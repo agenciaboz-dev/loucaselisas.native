@@ -32,6 +32,7 @@ export declare const course_include: {
                     messages: true;
                 };
             };
+            course: true;
         };
     };
     creators: {
@@ -108,6 +109,7 @@ export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | 
     owner_id: string;
     id?: string;
     declined_reason?: string;
+    status?: Status;
 };
 export declare class Course {
     id: string;
@@ -140,7 +142,8 @@ export declare class Course {
     views: number;
     downloads: number;
     constructor(id: string, data?: CoursePrisma);
-    static list(): Promise<Course[]>;
+    static getFromChat(id: string): Promise<Course>;
+    static list(all?: boolean): Promise<Course[]>;
     static search(role_id: number, text: string): Promise<Course[]>;
     static new(data: CourseForm, socket?: Socket): Promise<Course | undefined>;
     init(): Promise<void>;

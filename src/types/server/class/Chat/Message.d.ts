@@ -5,11 +5,10 @@ import { User } from "../User";
 import { Media, MediaForm } from "../Gallery/Media";
 export declare const message_include: {
     user: true;
+    media: true;
 };
 export type MessagePrisma = Prisma.MessageGetPayload<{
-    include: {
-        user: true;
-    };
+    include: typeof message_include;
 }>;
 export type MessageForm = Omit<WithoutFunctions<Message>, "id" | "user" | "datetime" | "media_id" | "media"> & {
     media?: MediaForm;

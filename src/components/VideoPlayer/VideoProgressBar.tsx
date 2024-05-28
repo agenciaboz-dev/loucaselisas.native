@@ -35,7 +35,7 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status, onCo
 
     return (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 10 }}>
-            <Text style={[{ color: theme.colors.background, flex: 0.11, textAlign: "center" }, isFullscreen && { flex: 0.05 }]}>
+            <Text style={[{ color: theme.colors.background, flex: 0.11, textAlign: "center" }, isFullscreen && { flex: 0.06 }]}>
                 {/* @ts-ignore */}
                 {moment.duration(value).format("mm:ss", { trim: false })}
             </Text>
@@ -52,7 +52,7 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({ status, onCo
                 minimumTrackStyle={{ backgroundColor: theme.colors.outlineVariant, borderRadius: 100 }}
                 step={1}
             />
-            <Text style={[{ color: theme.colors.background, flex: 0.11, textAlign: "center" }, isFullscreen && { flex: 0.05 }]}>
+            <Text style={[{ color: theme.colors.background, flex: 0.11, textAlign: "center" }, isFullscreen && { flex: 0.06 }]}>
                 {/* @ts-ignore */}
                 {moment.duration(status.durationMillis).format("mm:ss", { trim: false })}
             </Text>

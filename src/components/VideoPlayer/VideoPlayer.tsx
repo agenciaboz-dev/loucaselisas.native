@@ -22,8 +22,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, course, lesson
     const max_image_height = (image_width / 16) * 9
     const media_style: ViewStyle = { width: image_width, height: max_image_height, borderRadius: 15 }
     const fullscreenStyle: ViewStyle = {
-        width: Dimensions.get("screen").width,
-        height: Dimensions.get("screen").height * 0.95,
+        width: Dimensions.get("screen").width + 1,
+        height: Dimensions.get("screen").height + 1,
         marginLeft: -21,
         marginTop: -21,
     }

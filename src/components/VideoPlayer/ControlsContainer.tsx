@@ -135,7 +135,7 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status, co
                             height: "100%",
                             borderRadius: 15,
                         },
-                        isFullscreen && { width: Dimensions.get("screen").width, marginLeft: -21, borderRadius: 0 },
+                        isFullscreen && { width: Dimensions.get("screen").width + 1, marginLeft: -21, borderRadius: 0 },
                     ]}
                     colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
                     // locations={[0, 0.5]}

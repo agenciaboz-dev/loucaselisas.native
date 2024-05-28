@@ -212,57 +212,25 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             <Modal
                 visible={!!sharingLesson || !!media}
                 onDismiss={dismissMediaModal}
-                contentContainerStyle={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    paddingBottom: iosKeyboard && sharingLesson ? 10 : iosKeyboard && !sharingLesson ? 220 : 80,
-                }}
+                contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}
             >
-                <Image
-                    source={{ uri: sharingLesson?.thumb || media?.uri }}
-                    style={{
-                        width:
-                            Platform.OS === "ios" && sharingLesson
-                                ? 250
-                                : Platform.OS === "ios" && !sharingLesson
-                                ? 120
-                                : Platform.OS === "android" && sharingLesson
-                                ? 300
-                                : 100,
-                        aspectRatio: media ? media.width / media.height : 16 / 9,
-                        maxHeight: 500,
-                        borderRadius: 15,
-                    }}
-                />
+                <Image source={{ uri: sharingLesson?.thumb || media?.uri }} style={{ width: 375, aspectRatio: 16 / 9, borderRadius: 15 }} />
                 {sharingLesson && (
                     <View
                         style={{
-                            position: Platform.OS == "ios" ? "relative" : "absolute",
-                            width: 300,
-                            height: Platform.OS == "ios" ? "60%" : "100%",
+                            position: "absolute",
+                            width: 375,
+                            height: "100%",
                             alignItems: "center",
                             padding: 10,
                             justifyContent: "space-between",
-                            paddingBottom: 120,
-                            bottom: Platform.OS === "ios" ? 150 : 85,
                         }}
                     >
-                        <Text
-                            variant={Platform.OS == "ios" ? "bodyLarge" : "headlineMedium"}
-                            style={{ color: theme.colors.secondary }}
-                            numberOfLines={1}
-                        >
+                        <Text variant="headlineMedium" style={{ color: theme.colors.secondary }} numberOfLines={1}>
                             {sharingLesson.lesson.name}
                         </Text>
-                        <IconButton
-                            icon={"play-circle-outline"}
-                            iconColor={theme.colors.secondary}
-                            size={Platform.OS == "ios" ? 40 : 50}
-                        />
-                        <Text
-                            style={{ color: theme.colors.secondary }}
-                            variant={Platform.OS == "ios" ? "bodyMedium" : "headlineMedium"}
-                        >
+                        <IconButton icon={"play-circle-outline"} iconColor={theme.colors.secondary} size={50} />
+                        <Text style={{ color: theme.colors.secondary }} variant="headlineMedium">
                             {/* @ts-ignore */}
                             {moment.duration(sharingLesson.timestamp).format("mm:ss", { trim: false })}
                         </Text>

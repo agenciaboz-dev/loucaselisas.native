@@ -2,13 +2,16 @@ import ImageView from "react-native-image-viewing"
 import { RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import {
+    Dimensions,
     FlatList,
     GestureResponderEvent,
     Keyboard,
     LayoutAnimation,
     NativeSyntheticEvent,
     Platform,
+    Pressable,
     TextInputSubmitEditingEventData,
+    TouchableWithoutFeedback,
     View,
 } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
@@ -180,6 +183,30 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
         }
     }, [])
 
+    const SharingLessonDetails = () =>
+        sharingLesson ? (
+            <Pressable
+                style={{
+                    position: "absolute",
+                    width: Dimensions.get("screen").width * 0.85,
+                    height: "100%",
+                    alignItems: "center",
+                    padding: 10,
+                    justifyContent: "space-between",
+                }}
+                onPress={() => Keyboard.dismiss()}
+            >
+                <Text variant="headlineMedium" style={{ color: theme.colors.secondary }} numberOfLines={1}>
+                    {sharingLesson.lesson.name}
+                </Text>
+                <IconButton icon={"play-circle-outline"} iconColor={theme.colors.secondary} size={50} />
+                <Text style={{ color: theme.colors.secondary }} variant="headlineMedium">
+                    {/* @ts-ignore */}
+                    {moment.duration(sharingLesson.timestamp).format("mm:ss", { trim: false })}
+                </Text>
+            </Pressable>
+        ) : null
+
     return chat && course ? (
         <View style={{ flex: 1, padding: 20, paddingBottom: 0, paddingTop: 10, position: "relative" }}>
             <ScreenTitle title={`Grupo - ${course.name}`} />
@@ -213,37 +240,22 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                 visible={!!sharingLesson || !!media}
                 onDismiss={dismissMediaModal}
                 contentContainerStyle={{
+                    position: "relative",
                     justifyContent: "center",
                     alignItems: "center",
-                    paddingBottom: iosKeyboard ? 300 : 0,
+                    paddingBottom: iosKeyboard ? 250 : 0,
                 }}
             >
                 <Image
                     source={{ uri: sharingLesson?.thumb || media?.uri }}
-                    style={{ width: 347, aspectRatio: 16 / 9, borderRadius: 15 }}
+                    style={{
+                        width: Dimensions.get("screen").width * 0.85,
+                        aspectRatio: media ? media.width / media.height : 16 / 9,
+                        borderRadius: 15,
+                    }}
+                    children={Platform.OS == "ios" ? <SharingLessonDetails /> : undefined}
                 />
-                {sharingLesson && (
-                    <View
-                        style={{
-                            position: "absolute",
-                            width: 375,
-                            height: "100%",
-                            alignItems: "center",
-                            padding: 10,
-                            justifyContent: "space-between",
-                            paddingBottom: iosKeyboard ? 380 : 0,
-                        }}
-                    >
-                        <Text variant="headlineMedium" style={{ color: theme.colors.secondary }} numberOfLines={1}>
-                            {sharingLesson.lesson.name}
-                        </Text>
-                        <IconButton icon={"play-circle-outline"} iconColor={theme.colors.secondary} size={50} />
-                        <Text style={{ color: theme.colors.secondary }} variant="headlineMedium">
-                            {/* @ts-ignore */}
-                            {moment.duration(sharingLesson.timestamp).format("mm:ss", { trim: false })}
-                        </Text>
-                    </View>
-                )}
+                {Platform.OS == "android" && <SharingLessonDetails />}
             </Modal>
 
             <TextInput

@@ -1,4 +1,5 @@
 import * as ImagePicker from "expo-image-picker"
+import { Platform } from "react-native"
 
 export const pickMedia = async (
     aspect?: [number, number],
@@ -7,7 +8,7 @@ export const pickMedia = async (
 ) => {
     let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: mediaTypes,
-        allowsEditing: !multiple,
+        allowsEditing: Platform.OS == "ios" ? false : !multiple,
         aspect,
         quality: 1,
         base64: true,

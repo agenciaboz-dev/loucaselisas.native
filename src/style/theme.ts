@@ -5,7 +5,7 @@ import { colors } from "./colors"
 export const paper_theme: MD3Theme = {
     ...DefaultTheme,
 
-    fonts: configureFonts({ config: { fontFamily: "Founders-Grotesk-Regular" } }),
+    fonts: configureFonts({ config: { fontFamily: "Lato_400Regular" } }),
 
     colors: {
         ...DefaultTheme.colors,

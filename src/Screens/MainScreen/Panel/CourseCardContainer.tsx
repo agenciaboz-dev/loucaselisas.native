@@ -30,7 +30,7 @@ export const CourseCardContainer: React.FC<CourseCardContainerProps> = ({ course
                         style={{ width: 100, aspectRatio: "1/1", borderRadius: 15 }}
                     />
                     <View style={{ padding: 5, gap: 2, paddingRight: 140, flexDirection: "column", height: "100%", justifyContent: "space-between" }}>
-                        <Text variant="bodyLarge" style={{ fontFamily: "Founders-Grotesk-Bold" }} numberOfLines={1}>
+                        <Text variant="bodyLarge" style={{ fontFamily: "Lato_700Bold" }} numberOfLines={1}>
                             {course.name}
                         </Text>
                         <Text numberOfLines={3}>{course.description}</Text>

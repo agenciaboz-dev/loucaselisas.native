@@ -77,7 +77,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
             {form == "login" && <Login navigation={navigation} />}
             <TouchableOpacity onPress={() => navigation.navigate("signup")}>
                 <Text style={{ color: colors.secondary }}>
-                    Ainda não tem uma conta? <Text style={{ color: colors.secondary, fontFamily: "Founders-Grotesk-Bold" }}>Faça o cadastro</Text>{" "}
+                    Ainda não tem uma conta? <Text style={{ color: colors.secondary, fontFamily: "Lato_700Bold" }}>Faça o cadastro</Text>{" "}
                 </Text>
             </TouchableOpacity>
         </ScrollView>

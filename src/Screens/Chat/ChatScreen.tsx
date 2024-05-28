@@ -212,9 +212,16 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             <Modal
                 visible={!!sharingLesson || !!media}
                 onDismiss={dismissMediaModal}
-                contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}
+                contentContainerStyle={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingBottom: iosKeyboard ? 300 : 0,
+                }}
             >
-                <Image source={{ uri: sharingLesson?.thumb || media?.uri }} style={{ width: 375, aspectRatio: 16 / 9, borderRadius: 15 }} />
+                <Image
+                    source={{ uri: sharingLesson?.thumb || media?.uri }}
+                    style={{ width: 347, aspectRatio: 16 / 9, borderRadius: 15 }}
+                />
                 {sharingLesson && (
                     <View
                         style={{
@@ -224,6 +231,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                             alignItems: "center",
                             padding: 10,
                             justifyContent: "space-between",
+                            paddingBottom: iosKeyboard ? 380 : 0,
                         }}
                     >
                         <Text variant="headlineMedium" style={{ color: theme.colors.secondary }} numberOfLines={1}>

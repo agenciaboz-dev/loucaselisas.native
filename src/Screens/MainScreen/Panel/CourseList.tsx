@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, TextInput as OriginalText, NativeSyntheticEvent, Platform, ScrollView, TextInputFocusEventData, View } from "react-native"
 import { Course } from "../../../types/server/class/Course"
-import { TextInput, useTheme } from "react-native-paper"
+import { Text, TextInput, useTheme } from "react-native-paper"
 import { CourseCardContainer } from "./CourseCardContainer"
 import { useArray } from "burgos-array"
 import { LessonsSkeletons } from "../../Creator/ManageCourse/LessonsSkeletons"
@@ -45,6 +45,12 @@ export const CourseList: React.FC<CourseListProps> = ({ courses, scrollRef, refr
             />
 
             {refreshing && !courses.length && skeletons.map((index) => <LessonsSkeletons key={index} />)}
+
+            {!refreshing && !courses.length && (
+                <View>
+                    <Text>Nenhum curso encontrado</Text>
+                </View>
+            )}
 
             {courses
                 .sort((a, b) => Number(b.published) - Number(a.published))

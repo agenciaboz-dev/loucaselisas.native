@@ -14,7 +14,7 @@ export const FilteredCourses: React.FC<FilteredCoursesProps> = ({ courses }) => 
     const scrollRef = useRef<FlatList>(null)
     const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses)
     const [active, setActive] = useState("popular")
-    const [refreshing, setRefreshing] = useState(true)
+    const [refreshing, setRefreshing] = useState(!!courses.length)
 
     const onFilterCourses = (filtered_courses: Course[]) => {
         setRefreshing(true)

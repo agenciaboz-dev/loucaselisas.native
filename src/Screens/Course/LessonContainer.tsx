@@ -7,7 +7,6 @@ import { Image } from "expo-image"
 import { useUser } from "../../hooks/useUser"
 import { api } from "../../backend/api"
 import { Course } from "../../types/server/class/Course"
-import { Video } from "expo-av"
 
 interface LessonContainerProps {
     lesson: Lesson
@@ -27,13 +26,13 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
     const [liking, setLiking] = useState(false)
     const [liked, setliked] = useState(!!lesson?.favorited_by.find((item) => item.id == user?.id))
     const [watched, setWatched] = useState(0)
-    const [duration, setDuration] = useState(0)
-    const [progressValue, setProgressValue] = useState(0)
 
     const fetchWatchedTime = async () => {
         try {
             const response = await api.get("/user/lesson_watchtime", { params: { user_id: user?.id, lesson_id: lesson.id } })
-            setWatched(Number(response.data))
+            if (!!response.data) {
+                setWatched(Number(response.data) / lesson.media.duration)
+            }
         } catch (error) {
             console.log(error)
         }
@@ -69,12 +68,6 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
         fetchWatchedTime()
     }, [lesson])
 
-    useEffect(() => {
-        if (duration && watched) {
-            setProgressValue(watched / duration)
-        }
-    }, [duration, watched])
-
     return user ? (
         <Surface style={[{ backgroundColor: theme.colors.background, borderRadius: 15 }, blocked && { opacity: 0.5, pointerEvents: "none" }]}>
             <TouchableRipple
@@ -100,13 +93,8 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
                         <ProgressBar
                             style={{ marginTop: 5, borderRadius: 5 }}
                             fillStyle={{ borderRadius: 5 }}
-                            progress={progressValue}
-                            color={theme.colors.inversePrimary}
-                        />
-                        <Video
-                            source={{ uri: lesson.media.url }}
-                            style={{ display: "none" }}
-                            onLoad={(status) => setDuration(status.isLoaded ? status.durationMillis || 0 : 0)}
+                            progress={watched}
+                            color={theme.colors.primary}
                         />
                     </View>
                     <View style={{ marginLeft: "auto", alignSelf: "center" }}>

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { View } from "react-native"
 import { Lesson } from "../../types/server/class/Course/Lesson"
-import { IconButton, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
+import { IconButton, ProgressBar, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { NavigationProp, useNavigation } from "@react-navigation/native"
 import { Image } from "expo-image"
 import { useUser } from "../../hooks/useUser"
 import { api } from "../../backend/api"
 import { Course } from "../../types/server/class/Course"
+import { Video } from "expo-av"
 
 interface LessonContainerProps {
     lesson: Lesson
@@ -25,6 +26,18 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
 
     const [liking, setLiking] = useState(false)
     const [liked, setliked] = useState(!!lesson?.favorited_by.find((item) => item.id == user?.id))
+    const [watched, setWatched] = useState(0)
+    const [duration, setDuration] = useState(0)
+    const [progressValue, setProgressValue] = useState(0)
+
+    const fetchWatchedTime = async () => {
+        try {
+            const response = await api.get("/user/lesson_watchtime", { params: { user_id: user?.id, lesson_id: lesson.id } })
+            setWatched(Number(response.data))
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const onLikePress = async () => {
         if (!user) return
@@ -53,7 +66,14 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
 
     useEffect(() => {
         setliked(!!lesson?.favorited_by.find((item) => item.id == user?.id))
+        fetchWatchedTime()
     }, [lesson])
+
+    useEffect(() => {
+        if (duration && watched) {
+            setProgressValue(watched / duration)
+        }
+    }, [duration, watched])
 
     return user ? (
         <Surface style={[{ backgroundColor: theme.colors.background, borderRadius: 15 }, blocked && { opacity: 0.5, pointerEvents: "none" }]}>
@@ -64,7 +84,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
             >
                 <>
                     <Image source={lesson.thumb} contentFit="cover" style={{ width: 100, aspectRatio: "1/1", borderRadius: 15 }} />
-                    <View style={{ padding: 5, gap: 2, paddingRight: 140 }}>
+                    <View style={{ padding: 5, gap: 2, paddingRight: 140, width: "100%" }}>
                         {!liked_variant && (
                             <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceDisabled }}>
                                 Lição {index}
@@ -77,6 +97,17 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
                                 {course?.name}
                             </Text>
                         )}
+                        <ProgressBar
+                            style={{ marginTop: 5, borderRadius: 5 }}
+                            fillStyle={{ borderRadius: 5 }}
+                            progress={progressValue}
+                            color={theme.colors.inversePrimary}
+                        />
+                        <Video
+                            source={{ uri: lesson.media.url }}
+                            style={{ display: "none" }}
+                            onLoad={(status) => setDuration(status.isLoaded ? status.durationMillis || 0 : 0)}
+                        />
                     </View>
                     <View style={{ marginLeft: "auto", alignSelf: "center" }}>
                         {liked_variant ? (

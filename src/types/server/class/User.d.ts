@@ -180,4 +180,11 @@ export declare class User {
         courses: Course[];
     }>;
     getMessages(): Promise<Message[]>;
+    getWatchedTime(lesson_id: string): Promise<string | undefined>;
+    saveWatchedTime(lesson_id: string, watchedTime: number): Promise<{
+        id: number;
+        watchedTime: string;
+        lesson_id: string;
+        user_id: string;
+    }>;
 }

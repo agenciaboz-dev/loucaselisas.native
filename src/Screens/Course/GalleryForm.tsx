@@ -50,6 +50,7 @@ export const GalleryFormComponent: React.FC<GalleryFormProps> = ({ gallery, setG
                         position,
                         width: media.width,
                         height: media.height,
+                        duration: media.duration || undefined,
                     })
                 }
             })

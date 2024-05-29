@@ -19,6 +19,7 @@ import { CourseSkeletons } from "../../components/CourseSkeletons"
 import { CourseContainer } from "../Creator/CreatorHome/Resume/CourseContainer"
 import { VideoPlayer } from "../../components/VideoPlayer/VideoPlayer"
 import { useVideoPlayer } from "../../hooks/useVideoplayer"
+import { AVPlaybackStatusSuccess } from "expo-av"
 
 interface LessonScreenProps {
     navigation: NavigationProp<any, any>
@@ -27,7 +28,7 @@ interface LessonScreenProps {
 
 export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route }) => {
     const { user } = useUser()
-    const { isFullscreen } = useVideoPlayer()
+    const { isFullscreen, ref } = useVideoPlayer()
     const theme = useTheme()
     const image_width = Dimensions.get("screen").width * 0.9
     const max_image_height = (image_width / 16) * 9
@@ -48,6 +49,27 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
     const [refreshingLessonsList, setRefreshingLessonsList] = useState(true)
     const [sameCategoryCourses, setSameCategoryCourses] = useState<Course[]>([])
     const [refreshingCourses, setRefreshingCourses] = useState(true)
+    const [watchedTime, setWatchedTime] = useState<number>()
+
+    const saveWatchedTime = async () => {
+        try {
+            const status = (await ref.current?.getStatusAsync()) as AVPlaybackStatusSuccess
+            const watched = status.positionMillis
+            const response = await api.post("/user/lesson_watchtime", { user_id: user?.id, lesson_id: lesson?.id, watched })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const fetchWatchedTime = async () => {
+        try {
+            const response = await api.get("/user/lesson_watchtime", { params: { user_id: user?.id, lesson_id: lesson?.id } })
+            const data = response.data
+            setWatchedTime(Number(data))
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const fetchCategoryCourses = async () => {
         setRefreshingCourses(true)
@@ -139,12 +161,16 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
     useFocusEffect(
         useCallback(() => {
             refreshLesson()
+            fetchWatchedTime()
             if (!course) {
                 fetchCourse()
             }
 
+            const interval = setInterval(() => saveWatchedTime(), 1000 * 3)
+
             return () => {
                 videoRef.current?.stopAsync()
+                clearInterval(interval)
             }
         }, [])
     )
@@ -210,7 +236,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                         />
                     </TouchableRipple>
                 ) : (
-                    <VideoPlayer source={lesson.media.url} course={course} lesson={lesson} initialPosition={startingTime} />
+                    <VideoPlayer source={lesson.media.url} course={course} lesson={lesson} initialPosition={startingTime || watchedTime} />
                 )}
             </Surface>
             {lesson.media.type == "image" && (

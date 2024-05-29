@@ -76,7 +76,13 @@ export const CourseContainer: React.FC<CourseContainerProps> = ({ course, route,
                         </TouchableRipple>
                     </View>
                     {creatorInfo && course.primitive_lessons.some((item) => item.status == "declined") && (
-                        <IconButton icon={"alert"} size={16} style={{ position: "absolute", margin: 0 }} iconColor={colors.warning} />
+                        <IconButton
+                            icon={"alert"}
+                            size={18}
+                            style={{ position: "absolute", margin: 0, width: 25, height: 25, left: 5, top: 5 }}
+                            containerColor={theme.colors.background}
+                            iconColor={colors.warning}
+                        />
                     )}
                     {creatorInfo && (
                         <Surface

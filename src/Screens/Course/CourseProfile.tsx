@@ -55,7 +55,9 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     > = ({ route }) => {
         switch (route.key) {
             case "lessons":
-                return <LessonsList lessons={lessons} refreshing={loadingLessons} course={course} blocked={!isAvailable} />
+                return (
+                    <LessonsList lessons={lessons} refreshing={loadingLessons} course={course} blocked={!isAvailable} refreshCourse={refreshCourse} />
+                )
             case "downloaded":
                 return <DownloadedList />
             default:

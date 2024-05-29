@@ -14,9 +14,10 @@ interface LessonContainerProps {
     course?: Course
     liked_variant?: boolean
     blocked?: boolean
+    refreshCourse: () => Promise<void>
 }
 
-export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index, course, liked_variant, blocked }) => {
+export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index, course, liked_variant, blocked, refreshCourse }) => {
     const { user } = useUser()
 
     const navigation = useNavigation<NavigationProp<any, any>>()
@@ -38,6 +39,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ lesson, index,
             const response = await api.post("/lesson/favorite", data)
             const updated_lesson = response.data as Lesson
             setliked(!!updated_lesson.favorited_by.find((item) => item.id == user.id))
+            await refreshCourse()
         } catch (error) {
             console.log(error)
         } finally {

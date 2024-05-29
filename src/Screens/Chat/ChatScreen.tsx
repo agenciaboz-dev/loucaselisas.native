@@ -72,6 +72,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                 height: media.height,
                 width: media.width,
                 type: media.type || "image",
+                duration: undefined,
             }
         }
 

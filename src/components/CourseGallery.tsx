@@ -5,7 +5,8 @@ import { Course } from "../types/server/class/Course"
 import { Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Image, ImageStyle } from "expo-image"
 import placeholders from "../tools/placeholders"
-import { ResizeMode, Video } from "expo-av"
+import { ResizeMode, Video, VideoFullscreenUpdateEvent } from "expo-av"
+import * as ScreenOrientation from "expo-screen-orientation"
 
 interface CourseGalleryProps {
     course: Course
@@ -19,6 +20,15 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ course }) => {
     const media_style: ImageStyle = { width: image_width, height: max_image_height, borderRadius: 15 }
 
     const [viewingMedia, setViewingMedia] = useState<number | null>(null)
+
+    const handleFullscreen = async (event: VideoFullscreenUpdateEvent) => {
+        if (event.fullscreenUpdate == 1) {
+            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+        }
+        if (event.fullscreenUpdate == 3) {
+            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
+        }
+    }
 
     return (
         <>
@@ -58,6 +68,7 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ course }) => {
                                 resizeMode={ResizeMode.COVER}
                                 style={media_style}
                                 useNativeControls
+                                onFullscreenUpdate={handleFullscreen}
                                 shouldPlay
                                 onError={(error) => console.log(`course cover error: ${error}`)}
                             />
@@ -67,11 +78,7 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ course }) => {
                 renderItem={({ item, index }) => (
                     <Surface style={{ borderRadius: 15 }}>
                         {item.type == "image" ? (
-                            <TouchableRipple
-                                borderless
-                                style={{ borderRadius: 15 }}
-                                onPress={() => setViewingMedia(index + 1)}
-                            >
+                            <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => setViewingMedia(index + 1)}>
                                 <Image
                                     source={item.url}
                                     placeholder={placeholders.square}
@@ -85,6 +92,7 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ course }) => {
                                 source={{ uri: item.url }}
                                 resizeMode={ResizeMode.COVER}
                                 style={media_style}
+                                onFullscreenUpdate={handleFullscreen}
                                 useNativeControls
                                 onError={(error) => console.log(`course gallery item ${item.id} error: ${error}`)}
                             />

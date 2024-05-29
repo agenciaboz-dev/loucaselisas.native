@@ -74,6 +74,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({ current_lesson
                             anchorPosition="bottom"
                             anchor={<IconButton loading={switchingActive} icon={"dots-vertical"} onPress={() => setShowMenu((value) => !value)} />}
                             contentStyle={{ borderRadius: 15 }}
+                            style={{ marginTop: 35 }}
                         >
                             <TrianguloMiseravel color={theme.colors.elevation.level3} top={-9} right={15} />
                             <View style={{ paddingVertical: 0 }}>

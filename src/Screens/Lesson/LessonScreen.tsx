@@ -195,6 +195,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                                     anchorPosition={"bottom"}
                                     anchor={<IconButton icon={"comment-text-outline"} style={{ margin: 0 }} onPress={onChatPress} />}
                                     contentStyle={[{ borderRadius: 15 }]}
+                                    style={{ marginTop: 45 }}
                                 >
                                     <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} />
                                     <View style={{ paddingHorizontal: 15 }}>

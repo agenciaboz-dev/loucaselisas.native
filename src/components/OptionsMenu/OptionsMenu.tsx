@@ -24,7 +24,7 @@ export const OptionsMenu: React.FC<OptionsMenuProps> = ({ visible, onDismiss, an
             anchorPosition={anchorPosition}
             anchor={Anchor}
             contentStyle={[{ borderRadius: 15 }, style]}
-            style={{ marginTop: 30 }}
+            style={{ marginTop: 45 }}
         >
             <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} {...triangleProps} />
             <View style={{ paddingVertical: 0 }}>

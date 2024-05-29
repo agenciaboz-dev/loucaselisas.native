@@ -41,7 +41,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                     tabBarIcon: (tab) => getIcon("apps", tab.focused),
                 }}
             />
-            {user.creator && (
+            {user.creator?.active && (
                 <Tab.Screen
                     name="creator"
                     component={CreatorStack}

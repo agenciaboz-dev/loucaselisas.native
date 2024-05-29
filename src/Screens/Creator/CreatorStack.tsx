@@ -10,6 +10,8 @@ import { LessonFormComponent } from "../Lesson/LessonFormComponent"
 import { DeleteLesson } from "../Lesson/DeleteLesson"
 import { ManageLesson } from "../Lesson/ManageLesson"
 import { ChatScreen } from "../Chat/ChatScreen"
+import { useUser } from "../../hooks/useUser"
+import { CreatorReviewProfile } from "./CreatorReviewProfile"
 
 interface CreatorStackProps {
     navigation: NavigationProp<any, any>
@@ -29,9 +31,11 @@ export type CreatorStackList = {
 const Stack = createNativeStackNavigator()
 
 export const CreatorStack: React.FC<CreatorStackProps> = ({ navigation }) => {
+    const { user } = useUser()
+
     return (
         <Stack.Navigator screenOptions={default_navigator_options} initialRouteName="creator:home">
-            <Stack.Screen name="creator:home" component={CreatorHome} />
+            <Stack.Screen name="creator:home" component={user?.creator?.need_send_data ? CreatorReviewProfile : CreatorHome} />
             <Stack.Screen name="creator:course:form" component={CourseFormComponent} />
             <Stack.Screen name="creator:course:manage" component={ManageCourse} />
             <Stack.Screen name="creator:course:delete" component={DeleteCourseScreen} />

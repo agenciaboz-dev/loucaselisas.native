@@ -34,8 +34,8 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
         : (Math.floor(skeletonWidth / 300) + 1) * 30
 
     const index = list.findIndex((item) => item.id == message.id)
-    const previous_message = index > 0 ? list[index - 1] : null
-    const next_message = index + 1 <= list.length ? list[index + 1] : null
+    const next_message = index > 0 ? list[index - 1] : null
+    const previous_message = index + 1 <= list.length ? list[index + 1] : null
 
     const same_message_above = !(!previous_message || previous_message.user_id != message.user_id)
     const same_message_bellow = !(!next_message || next_message.user_id != message.user_id)
@@ -74,7 +74,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
         if (message.video_id) {
             fetchLesson()
         }
-    }, [message])
+    }, [])
 
     return user ? (
         !refreshing && !loadingLesson ? (

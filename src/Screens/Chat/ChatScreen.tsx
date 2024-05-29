@@ -120,7 +120,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             setTimeout(() => {
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
                 setRefreshing(false)
-            }, 2000)
+            }, 1000)
         })
 
         socket.current.on("chat:message", (message: Message) => {
@@ -214,7 +214,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
 
             <FlatList
                 ref={scrollRef}
-                data={messages.sort((a, b) => Number(a.datetime) - Number(b.datetime))}
+                data={messages.sort((a, b) => Number(a.datetime) - Number(b.datetime)).reverse()}
                 renderItem={({ item, index }) => (
                     <MessageContainer
                         message={item}
@@ -224,13 +224,14 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                         showImage={(position: number) => setViewingMedia(position - 1)}
                     />
                 )}
+                keyExtractor={(item: Message) => item.id}
                 style={{ marginHorizontal: -20 }}
                 contentContainerStyle={{
                     // flex: 1,
                     gap: 20,
                     paddingHorizontal: 20,
                     paddingTop: iosKeyboard ? 270 : 80,
-                    flexDirection: "column-reverse",
+                    paddingBottom: 5,
                 }}
                 inverted
                 refreshing={refreshing}

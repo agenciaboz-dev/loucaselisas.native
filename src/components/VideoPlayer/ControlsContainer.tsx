@@ -14,6 +14,8 @@ import { Lesson } from "../../types/server/class/Course/Lesson"
 import * as VideoThumbnails from "expo-video-thumbnails"
 import Clipboard from "@react-native-clipboard/clipboard"
 import { urlGenerator } from "../../tools/urlGenerator"
+import * as Sharing from "expo-sharing"
+import { Share } from "react-native"
 
 interface ControlsContainerProps {
     status: AVPlaybackStatusSuccess
@@ -95,6 +97,12 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status, co
     const onLinkCopy = () => {
         const url = urlGenerator.lesson(lesson?.id)
         Clipboard.setString(url)
+        setShareModal(false)
+    }
+
+    const onShare = async () => {
+        const url = urlGenerator.lesson(lesson?.id)
+        await Share.share({ message: url, url, title: "Compartilhar lição" })
         setShareModal(false)
     }
 
@@ -213,7 +221,7 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status, co
                                 style={{ marginTop: -120, marginLeft: 35 }}
                                 anchorPosition="top"
                             >
-                                <ShareButton text="Compartilhar" onPress={() => null} />
+                                <ShareButton text="Compartilhar" onPress={onShare} />
                                 {course?.favorited_by.find((item) => item.id == user?.id) && (
                                     <ShareButton text="Compartilhe via chat" onPress={onShareToChat} />
                                 )}

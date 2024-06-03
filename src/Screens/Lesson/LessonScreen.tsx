@@ -21,6 +21,7 @@ import { VideoPlayer } from "../../components/VideoPlayer/VideoPlayer"
 import { useVideoPlayer } from "../../hooks/useVideoplayer"
 import { AVPlaybackStatusSuccess } from "expo-av"
 import { urlGenerator } from "../../tools/urlGenerator"
+import { DisabledResource } from "../../components/DisabledResource"
 
 interface LessonScreenProps {
     navigation: NavigationProp<any, any>
@@ -186,102 +187,113 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
     )
 
     return lesson && course ? (
-        <ScrollView
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshLesson} enabled={!isFullscreen} />}
-            style={{ flex: 1 }}
-            contentContainerStyle={{ padding: 20, gap: 10 }}
-            scrollEnabled={!isFullscreen}
-        >
-            {!isFullscreen && (
-                <>
-                    <ScreenTitle
-                        title={lesson.name}
-                        right={
-                            <View style={{ flexDirection: "row", gap: -5 }}>
-                                <IconButton icon={liked ? "heart" : "heart-outline"} style={{ margin: 0 }} loading={liking} onPress={onLikePress} />
-                                <Menu
-                                    visible={showChatDenied}
-                                    onDismiss={() => setShowChatDenied(false)}
-                                    anchorPosition={"bottom"}
-                                    anchor={<IconButton icon={"comment-text-outline"} style={{ margin: 0 }} onPress={onChatPress} />}
-                                    contentStyle={[{ borderRadius: 15 }]}
-                                    style={{ marginTop: 45 }}
-                                >
-                                    <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} />
-                                    <View style={{ paddingHorizontal: 15 }}>
-                                        <Text variant="bodyLarge">Favorite o curso para acessar o chat</Text>
-                                    </View>
-                                </Menu>
-
-                                <OptionsMenu
-                                    options={[{ label: "Compartilhar", onPress: onShare }]}
-                                    Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
-                                    onDismiss={() => setShowMenu(false)}
-                                    visible={showMenu}
-                                />
-                            </View>
-                        }
-                    />
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 2 }}>
-                        <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
-                            {course.owner.nickname}
-                        </Text>
-                        <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
-                            {course.lessons} lições
-                        </Text>
-                    </View>
-                </>
-            )}
-
-            <Surface style={{ borderRadius: 15 }}>
-                {lesson.media.type == "image" ? (
-                    <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => setViewingMedia(0)}>
-                        <Image
-                            source={lesson.media.url}
-                            transition={1000}
-                            priority={"high"}
-                            placeholder={placeholders.video}
-                            placeholderContentFit="cover"
-                            contentFit="cover"
-                            style={media_style}
-                        />
-                    </TouchableRipple>
-                ) : (
-                    <VideoPlayer source={lesson.media.url} course={course} lesson={lesson} initialPosition={startingTime || watchedTime} />
-                )}
-            </Surface>
-            {lesson.media.type == "image" && (
-                <ImageView
-                    images={[{ uri: lesson.media.url }]}
-                    imageIndex={viewingMedia ?? 0}
-                    visible={viewingMedia !== null}
-                    onRequestClose={() => setViewingMedia(null)}
-                    animationType="slide"
-                />
-            )}
-
-            <ExtendableText minLines={3} text={lesson.info} />
-            <Text variant="bodyLarge">Próximos</Text>
-            <FlatList
-                horizontal
-                data={LessonsList.filter((item) => item.id != lesson.id).sort((a, b) => Number(a.published) - Number(b.published))}
-                renderItem={({ item }) => <LesonSquareComponent lesson={item} />}
-                style={{ margin: -20 }}
+        lesson.status == "active" && course.status == "active" ? (
+            <ScrollView
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshLesson} enabled={!isFullscreen} />}
+                style={{ flex: 1 }}
                 contentContainerStyle={{ padding: 20, gap: 10 }}
-                showsHorizontalScrollIndicator={false}
-                ListEmptyComponent={refreshingLessonsList ? <CourseSkeletons /> : <Text>Nenhuma lição a seguir</Text>}
-            />
-            <Text variant="bodyLarge">Veja também</Text>
-            <FlatList
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={sameCategoryCourses.filter((item) => item.id != course.id)}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <CourseContainer course={item} route="course:profile" />}
-                style={{ margin: -20 }}
-                contentContainerStyle={{ gap: 10, padding: 20 }}
-                ListEmptyComponent={refreshingCourses ? <CourseSkeletons /> : <Text>Nenhum curso encontrado</Text>}
-            />
-        </ScrollView>
+                scrollEnabled={!isFullscreen}
+            >
+                {!isFullscreen && (
+                    <>
+                        <ScreenTitle
+                            title={lesson.name}
+                            right={
+                                <View style={{ flexDirection: "row", gap: -5 }}>
+                                    <IconButton
+                                        icon={liked ? "heart" : "heart-outline"}
+                                        style={{ margin: 0 }}
+                                        loading={liking}
+                                        onPress={onLikePress}
+                                    />
+                                    <Menu
+                                        visible={showChatDenied}
+                                        onDismiss={() => setShowChatDenied(false)}
+                                        anchorPosition={"bottom"}
+                                        anchor={<IconButton icon={"comment-text-outline"} style={{ margin: 0 }} onPress={onChatPress} />}
+                                        contentStyle={[{ borderRadius: 15 }]}
+                                        style={{ marginTop: 45 }}
+                                    >
+                                        <TrianguloMiseravel color={theme.colors.elevation.level3} right={10} />
+                                        <View style={{ paddingHorizontal: 15 }}>
+                                            <Text variant="bodyLarge">Favorite o curso para acessar o chat</Text>
+                                        </View>
+                                    </Menu>
+
+                                    <OptionsMenu
+                                        options={[{ label: "Compartilhar", onPress: onShare }]}
+                                        Anchor={
+                                            <IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />
+                                        }
+                                        onDismiss={() => setShowMenu(false)}
+                                        visible={showMenu}
+                                    />
+                                </View>
+                            }
+                        />
+                        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 2 }}>
+                            <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
+                                {course.owner.nickname}
+                            </Text>
+                            <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
+                                {course.lessons} lições
+                            </Text>
+                        </View>
+                    </>
+                )}
+
+                <Surface style={{ borderRadius: 15 }}>
+                    {lesson.media.type == "image" ? (
+                        <TouchableRipple borderless style={{ borderRadius: 15 }} onPress={() => setViewingMedia(0)}>
+                            <Image
+                                source={lesson.media.url}
+                                transition={1000}
+                                priority={"high"}
+                                placeholder={placeholders.video}
+                                placeholderContentFit="cover"
+                                contentFit="cover"
+                                style={media_style}
+                            />
+                        </TouchableRipple>
+                    ) : (
+                        <VideoPlayer source={lesson.media.url} course={course} lesson={lesson} initialPosition={startingTime || watchedTime} />
+                    )}
+                </Surface>
+                {lesson.media.type == "image" && (
+                    <ImageView
+                        images={[{ uri: lesson.media.url }]}
+                        imageIndex={viewingMedia ?? 0}
+                        visible={viewingMedia !== null}
+                        onRequestClose={() => setViewingMedia(null)}
+                        animationType="slide"
+                    />
+                )}
+
+                <ExtendableText minLines={3} text={lesson.info} />
+                <Text variant="bodyLarge">Próximos</Text>
+                <FlatList
+                    horizontal
+                    data={LessonsList.filter((item) => item.id != lesson.id).sort((a, b) => Number(a.published) - Number(b.published))}
+                    renderItem={({ item }) => <LesonSquareComponent lesson={item} />}
+                    style={{ margin: -20 }}
+                    contentContainerStyle={{ padding: 20, gap: 10 }}
+                    showsHorizontalScrollIndicator={false}
+                    ListEmptyComponent={refreshingLessonsList ? <CourseSkeletons /> : <Text>Nenhuma lição a seguir</Text>}
+                />
+                <Text variant="bodyLarge">Veja também</Text>
+                <FlatList
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    data={sameCategoryCourses.filter((item) => item.id != course.id)}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => <CourseContainer course={item} route="course:profile" />}
+                    style={{ margin: -20 }}
+                    contentContainerStyle={{ gap: 10, padding: 20 }}
+                    ListEmptyComponent={refreshingCourses ? <CourseSkeletons /> : <Text>Nenhum curso encontrado</Text>}
+                />
+            </ScrollView>
+        ) : (
+            <DisabledResource type="lesson" />
+        )
     ) : null
 }

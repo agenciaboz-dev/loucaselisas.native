@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react"
 import { IconButton, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { Course } from "../../../types/server/class/Course"
 import { ScreenTitle } from "../../../components/ScreenTItle"
-import { FlatList, LayoutAnimation, View } from "react-native"
+import { FlatList, LayoutAnimation, Share, View } from "react-native"
 import { currencyMask } from "../../../tools/currencyMask"
 import { api } from "../../../backend/api"
 import { MiniStatistics } from "./MiniStatistics"
@@ -16,6 +16,7 @@ import { OptionsMenu } from "../../../components/OptionsMenu/OptionsMenu"
 import { CourseGallery } from "../../../components/CourseGallery"
 import { StatusText } from "../../../components/StatusText"
 import { DeclinedWarning } from "./DeclinedWarning"
+import { urlGenerator } from "../../../tools/urlGenerator"
 
 interface ManageCourseProps {
     navigation: NavigationProp<any, any>
@@ -74,6 +75,12 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
         setExtendedDescription((value) => !value)
     }
 
+    const onShare = async () => {
+        const url = urlGenerator.course(course?.id)
+        await Share.share({ message: url, url, title: "Compartilhar curso" })
+        setShowMenu(false)
+    }
+
     useFocusEffect(
         useCallback(() => {
             setTimeout(() => {
@@ -123,6 +130,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
                                     <OptionsMenu
                                         options={[
                                             { label: "Editar curso", onPress: () => onMenuItemPress("creator:course:form") },
+                                            { label: "Compartilhar", onPress: onShare },
                                             { label: "Chat", onPress: () => onMenuItemPress("creator:course:chat") },
                                             { label: "Deletar", onPress: onDelete },
                                         ]}

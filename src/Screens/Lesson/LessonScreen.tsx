@@ -1,7 +1,7 @@
 import ImageView from "react-native-image-viewing"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { Dimensions, FlatList, RefreshControl, ScrollView, View } from "react-native"
+import { Dimensions, FlatList, RefreshControl, ScrollView, Share, View } from "react-native"
 import { Lesson } from "../../types/server/class/Course/Lesson"
 import { useUser } from "../../hooks/useUser"
 import { ScreenTitle } from "../../components/ScreenTItle"
@@ -20,6 +20,7 @@ import { CourseContainer } from "../Creator/CreatorHome/Resume/CourseContainer"
 import { VideoPlayer } from "../../components/VideoPlayer/VideoPlayer"
 import { useVideoPlayer } from "../../hooks/useVideoplayer"
 import { AVPlaybackStatusSuccess } from "expo-av"
+import { urlGenerator } from "../../tools/urlGenerator"
 
 interface LessonScreenProps {
     navigation: NavigationProp<any, any>
@@ -150,6 +151,12 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
         navigation.navigate("course:chat", { course })
     }
 
+    const onShare = async () => {
+        const url = urlGenerator.lesson(lesson?.id)
+        await Share.share({ message: url, url, title: "Compartilhar Lição" })
+        setShowMenu(false)
+    }
+
     useEffect(() => {
         if (course) {
             fetchCategoryCourses()
@@ -206,12 +213,12 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
                                     </View>
                                 </Menu>
 
-                                {/* <OptionsMenu
-                                    options={[{ label: "Compartilhar", onPress: () => null }]}
+                                <OptionsMenu
+                                    options={[{ label: "Compartilhar", onPress: onShare }]}
                                     Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
                                     onDismiss={() => setShowMenu(false)}
                                     visible={showMenu}
-                                /> */}
+                                />
                             </View>
                         }
                     />

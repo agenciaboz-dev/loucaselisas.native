@@ -55,7 +55,8 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
             externalRoute.current.query = queryParams
 
             if (user) {
-                navigation.push(externalRoute.current.route, externalRoute.current.query)
+                navigation.navigate("panel")
+                setTimeout(() => navigation.push(externalRoute.current!.route, externalRoute.current!.query), 200)
             }
         }
         console.log({ path, queryParams, route: externalRoute.current })

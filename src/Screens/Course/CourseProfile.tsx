@@ -1,6 +1,6 @@
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useEffect, useState } from "react"
-import { RefreshControl, ScrollView, View } from "react-native"
+import { RefreshControl, ScrollView, Share, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { Course } from "../../types/server/class/Course"
 import { CourseGallery } from "../../components/CourseGallery"
@@ -15,6 +15,7 @@ import { useUser } from "../../hooks/useUser"
 import { OptionsMenu } from "../../components/OptionsMenu/OptionsMenu"
 import { TrianguloMiseravel } from "../../components/TrianguloMiseravel"
 import { BuyCourse } from "./BuyCourse"
+import { urlGenerator } from "../../tools/urlGenerator"
 
 interface CourseProfileProps {
     navigation: NavigationProp<any, any>
@@ -64,6 +65,12 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
             default:
                 return null
         }
+    }
+
+    const onShare = async () => {
+        const url = urlGenerator.course(course?.id)
+        await Share.share({ message: url, url, title: "Compartilhar curso" })
+        setShowMenu(false)
     }
 
     const refreshCourse = async () => {
@@ -166,12 +173,12 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
                             </View>
                         </Menu>
 
-                        {/* <OptionsMenu
-                            options={[{ label: "Compartilhar", onPress: () => null }]}
+                        <OptionsMenu
+                            options={[{ label: "Compartilhar", onPress: onShare }]}
                             Anchor={<IconButton icon={"dots-vertical"} style={{ margin: 0 }} onPress={() => setShowMenu((show) => !show)} />}
                             onDismiss={() => setShowMenu(false)}
                             visible={showMenu}
-                        /> */}
+                        />
                     </View>
                 }
             />

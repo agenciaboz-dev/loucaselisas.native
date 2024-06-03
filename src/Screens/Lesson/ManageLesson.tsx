@@ -1,6 +1,6 @@
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import React, { useCallback, useState } from "react"
-import { Dimensions, LayoutAnimation, ScrollView, View } from "react-native"
+import { Dimensions, LayoutAnimation, ScrollView, Share, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { Lesson, PartialLesson } from "../../types/server/class/Course/Lesson"
 import { IconButton, Menu, Text, TouchableRipple, useTheme } from "react-native-paper"
@@ -13,6 +13,7 @@ import { api } from "../../backend/api"
 import { StatusText } from "../../components/StatusText"
 import { Status, StatusForm } from "../../types/server/class/Course"
 import { DeclinedWarning } from "../Creator/ManageCourse/DeclinedWarning"
+import { urlGenerator } from "../../tools/urlGenerator"
 
 interface ManageLessonProps {
     navigation: NavigationProp<any, any>
@@ -59,6 +60,12 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
         }
     }
 
+    const onShare = async () => {
+        const url = urlGenerator.lesson(lesson?.id)
+        await Share.share({ message: url, url, title: "Compartilhar Lição" })
+        setShowMenu(false)
+    }
+
     useFocusEffect(
         useCallback(() => {
             refresh()
@@ -77,6 +84,7 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
                         visible={showMenu}
                         options={[
                             { label: "Editar Lição", onPress: () => onMenuItemNavigate("creator:lesson:form") },
+                            { label: "Compartilhar", onPress: onShare },
                             { label: "Deletar", onPress: () => onMenuItemNavigate("creator:lesson:delete") },
                             {
                                 label: lesson.status == "active" ? "Desativar" : lesson.status == "disabled" ? "Ativar" : "Pendente",

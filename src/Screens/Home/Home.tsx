@@ -20,6 +20,8 @@ import { setStatusBarStyle } from "expo-status-bar"
 import * as SplashScreen from "expo-splash-screen"
 import { HomeStackParams } from "../../Routes"
 import constants from "expo-constants"
+import * as Linking from "expo-linking"
+import { ExternalRoute } from "../../types/ExternalRoute"
 
 interface HomeProps {
     navigation: NavigationProp<HomeStackParams, "home">
@@ -29,6 +31,23 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
     const video = useRef<Video>(null)
     const { width, height } = Dimensions.get("screen")
     const [form, setForm] = useState<"login" | "signup">()
+    const url = Linking.useURL()
+    const externalRoute = useRef<ExternalRoute>()
+
+    if (url) {
+        const { hostname, path, queryParams } = Linking.parse(url)
+
+        const app_routes = [
+            {
+                path: "course",
+                route: "course:profile",
+                query: queryParams,
+            },
+        ]
+
+        externalRoute.current = app_routes.find((item) => item.path == path)
+        console.log({ path, queryParams, route: externalRoute.current })
+    }
 
     const onLoginPress = () => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -90,11 +109,10 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                     </Button>
                 </Surface>
             )}
-            {form == "login" && <Login navigation={navigation} />}
+            {form == "login" && <Login navigation={navigation} externalRoute={externalRoute.current} />}
             <TouchableOpacity onPress={() => navigation.navigate("signup")} style={{ gap: 50 }}>
                 <Text style={{ color: colors.secondary, fontSize: 13 }}>
-                    Ainda não tem uma conta?{" "}
-                    <Text style={{ color: colors.secondary, fontFamily: "Lato_700Bold" }}>Faça o cadastro</Text>{" "}
+                    Ainda não tem uma conta? <Text style={{ color: colors.secondary, fontFamily: "Lato_700Bold" }}>Faça o cadastro</Text>{" "}
                 </Text>
                 <View
                     style={{
@@ -105,9 +123,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                         flex: 1,
                     }}
                 >
-                    <Text style={{ color: colors.secondary, fontSize: 11 }}>
-                        2024 © Direitos Reservados - v{constants.expoConfig?.version}
-                    </Text>
+                    <Text style={{ color: colors.secondary, fontSize: 11 }}>2024 © Direitos Reservados - v{constants.expoConfig?.version}</Text>
                     <Text style={{ color: colors.secondary, fontSize: 11 }}>Powered by BOZ</Text>
                 </View>
             </TouchableOpacity>

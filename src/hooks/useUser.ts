@@ -8,11 +8,14 @@ export const useUser = () => {
     const context = useContext(UserContext)
     const navigation = useNavigation<any>()
 
-    const onLogin = (user: User) => {
+    const onLogin = (user: User, externalRoute?: { path: string; query: any }) => {
         context.setUser(user)
+
         navigation.navigate("mainscreen")
 
-        console.log(JSON.stringify(user, null, 4))
+        if (externalRoute) {
+            setTimeout(() => navigation.navigate(externalRoute.path, externalRoute.query), 200)
+        }
     }
 
     const logout = () => {

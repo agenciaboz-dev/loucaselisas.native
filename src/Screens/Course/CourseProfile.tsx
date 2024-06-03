@@ -25,6 +25,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     const theme = useTheme()
     const { user } = useUser()
 
+    const course_id = route.params?.course_id as string | undefined
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
     const is_favorited = course?.favorited_by?.find((item) => item.id == user?.id)
 
@@ -66,10 +67,10 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     }
 
     const refreshCourse = async () => {
-        if (!user || !course) return
+        if (!user || (!course && !course_id)) return
         setLoadingLessons(true)
         try {
-            const response = await api.get("/course", { params: { course_id: course.id, user_id: user.id } })
+            const response = await api.get("/course", { params: { course_id: course_id || course?.id, user_id: user.id } })
             setCourse(response.data)
         } catch (error) {
             console.log(error)
@@ -118,12 +119,14 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     }
 
     useEffect(() => {
-        setTimeout(() => {
-            // LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
+        if (course) {
+            setTimeout(() => {
+                // LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
 
-            // setSkeletons(skeletons_array)
-            refreshLessons()
-        }, 200)
+                // setSkeletons(skeletons_array)
+                refreshLessons()
+            }, 200)
+        }
     }, [course])
 
     useFocusEffect(

@@ -7,19 +7,20 @@ import { LoginForm } from "../../types/server/login"
 import { Keyboard, KeyboardAvoidingView, TextInput as TextInputRef, View } from "react-native"
 import { Button } from "./Button"
 import { api } from "../../backend/api"
-import { AxiosError } from "axios"
 import { useSnackbar } from "../../hooks/useSnackbar"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { KeepSession } from "../../components/KeepSession"
 import { colors } from "../../style/colors"
 import { useUser } from "../../hooks/useUser"
 import { User } from "../../types/server/class"
+import { ExternalRoute } from "../../types/ExternalRoute"
 
 interface LoginProps {
     navigation: NavigationProp<any, any>
+    externalRoute?: ExternalRoute
 }
 
-export const Login: React.FC<LoginProps> = ({ navigation }) => {
+export const Login: React.FC<LoginProps> = ({ navigation, externalRoute }) => {
     const password_ref = useRef<TextInputRef>(null)
     const { snackbar } = useSnackbar()
     const { onLogin } = useUser()
@@ -42,7 +43,7 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
                 const response = await api.post("/login", values)
                 const user = response.data
                 if (user) {
-                    onLogin(user)
+                    onLogin(user, externalRoute ? { path: externalRoute.route, query: externalRoute.query } : undefined)
                     if (keepSession) {
                         await AsyncStorage.setItem("session", JSON.stringify(user))
                     } else {
@@ -141,7 +142,7 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
                     Entrar
                 </Button>
             </Surface>
-            <KeepSession setLoading={setLoading} />
+            <KeepSession setLoading={setLoading} externalRoute={externalRoute} />
         </KeyboardAvoidingView>
     )
 }

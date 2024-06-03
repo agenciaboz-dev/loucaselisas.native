@@ -12,12 +12,23 @@ import { useUser } from "../../hooks/useUser"
 import { NavigationProp, useNavigation } from "@react-navigation/native"
 import { Lesson } from "../../types/server/class/Course/Lesson"
 import * as VideoThumbnails from "expo-video-thumbnails"
+import Clipboard from "@react-native-clipboard/clipboard"
+import { urlGenerator } from "../../tools/urlGenerator"
 
 interface ControlsContainerProps {
     status: AVPlaybackStatusSuccess
     course?: Course
     lesson?: Lesson
     initialPosition?: number
+}
+
+const ShareButton: React.FC<{ text: string; onPress: () => void }> = ({ text, onPress }) => {
+    const theme = useTheme()
+    return (
+        <TouchableRipple borderless style={{ padding: 5 }} onPress={onPress}>
+            <Text style={{ color: theme.colors.secondary }}>{text}</Text>
+        </TouchableRipple>
+    )
 }
 
 export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status, course, lesson, initialPosition }) => {
@@ -79,6 +90,12 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status, co
         const { uri } = await VideoThumbnails.getThumbnailAsync(lesson.media.url, { time: status.positionMillis })
         setLoading(false)
         navigation.navigate("course:chat", { course, sharingLesson: { lesson, timestamp: status.positionMillis, thumb: uri, course } })
+    }
+
+    const onLinkCopy = () => {
+        const url = urlGenerator.lesson(lesson?.id)
+        Clipboard.setString(url)
+        setShareModal(false)
     }
 
     useEffect(() => {
@@ -196,11 +213,11 @@ export const ControlsContainer: React.FC<ControlsContainerProps> = ({ status, co
                                 style={{ marginTop: -120, marginLeft: 35 }}
                                 anchorPosition="top"
                             >
+                                <ShareButton text="Compartilhar" onPress={() => null} />
                                 {course?.favorited_by.find((item) => item.id == user?.id) && (
-                                    <TouchableRipple borderless style={{ padding: 5 }} onPress={onShareToChat}>
-                                        <Text style={{ color: theme.colors.secondary }}>Compartilhe via chat</Text>
-                                    </TouchableRipple>
+                                    <ShareButton text="Compartilhe via chat" onPress={onShareToChat} />
                                 )}
+                                <ShareButton text="Copiar link" onPress={onLinkCopy} />
                                 <IconButton
                                     icon={"close-circle-outline"}
                                     size={20}

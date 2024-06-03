@@ -22,12 +22,14 @@ import { HomeStackParams } from "../../Routes"
 import constants from "expo-constants"
 import * as Linking from "expo-linking"
 import { ExternalRoute } from "../../types/ExternalRoute"
+import { useUser } from "../../hooks/useUser"
 
 interface HomeProps {
-    navigation: NavigationProp<HomeStackParams, "home">
+    navigation: any
 }
 
 export const Home: React.FC<HomeProps> = ({ navigation }) => {
+    const { user } = useUser()
     const video = useRef<Video>(null)
     const { width, height } = Dimensions.get("screen")
     const [form, setForm] = useState<"login" | "signup">()
@@ -41,11 +43,21 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
             {
                 path: "course",
                 route: "course:profile",
-                query: queryParams,
+            },
+            {
+                path: "lesson",
+                route: "lesson",
             },
         ]
 
         externalRoute.current = app_routes.find((item) => item.path == path)
+        if (externalRoute.current) {
+            externalRoute.current.query = queryParams
+
+            if (user) {
+                navigation.push(externalRoute.current.route, externalRoute.current.query)
+            }
+        }
         console.log({ path, queryParams, route: externalRoute.current })
     }
 

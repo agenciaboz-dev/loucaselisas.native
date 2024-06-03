@@ -14,7 +14,7 @@ export const useUser = () => {
         navigation.navigate("mainscreen")
 
         if (externalRoute) {
-            setTimeout(() => navigation.navigate(externalRoute.path, externalRoute.query), 200)
+            setTimeout(() => navigation.push(externalRoute.path, externalRoute.query), 200)
         }
     }
 

@@ -25,7 +25,7 @@ export const CourseProfile: React.FC<CourseProfileProps> = ({ navigation, route 
     const theme = useTheme()
     const { user } = useUser()
 
-    const course_id = route.params?.course_id as string | undefined
+    const course_id = route.params?.id as string | undefined
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
     const is_favorited = course?.favorited_by?.find((item) => item.id == user?.id)
 

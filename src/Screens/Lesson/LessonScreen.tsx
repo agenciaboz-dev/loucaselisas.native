@@ -39,6 +39,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
     const [viewingMedia, setViewingMedia] = useState<number | null>(null)
 
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
+    const lesson_id = route.params?.id as string | undefined
     const [lesson, setLesson] = useState(route.params?.lesson as Lesson | undefined)
     const [refreshing, setRefreshing] = useState(false)
     const [liking, setLiking] = useState(false)
@@ -110,7 +111,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
     const refreshLesson = async () => {
         setRefreshing(true)
         try {
-            const response = await api.get("/lesson", { params: { lesson_id: lesson?.id, user_id: user?.id } })
+            const response = await api.get("/lesson", { params: { lesson_id: lesson_id || lesson?.id, user_id: user?.id } })
             setLesson(response.data)
         } catch (error) {
             console.log(error)
@@ -150,12 +151,14 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
     }
 
     useEffect(() => {
-        fetchCategoryCourses()
-        fetchLessonsList()
+        if (course) {
+            fetchCategoryCourses()
+            fetchLessonsList()
+        }
     }, [course])
 
     useEffect(() => {
-        fetchCourse()
+        if (lesson) fetchCourse()
     }, [lesson])
 
     useFocusEffect(

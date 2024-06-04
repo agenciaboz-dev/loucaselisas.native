@@ -17,7 +17,8 @@
       "ios": {
           "userInterfaceStyle": "light",
           "supportsTablet": false,
-          "bundleIdentifier": "com.agenciabozdev.loucaselisas"
+          "bundleIdentifier": "com.agenciabozdev.loucaselisas",
+          "associatedDomains": ["applinks:app.loucaseco.com.br"]
       },
       "android": {
           "userInterfaceStyle": "light",

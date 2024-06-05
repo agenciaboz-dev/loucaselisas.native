@@ -29,6 +29,7 @@ import { Image } from "expo-image"
 import { Lesson } from "../../types/server/class/Course/Lesson"
 import moment from "moment"
 import "moment-duration-format"
+import { api } from "../../backend/api"
 
 interface ChatProps {
     route: RouteProp<any, any>
@@ -51,6 +52,8 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
 
     const [media, setMedia] = useState<ImagePickerAsset>()
     const [text, setText] = useState("")
+    const [selectedList, setSelectedList] = useState<Message[]>([])
+    const [deleting, setDeleting] = useState(false)
 
     const onSubmitText = () => {
         if (!chat || !socket.current || !user || (!text && !media)) return
@@ -99,6 +102,11 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
         setMessages((messages) => [...messages, message])
     }
 
+    const deleteMessages = (deleted: Message[]) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setMessages((currentMessages) => currentMessages.filter((message) => !deleted.some((deletedMessage) => deletedMessage.id === message.id)))
+    }
+
     const dismissMediaModal = () => {
         setMedia(undefined)
         setSharingLesson(undefined)
@@ -127,6 +135,10 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             addMessage(message)
         })
 
+        socket.current.on("chat:message:delete", (messages: Message[]) => {
+            deleteMessages(messages)
+        })
+
         socket.current.on("chat:message:success", (message: Message) => {
             addMessage(message)
         })
@@ -138,13 +150,30 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
         socket.current.off("chat:join")
         socket.current.off("chat:message")
         socket.current.off("chat:message:success")
+        socket.current.off("chat:message:delete")
     }
 
     const socketConnect = () => {
         socket.current = io(`ws${url}`)
         listenToEvents()
 
-        socket.current.emit("chat:join", chat?.id)
+        socket.current.emit("chat:join", chat?.id, "app")
+    }
+
+    const onSelectMessage = (message: Message, selected: boolean) => {
+        if (Platform.OS == "ios") LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        if (selected) {
+            setSelectedList((list) => [...list, message])
+        } else {
+            setSelectedList((list) => list.filter((item) => item.id != message.id))
+        }
+    }
+
+    const handleDelete = async () => {
+        if (deleting || !socket.current) return
+
+        socket.current.emit("chat:message:delete", selectedList, chat?.id)
+        setSelectedList([])
     }
 
     useFocusEffect(
@@ -161,7 +190,7 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
     useEffect(() => {
         if (!!messages.length && !refreshing) {
             console.log("should scroll")
-            setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 2000)
+            setTimeout(() => scrollRef.current?.scrollToOffset({ offset: 0 }), 2000)
         }
     }, [messages])
 
@@ -210,7 +239,10 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
 
     return chat && course ? (
         <View style={{ flex: 1, padding: 20, paddingBottom: 0, paddingTop: 10, position: "relative" }}>
-            <ScreenTitle title={`Grupo - ${course.name}`} />
+            <ScreenTitle
+                title={`Grupo - ${course.name}`}
+                right={!!selectedList.length && <IconButton loading={deleting} icon={"delete"} style={{ margin: 0 }} onPress={handleDelete} />}
+            />
 
             <FlatList
                 ref={scrollRef}
@@ -222,6 +254,8 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
                         creators={[course.owner, ...course.creators]}
                         refreshing={refreshing}
                         showImage={(position: number) => setViewingMedia(position - 1)}
+                        selectedList={selectedList}
+                        onSelectMessage={onSelectMessage}
                     />
                 )}
                 keyExtractor={(item: Message) => item.id}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
-import { View } from "react-native"
+import { LayoutAnimation, Pressable, View } from "react-native"
 import { Message } from "../../types/server/class/Chat/Message"
-import { Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
+import { Checkbox, Surface, Text, TouchableRipple, useTheme } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
 import { Creator } from "../../types/server/class"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
@@ -19,9 +19,19 @@ interface MessageContainerProps {
     creators: Partial<Creator>[]
     refreshing?: boolean
     showImage: (position: number) => void
+    onSelectMessage: (message: Message, selected: boolean) => void
+    selectedList: Message[]
 }
 
-export const MessageContainer: React.FC<MessageContainerProps> = ({ message, list, creators, refreshing, showImage }) => {
+export const MessageContainer: React.FC<MessageContainerProps> = ({
+    message,
+    list,
+    creators,
+    refreshing,
+    showImage,
+    onSelectMessage,
+    selectedList,
+}) => {
     const navigation = useNavigation<any>()
     const { user } = useUser()
     const you = message.user_id == user?.id
@@ -43,6 +53,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
     const [lesson, setLesson] = useState<Lesson>()
     const [thumb, setThumb] = useState("")
     const [loadingLesson, setLoadingLesson] = useState(!!message.video_id)
+    const [selected, setSelected] = useState(false)
 
     const fetchLesson = async () => {
         try {
@@ -64,6 +75,25 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
         navigation.push("lesson", { lesson, startingTime: Number(message.video_timestamp) })
     }
 
+    const handlePress = () => {
+        if (!!selectedList.length) {
+            // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setSelected(!selected)
+        }
+    }
+
+    const handleLongPress = () => {
+        if (!selected) {
+            // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setSelected(true)
+        }
+    }
+
+    useEffect(() => {
+        // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        onSelectMessage(message, selected)
+    }, [selected])
+
     useEffect(() => {
         if (lesson) {
             fetchThumb(lesson)
@@ -78,12 +108,14 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
 
     return user ? (
         !refreshing && !loadingLesson ? (
-            <View
+            <Pressable
+                onLongPress={handleLongPress}
                 style={[
-                    { alignSelf: "flex-start" },
+                    { alignSelf: "flex-start", alignItems: "flex-start" },
                     you && { alignSelf: "flex-end", alignItems: "flex-end" },
                     same_message_above && { marginTop: -12 },
                 ]}
+                onPress={handlePress}
             >
                 {!same_message_above && (
                     <View style={{ flexDirection: "row", alignItems: "flex-end", gap: 0, marginBottom: 5 }}>
@@ -95,43 +127,65 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, lis
                         </Text>
                     </View>
                 )}
-                <Surface
+                <View
                     style={[
-                        { padding: 10, borderRadius: 15, maxWidth: 300, gap: 10 },
-                        you && { backgroundColor: theme.colors.surfaceVariant },
-                        you && !same_message_bellow && { borderBottomRightRadius: 0 },
-
-                        !you && !same_message_bellow && { borderBottomLeftRadius: 0, alignSelf: "flex-start" },
+                        { alignItems: "center", flexDirection: "row", gap: 20 },
+                        selected && { backgroundColor: "#00000033", borderRadius: 15, marginRight: -20, paddingRight: 20 },
                     ]}
                 >
-                    {message.media && (
-                        <TouchableRipple borderless style={{ borderRadius: 10 }} onPress={() => showImage(message.media!.position)}>
-                            <Image
-                                source={{ uri: message.media.url }}
-                                style={{ width: 270, aspectRatio: message.media.width / message.media.height, maxHeight: 500, borderRadius: 10 }}
-                            />
-                        </TouchableRipple>
+                    <Surface
+                        style={[
+                            { padding: 10, borderRadius: 15, maxWidth: 300, gap: 10 },
+                            you && { backgroundColor: theme.colors.surfaceVariant },
+                            you && !same_message_bellow && { borderBottomRightRadius: 0 },
+                            !you && !same_message_bellow && { borderBottomLeftRadius: 0, alignSelf: "flex-start" },
+                        ]}
+                    >
+                        {message.media && (
+                            <TouchableRipple
+                                borderless
+                                style={{ borderRadius: 10 }}
+                                pointerEvents={!!selectedList.length ? "none" : "auto"}
+                                onPress={() => showImage(message.media!.position)}
+                                onLongPress={handleLongPress}
+                            >
+                                <Image
+                                    source={{ uri: message.media.url }}
+                                    style={{ width: 270, aspectRatio: message.media.width / message.media.height, maxHeight: 500, borderRadius: 10 }}
+                                />
+                            </TouchableRipple>
+                        )}
+                        {lesson && thumb && (
+                            <TouchableRipple
+                                borderless
+                                style={{ borderRadius: 10 }}
+                                pointerEvents={!!selectedList.length ? "none" : "auto"}
+                                onPress={onVideoMessagePress}
+                                onLongPress={handleLongPress}
+                            >
+                                <Surface elevation={3} style={{ padding: 5, width: 270, flexDirection: "row", gap: 10 }}>
+                                    <Image source={{ uri: thumb }} style={{ width: 70, aspectRatio: 1, borderRadius: 10 }} />
+                                    <View style={{ justifyContent: "space-evenly" }}>
+                                        <Text variant="bodyLarge" numberOfLines={1}>
+                                            {lesson.name}
+                                        </Text>
+                                        <Text>
+                                            {/* @ts-ignore */}
+                                            {moment.duration(message.video_timestamp).format("mm:ss", { trim: false })}
+                                        </Text>
+                                    </View>
+                                </Surface>
+                            </TouchableRipple>
+                        )}
+                        {message.text && <Text>{message.text}</Text>}
+                    </Surface>
+                    {!!selectedList.length && you && (
+                        <View style={{ alignSelf: "center" }}>
+                            <Checkbox status={selected ? "checked" : "unchecked"} />
+                        </View>
                     )}
-                    {lesson && thumb && (
-                        <TouchableRipple borderless style={{ borderRadius: 10 }} onPress={onVideoMessagePress}>
-                            <Surface elevation={3} style={{ padding: 5, width: 270, flexDirection: "row", gap: 10 }}>
-                                <Image source={{ uri: thumb }} style={{ width: 70, aspectRatio: 1, borderRadius: 10 }} />
-
-                                <View style={{ justifyContent: "space-evenly" }}>
-                                    <Text variant="bodyLarge" numberOfLines={1}>
-                                        {lesson.name}
-                                    </Text>
-                                    <Text>
-                                        {/* @ts-ignore */}
-                                        {moment.duration(message.video_timestamp).format("mm:ss", { trim: false })}
-                                    </Text>
-                                </View>
-                            </Surface>
-                        </TouchableRipple>
-                    )}
-                    {message.text && <Text>{message.text}</Text>}
-                </Surface>
-            </View>
+                </View>
+            </Pressable>
         ) : (
             <SkeletonPlaceholder backgroundColor={theme.colors.backdrop}>
                 <SkeletonPlaceholder.Item

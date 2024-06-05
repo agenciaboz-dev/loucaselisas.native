@@ -7,6 +7,7 @@ import * as SplashScreen from "expo-splash-screen"
 import { useCallback } from "react"
 import { useVideoPlayer } from "./src/hooks/useVideoplayer"
 import { Lato_400Regular, Lato_700Bold, useFonts } from "@expo-google-fonts/lato"
+import { NotificationsHandler } from "./src/components/NotificationsHandler"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -43,6 +44,7 @@ export default function App() {
             <Providers>
                 <StatusBarContainer />
                 <Routes />
+                <NotificationsHandler />
             </Providers>
         </View>
     )

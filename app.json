@@ -28,7 +28,8 @@
               "backgroundColor": "#000"
           },
           "softwareKeyboardLayoutMode": "resize",
-          "package": "com.agenciabozdev.loucaselisas"
+          "package": "com.agenciabozdev.loucaselisas",
+          "googleServicesFile": "./google-services.json"
       },
       "web": {
           "favicon": "./assets/favicon.png"
@@ -53,6 +54,13 @@
                       "assets/fonts/FoundersGrotesk-Bold.otf",
                       "assets/fonts/FoundersGroteskXCond-Bold.otf"
                   ]
+              }
+          ],
+          [
+              "expo-notifications",
+              {
+                  "icon": "./assets/adaptive-icon.png",
+                  "color": "#000000"
               }
           ]
       ],

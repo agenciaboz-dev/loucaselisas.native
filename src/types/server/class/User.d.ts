@@ -151,6 +151,7 @@ export declare class User {
     bio: string | null;
     google_id: string | null;
     google_token: string | null;
+    expoPushToken: string | null;
     favorite_creators: string[];
     favorite_courses: {
         id: string;

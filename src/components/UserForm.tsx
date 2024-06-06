@@ -58,6 +58,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
             tiktok: "",
             uf: "",
             username: "",
+            expoPushToken: "",
         },
         async onSubmit(values, formikHelpers) {
             if (loading) return

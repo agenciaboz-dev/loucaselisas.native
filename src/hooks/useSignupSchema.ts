@@ -10,7 +10,7 @@ export const useSignupSchema = () => {
         bio: Yup.string().max(300, "Bio pode ter no máximo 300 caracteres"),
 
         birth: Yup.string().test("birth-valid", "Data inválida", (value) => {
-            if (!value) return false
+            if (!value) return true
             const max = new Date()
             const date = new Date(Number(value))
             return date <= max

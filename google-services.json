@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:897246347121:android:fa4439403a8af00b7a40d0",
+        "android_client_info": {
+          "package_name": "com.agenciabozdev.loucaseco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYHB3umOIZgbR2VTRBkenLjyRTb5nnG88"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:897246347121:android:ae995b883cfa0b267a40d0",
         "android_client_info": {
           "package_name": "com.agenciabozdev.loucaselisas"

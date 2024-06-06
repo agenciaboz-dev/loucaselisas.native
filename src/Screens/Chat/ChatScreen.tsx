@@ -316,7 +316,10 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             />
 
             <ImageView
-                images={messages.filter((item) => item.media).map((item) => ({ uri: item.media!.url }))}
+                images={messages
+                    .filter((item) => item.media)
+                    .reverse()
+                    .map((item) => ({ uri: item.media!.url }))}
                 imageIndex={viewingMedia ?? 0}
                 visible={viewingMedia !== null}
                 onRequestClose={() => setViewingMedia(null)}

@@ -10,32 +10,13 @@ import { api } from "../backend/api"
 interface NotificationsHandlerProps {}
 
 Notifications.setNotificationHandler({
-    handleNotification: async () => ({
+    handleNotification: async (data) => ({
         shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        priority: Notifications.AndroidNotificationPriority.HIGH,
     }),
 })
-
-async function sendPushNotification(expoPushToken: string) {
-    const message = {
-        to: expoPushToken,
-        sound: "default",
-        title: "Original Title",
-        body: "And here is the body!",
-        data: { someData: "goes here" },
-    }
-
-    await fetch("https://exp.host/--/api/v2/push/send", {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            "Accept-encoding": "gzip, deflate",
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(message),
-    })
-}
 
 function handleRegistrationError(errorMessage: string) {
     alert(errorMessage)
@@ -49,6 +30,7 @@ async function registerForPushNotificationsAsync() {
             importance: Notifications.AndroidImportance.MAX,
             vibrationPattern: [0, 250, 250, 250],
             lightColor: "#FF231F7C",
+            bypassDnd: true,
         })
     }
 
@@ -86,7 +68,6 @@ async function registerForPushNotificationsAsync() {
 export const NotificationsHandler: React.FC<NotificationsHandlerProps> = ({}) => {
     const { user, setUser } = useUser()
     const [expoPushToken, setExpoPushToken] = useState("")
-    const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined)
     const notificationListener = useRef<Notifications.Subscription>()
     const responseListener = useRef<Notifications.Subscription>()
 
@@ -107,8 +88,8 @@ export const NotificationsHandler: React.FC<NotificationsHandlerProps> = ({}) =>
             .then((token) => setExpoPushToken(token ?? ""))
             .catch((error: any) => setExpoPushToken(`${error}`))
 
-        notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-            setNotification(notification)
+        notificationListener.current = Notifications.addNotificationReceivedListener((data) => {
+            console.log(JSON.stringify(data, null, 4))
         })
 
         responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
@@ -128,19 +109,4 @@ export const NotificationsHandler: React.FC<NotificationsHandlerProps> = ({}) =>
     }, [expoPushToken, user])
 
     return null
-    // <View style={{ flex: 1, alignItems: "center", justifyContent: "space-around", position: "absolute", padding: 50 }}>
-    //     <Text style={{ color: "white" }}>Your Expo push token: {expoPushToken}</Text>
-    //     <View style={{ alignItems: "center", justifyContent: "center" }}>
-    //         <Text style={{ color: "white" }}>Title: {notification && notification.request.content.title} </Text>
-    //         <Text style={{ color: "white" }}>Body: {notification && notification.request.content.body}</Text>
-    //         <Text style={{ color: "white" }}>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
-    //     </View>
-    //     <Button
-    //         onPress={async () => {
-    //             await sendPushNotification(expoPushToken)
-    //         }}
-    //     >
-    //         Press to send push notification
-    //     </Button>
-    // </View>
 }

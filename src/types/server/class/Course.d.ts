@@ -64,7 +64,11 @@ export declare const course_include: {
         include: {
             media: true;
             likes: true;
-            course: true;
+            course: {
+                include: {
+                    favorited_by: true;
+                };
+            };
             _count: {
                 select: {
                     downloads: true;
@@ -101,7 +105,7 @@ export type PartialCourse = Partial<Omit<WithoutFunctions<Course>, "favorited_by
     }[];
     plans: number[];
 };
-export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles" | "likes" | "downloads" | "status" | "declined_reason" | "plans" | "price"> & {
+export type CourseForm = Omit<WithoutFunctions<Course>, "id" | "favorited_by" | "lessons" | "cover" | "cover_type" | "owner" | "gallery" | "categories" | "creators" | "chat" | "published" | "students" | "views" | "roles" | "likes" | "downloads" | "status" | "declined_reason" | "plans" | "price" | "primitive_lessons"> & {
     lessons: LessonForm[];
     cover?: CoverForm;
     gallery: GalleryForm;
@@ -166,4 +170,8 @@ export declare class Course {
         course_id: string;
         user_id: string;
     }[] | undefined>;
+    sendPendingNotification(): Promise<void>;
+    sendCreatedNotification(): Promise<void>;
+    sendActiveNotification(): Promise<void>;
+    sendDeclinedNotification(): Promise<void>;
 }

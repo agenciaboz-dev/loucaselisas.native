@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { Gallery } from "../Gallery/Gallery";
 import { Socket } from "socket.io";
+import { Message } from "./Message";
 export declare const chat_include: {
     media: {
         include: {
@@ -22,6 +23,8 @@ export declare class Chat {
     description: string | null;
     media: Gallery;
     messages: number;
-    static join(chat_id: string, socket: Socket): Promise<void>;
+    static join(socket: Socket, chat_id: string, platform: "app" | "admin"): Promise<void>;
+    static deleteMessages(socket: Socket, messages: Message[], chat_id: string): Promise<void>;
     constructor(data: ChatPrisma);
+    deleteMessages(socket: Socket, messages: Message[]): Promise<void>;
 }

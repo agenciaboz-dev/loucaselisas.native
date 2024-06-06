@@ -10,8 +10,9 @@ export declare const message_include: {
 export type MessagePrisma = Prisma.MessageGetPayload<{
     include: typeof message_include;
 }>;
-export type MessageForm = Omit<WithoutFunctions<Message>, "id" | "user" | "datetime" | "media_id" | "media"> & {
+export type MessageForm = Omit<WithoutFunctions<Message>, "id" | "user" | "datetime" | "media_id" | "media" | "deleted"> & {
     media?: MediaForm;
+    admin?: boolean;
 };
 export declare class Message {
     id: string;
@@ -24,6 +25,7 @@ export declare class Message {
     video_timestamp: string | null;
     media_id: string | null;
     media: Media | null;
+    deleted: boolean;
     static new(data: MessageForm, socket: Socket): Promise<void>;
     constructor(data: MessagePrisma);
 }

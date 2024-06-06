@@ -2,10 +2,15 @@ import { Prisma } from "@prisma/client";
 import { Media, MediaForm } from "../Gallery/Media";
 import { FileUpload, WithoutFunctions } from "../helpers";
 import { Status } from "../Course";
+import { User } from "../User";
 export declare const lesson_include: {
     media: true;
     likes: true;
-    course: true;
+    course: {
+        include: {
+            favorited_by: true;
+        };
+    };
     _count: {
         select: {
             downloads: true;
@@ -21,6 +26,7 @@ export type LessonForm = Omit<WithoutFunctions<Lesson>, "id" | "published" | "th
     thumb?: FileUpload;
     media?: MediaForm;
     declined_reason?: string;
+    status?: Status;
 };
 export type PartialLesson = Partial<Lesson> & {
     id: string;
@@ -59,4 +65,8 @@ export declare class Lesson {
         lesson_id: string;
         user_id: string;
     }[] | undefined>;
+    getOwner(): Promise<User>;
+    sendCreatedNotification(): Promise<void>;
+    sendActiveNotification(): Promise<void>;
+    sendDeclinedNotification(): Promise<void>;
 }

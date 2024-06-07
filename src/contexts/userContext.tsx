@@ -5,6 +5,8 @@ import { User } from "../types/server/class"
 interface UserContextValue {
     user: User | null
     setUser: React.Dispatch<React.SetStateAction<User | null>>
+    expoPushToken: string
+    setExpoPushToken: React.Dispatch<React.SetStateAction<string>>
 }
 
 interface UserProviderProps {
@@ -17,6 +19,7 @@ export default UserContext
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null)
+    const [expoPushToken, setExpoPushToken] = useState("")
 
-    return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>
+    return <UserContext.Provider value={{ user, setUser, expoPushToken, setExpoPushToken }}>{children}</UserContext.Provider>
 }

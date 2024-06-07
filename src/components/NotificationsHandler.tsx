@@ -66,17 +66,16 @@ async function registerForPushNotificationsAsync() {
 }
 
 export const NotificationsHandler: React.FC<NotificationsHandlerProps> = ({}) => {
-    const { user, setUser } = useUser()
-    const [expoPushToken, setExpoPushToken] = useState("")
+    const { user, setUser, setExpoPushToken, expoPushToken } = useUser()
     const notificationListener = useRef<Notifications.Subscription>()
     const responseListener = useRef<Notifications.Subscription>()
 
     const saveExpoPushToken = async () => {
         if (!user || !expoPushToken) return
-        if (user.expoPushToken == expoPushToken) return
+        if (user.expoPushToken.includes(expoPushToken)) return
 
         try {
-            const response = await api.patch("/user", { id: user.id, expoPushToken })
+            const response = await api.patch("/user", { id: user.id, expoPushToken: [...user.expoPushToken, expoPushToken] })
             setUser(response.data)
         } catch (error) {
             console.log(error)

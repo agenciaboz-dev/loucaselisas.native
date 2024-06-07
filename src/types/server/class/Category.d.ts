@@ -22,6 +22,6 @@ export declare class Category {
     init(): Promise<void>;
     load(data: CategoryPrisma): void;
     updateCover(cover: FileUpload): Promise<void>;
-    getCourses(): Promise<Course[]>;
+    getCourses(role_id?: number): Promise<Course[]>;
     update(data: PartialCategory): Promise<void>;
 }

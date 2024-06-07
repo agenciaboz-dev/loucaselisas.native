@@ -8,12 +8,8 @@ export declare const chat_include: {
             media: true;
         };
     };
-    _count: {
-        select: {
-            messages: true;
-        };
-    };
     course: true;
+    messages: true;
 };
 export type ChatPrisma = Prisma.ChatGetPayload<{
     include: typeof chat_include;

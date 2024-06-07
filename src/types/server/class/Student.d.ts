@@ -11,12 +11,8 @@ export declare const student_include: {
                             media: true;
                         };
                     };
-                    _count: {
-                        select: {
-                            messages: true;
-                        };
-                    };
                     course: true;
+                    messages: true;
                 };
             };
             creators: {

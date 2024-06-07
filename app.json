@@ -34,6 +34,10 @@
         "web": {
             "favicon": "./assets/favicon.png"
         },
+        "notification": {
+            "icon": "./assets/notification-icon.png",
+            "color": "#000000"
+        },
         "plugins": [
             ["./plugins/withDisableForcedDarkModeAndroid.js", {}],
             ["./plugins/withAndroidLargeHeap.js", {}],

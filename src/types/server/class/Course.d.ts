@@ -27,12 +27,8 @@ export declare const course_include: {
                     media: true;
                 };
             };
-            _count: {
-                select: {
-                    messages: true;
-                };
-            };
             course: true;
+            messages: true;
         };
     };
     creators: {

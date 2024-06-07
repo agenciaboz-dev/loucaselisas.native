@@ -18,9 +18,19 @@ export const useUser = () => {
         }
     }
 
-    const logout = () => {
+    const logout = async () => {
+        if (!context.user) return
+
         navigation.navigate("home")
         context.setUser(null)
+        try {
+            const response = await api.patch("/user", {
+                id: context.user.id,
+                expoPushToken: context.user.expoPushToken.filter((item) => item != context.expoPushToken),
+            })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const refresh = async () => {

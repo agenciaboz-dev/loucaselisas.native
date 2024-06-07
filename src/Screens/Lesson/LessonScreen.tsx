@@ -41,7 +41,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({ navigation, route })
     const [viewingMedia, setViewingMedia] = useState<number | null>(null)
 
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
-    const lesson_id = route.params?.id as string | undefined
+    const lesson_id = (route.params?.id as string | undefined) || (route.params?.lesson_id as string | undefined)
     const [lesson, setLesson] = useState(route.params?.lesson as Lesson | undefined)
     const [refreshing, setRefreshing] = useState(false)
     const [liking, setLiking] = useState(false)

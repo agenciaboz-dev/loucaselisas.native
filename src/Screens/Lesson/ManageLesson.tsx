@@ -1,5 +1,5 @@
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import { Dimensions, LayoutAnimation, ScrollView, Share, View } from "react-native"
 import { ScreenTitle } from "../../components/ScreenTItle"
 import { Lesson, PartialLesson } from "../../types/server/class/Course/Lesson"
@@ -21,11 +21,15 @@ interface ManageLessonProps {
 }
 
 export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route }) => {
-    const [lesson, setLesson] = useState(route.params?.lesson as Lesson)
+    const lesson_id = route.params?.lesson_id as string | undefined
+    const [lesson, setLesson] = useState(route.params?.lesson as Lesson | undefined)
     const theme = useTheme()
     const image_width = Dimensions.get("screen").width * 0.9
     const max_image_height = (image_width / 16) * 9
-    const media_style: ImageStyle = { width: image_width, borderRadius: 15, aspectRatio: lesson.media.width / lesson.media.height }
+    const media_style: ImageStyle = useMemo(
+        () => (lesson ? { width: image_width, borderRadius: 15, aspectRatio: lesson.media.width / lesson.media.height } : {}),
+        [lesson]
+    )
 
     const [extendedDescription, setExtendedDescription] = useState(false)
     const [showMenu, setShowMenu] = useState(false)
@@ -41,6 +45,7 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
     }
 
     const onToggle = async (status: Status) => {
+        if (!lesson) return
         setShowMenu(false)
         try {
             const data: StatusForm = { id: lesson.id, status: status == "active" ? "disabled" : "active" }
@@ -53,7 +58,7 @@ export const ManageLesson: React.FC<ManageLessonProps> = ({ navigation, route })
 
     const refresh = async () => {
         try {
-            const response = await api.get("/lesson", { params: { lesson_id: lesson.id } })
+            const response = await api.get("/lesson", { params: { lesson_id: lesson?.id || lesson_id } })
             setLesson(response.data)
         } catch (error) {
             console.log(error)

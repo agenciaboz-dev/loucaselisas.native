@@ -6,6 +6,7 @@ import { ScreenTitle } from "../../../components/ScreenTItle"
 import { Course } from "../../../types/server/class/Course"
 import { api } from "../../../backend/api"
 import { CategoryCourseList } from "./CategoryCourseList"
+import { useUser } from "../../../hooks/useUser"
 
 interface CategoryScreenProps {
     navigation: NavigationProp<any, any>
@@ -14,6 +15,7 @@ interface CategoryScreenProps {
 
 export const CategoryScreen: React.FC<CategoryScreenProps> = ({ navigation, route }) => {
     const category = route.params?.category as Category | undefined
+    const { user } = useUser()
 
     const [courses, setCourses] = useState<Course[]>([])
     const [refreshing, setRefreshing] = useState(true)
@@ -22,7 +24,7 @@ export const CategoryScreen: React.FC<CategoryScreenProps> = ({ navigation, rout
         setCourses([])
         setRefreshing(true)
         try {
-            const response = await api.get("/category/courses", { params: { category_id: category?.id } })
+            const response = await api.get("/category/courses", { params: { category_id: category?.id, role_id: user?.role.id } })
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             setCourses(response.data)
         } catch (error) {
@@ -47,14 +49,14 @@ export const CategoryScreen: React.FC<CategoryScreenProps> = ({ navigation, rout
             <ScreenTitle title={category.name} />
             <CategoryCourseList title={`Populares`} courses={[...courses].sort((a, b) => b.views - a.views).slice(0, 10)} loading={refreshing} />
             <CategoryCourseList title={`Favoritos`} courses={[...courses].sort((a, b) => b.likes - a.likes).slice(0, 10)} loading={refreshing} />
-            <CategoryCourseList
+            {/* <CategoryCourseList
                 title={`Gratuitos`}
                 courses={[...courses]
                     .filter((item) => item.plans.find((plan) => plan.id == 1))
                     .sort((a, b) => Number(b.published) - Number(a.published))
                     .slice(0, 10)}
                 loading={refreshing}
-            />
+            /> */}
         </ScrollView>
     ) : null
 }

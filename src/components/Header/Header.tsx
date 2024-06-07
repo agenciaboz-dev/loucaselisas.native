@@ -55,7 +55,9 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 anchor={
                     <View style={{ position: "relative" }}>
                         <IconButton icon={"bell-outline"} onPress={() => setShowNotifications(true)} />
-                        <Badge style={{ position: "absolute" }}>{user.notifications.filter((item) => !item.viewed).length}</Badge>
+                        {!!user.notifications.filter((item) => !item.viewed).length && (
+                            <Badge style={{ position: "absolute" }}>{user.notifications.filter((item) => !item.viewed).length}</Badge>
+                        )}
                     </View>
                 }
                 contentStyle={{ width: "100%" }}

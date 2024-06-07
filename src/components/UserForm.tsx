@@ -17,6 +17,7 @@ import { Button } from "./Button"
 import DatePicker from "react-native-date-picker"
 import { mask } from "react-native-mask-text"
 import { LabeledComponent } from "./LabeledComponent"
+import { useUser } from "../hooks/useUser"
 
 interface UserFormProps {
     user?: User
@@ -30,6 +31,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
     const theme = useTheme()
     const schema = useSignupSchema()
     const { snackbar } = useSnackbar()
+    const { expoPushToken } = useUser()
 
     const [selectDate, setSelectDate] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -58,7 +60,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
             tiktok: "",
             uf: "",
             username: "",
-            expoPushToken: "",
+            expoPushToken: [expoPushToken],
         },
         async onSubmit(values, formikHelpers) {
             if (loading) return

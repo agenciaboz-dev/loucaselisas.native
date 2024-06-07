@@ -290,7 +290,7 @@ export const CourseFormComponent: React.FC<CourseFormProps> = ({ navigation, rou
                 }}
             >
                 <ScreenTitle title={course ? course.name : "Novo Curso"} />
-                {course.status == "declined" && (
+                {course?.status == "declined" && (
                     <Surface style={{ padding: 10, borderRadius: 20, gap: 10 }}>
                         <DeclinedWarning />
                         <Text variant="headlineMedium" style={{ color: theme.colors.tertiary }}>

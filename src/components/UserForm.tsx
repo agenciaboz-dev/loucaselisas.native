@@ -191,7 +191,6 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                     keyboardType="email-address"
                     autoCapitalize={"none"}
                     onSubmitEditing={() => focusInput(4)}
-                    disabled={!!user}
                 />
                 <FormText
                     ref={input_refs[4]}
@@ -234,13 +233,7 @@ export const UserFormComponent: React.FC<UserFormProps> = ({ user, onSubmit, ext
                         value={formik.values.birth ? new Date(Number(formik.values.birth)).toLocaleDateString("pt-br") : ""}
                     />
                 </Pressable>
-                <FormText
-                    ref={input_refs[7]}
-                    name="profession"
-                    formik={formik}
-                    label={"Profissão"}
-                    onSubmitEditing={() => focusInput(8)}
-                />
+                <FormText ref={input_refs[7]} name="profession" formik={formik} label={"Profissão"} onSubmitEditing={() => focusInput(8)} />
                 <View style={{ flexDirection: "row", gap: 10, width: "100%" }}>
                     <FormText
                         ref={input_refs[8]}

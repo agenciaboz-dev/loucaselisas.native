@@ -43,14 +43,25 @@ export const useUser = () => {
         }
     }
 
-    const sendViewedNotification = async (notification: Notification) => {
+    const refreshNotifications = async () => {
+        if (!context.user) return
         try {
-            const response = await api.post("/notification/viewed", { id: notification.id })
+            const response = await api.get("/user/notifications", { params: { user_id: context.user.id } })
+            // @ts-ignore
+            context.setUser((user) => ({ ...user, notifications: response.data }))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const sendViewedNotification = async (notification_id: string) => {
+        try {
+            const response = await api.post("/notification/viewed", { id: notification_id })
             context.updateNotification(response.data)
         } catch (error) {
             console.log(error)
         }
     }
 
-    return { ...context, onLogin, logout, refresh, sendViewedNotification }
+    return { ...context, onLogin, logout, refresh, sendViewedNotification, refreshNotifications }
 }

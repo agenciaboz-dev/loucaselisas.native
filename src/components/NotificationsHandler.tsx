@@ -6,6 +6,7 @@ import Constants from "expo-constants"
 import { Button, Text } from "react-native-paper"
 import { useUser } from "../hooks/useUser"
 import { api } from "../backend/api"
+import { NavigationProp, useNavigation } from "@react-navigation/native"
 
 interface NotificationsHandlerProps {}
 
@@ -66,9 +67,10 @@ async function registerForPushNotificationsAsync() {
 }
 
 export const NotificationsHandler: React.FC<NotificationsHandlerProps> = ({}) => {
-    const { user, setUser, setExpoPushToken, expoPushToken, updateNotification } = useUser()
+    const { user, setUser, setExpoPushToken, expoPushToken, updateNotification, sendViewedNotification } = useUser()
     const notificationListener = useRef<Notifications.Subscription>()
     const responseListener = useRef<Notifications.Subscription>()
+    const navigation = useNavigation<NavigationProp<any, any>>()
 
     const saveExpoPushToken = async () => {
         if (!user || !expoPushToken) return
@@ -104,7 +106,18 @@ export const NotificationsHandler: React.FC<NotificationsHandlerProps> = ({}) =>
         })
 
         responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-            console.log(response)
+            const notification = response.notification.request.content.data
+            console.log(notification)
+            if (notification && notification.target_route) {
+                const routes = notification.target_route.split(",") as string[]
+                console.log(routes)
+                let timeout = 0
+                routes.forEach((route) => {
+                    setTimeout(() => navigation.navigate(route, notification.target_param), timeout)
+                    timeout += 200
+                })
+                sendViewedNotification(notification.id)
+            }
         })
 
         return () => {

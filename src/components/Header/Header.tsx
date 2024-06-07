@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Badge, IconButton, Menu, Text, useTheme } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
 import { FlatList, Pressable, View } from "react-native"
@@ -13,9 +13,17 @@ interface HeaderProps {}
 export const Header: React.FC<HeaderProps> = ({}) => {
     const theme = useTheme()
     const navigation = useNavigation<any>()
-    const { user, sendViewedNotification } = useUser()
+    const { user, sendViewedNotification, refreshNotifications } = useUser()
 
     const [showNotifications, setShowNotifications] = useState(false)
+
+    useEffect(() => {
+        const interval = setInterval(() => refreshNotifications(), 1000 * 60 * 1)
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [])
 
     return user ? (
         <View

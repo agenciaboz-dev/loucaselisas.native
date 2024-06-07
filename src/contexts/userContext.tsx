@@ -23,7 +23,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [expoPushToken, setExpoPushToken] = useState("")
 
     const updateNotification = (notification: Notification) => {
-        console.log(user)
         // @ts-ignore
         setUser((user) => ({ ...user, notifications: [...user?.notifications.filter((item) => item.id != notification.id), notification] }))
     }

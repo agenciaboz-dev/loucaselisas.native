@@ -8,16 +8,17 @@ import { NavigationProp, useNavigation } from "@react-navigation/native"
 interface NotificationItemProps {
     notification: Notification
     closeModal: () => void
-    sendViewedNotification: (notification: Notification) => Promise<void>
+    sendViewedNotification: (notification_id: string) => Promise<void>
 }
 
 export const NotificationItem: React.FC<NotificationItemProps> = ({ notification, closeModal, sendViewedNotification }) => {
     const theme = useTheme()
     const navigation = useNavigation<NavigationProp<any, any>>()
+    const datetime = new Date(Number(notification.datetime))
 
     const onPress = () => {
         closeModal()
-        sendViewedNotification(notification)
+        sendViewedNotification(notification.id)
         const routes = notification.target_route.split(",")
         console.log(routes)
         let timeout = 0
@@ -44,9 +45,12 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
                         {notification.title}
                     </Text>
                     <Text numberOfLines={2}>{notification.body}</Text>
+                    <Text variant="bodySmall" style={{ color: theme.colors.backdrop }}>
+                        {datetime.toLocaleTimeString("pt-br", { hour: "2-digit", minute: "2-digit" })} - {datetime.toLocaleDateString("pt-br")}
+                    </Text>
                 </View>
                 {!notification.viewed && (
-                    <IconButton size={30} icon={"check"} style={{ margin: 0 }} onPress={() => sendViewedNotification(notification)} />
+                    <IconButton size={30} icon={"check"} style={{ margin: 0 }} onPress={() => sendViewedNotification(notification.id)} />
                 )}
             </>
         </TouchableRipple>

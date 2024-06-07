@@ -7,7 +7,7 @@ interface TermsScreenProps {}
 
 export const TermsScreen: React.FC<TermsScreenProps> = ({}) => {
     const terms = `
-    Esses termos e condições se aplicam ao aplicativo Loucas & Co. (por meio deste referido como "Aplicativo") para dispositivos móveis, criado pela Agência BOZ (por meio deste referida como "Prestador de Serviço") como um serviço gratuito.
+    Esses termos e condições se aplicam ao aplicativo Loucas & Lisas (por meio deste referido como "Aplicativo") para dispositivos móveis, criado pela Agência BOZ (por meio deste referida como "Prestador de Serviço") como um serviço gratuito.
     
     Ao baixar ou utilizar o Aplicativo, você concorda automaticamente com os seguintes termos. É fortemente recomendado que você leia e compreenda estes termos antes de usar o Aplicativo. A cópia não autorizada, modificação do Aplicativo, qualquer parte do Aplicativo ou nossas marcas registradas é estritamente proibida. Quaisquer tentativas de extrair o código-fonte do Aplicativo, traduzir o Aplicativo para outros idiomas ou criar versões derivadas não são permitidas. Todas as marcas registradas, direitos autorais, direitos de banco de dados e outros direitos de propriedade intelectual relacionados ao Aplicativo permanecem de propriedade do Prestador de Serviço.
     

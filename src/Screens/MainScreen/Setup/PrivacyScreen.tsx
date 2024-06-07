@@ -7,7 +7,7 @@ interface PricacyScreenProps {}
 
 export const PrivacyScreen: React.FC<PricacyScreenProps> = ({}) => {
     const privacy = `
-    Esta política de privacidade se aplica ao aplicativo Loucas & Co. (por meio deste referido como "Aplicativo") para dispositivos móveis, criado pela Agência BOZ (por meio deste referida como "Prestador de Serviço") como um serviço gratuito. Este serviço é destinado ao uso "TAL COMO ESTÁ".
+    Esta política de privacidade se aplica ao aplicativo Loucas & Lisas (por meio deste referido como "Aplicativo") para dispositivos móveis, criado pela Agência BOZ (por meio deste referida como "Prestador de Serviço") como um serviço gratuito. Este serviço é destinado ao uso "TAL COMO ESTÁ".
 
 Coleta e Uso de Informações
 

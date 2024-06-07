@@ -66,17 +66,28 @@ async function registerForPushNotificationsAsync() {
 }
 
 export const NotificationsHandler: React.FC<NotificationsHandlerProps> = ({}) => {
-    const { user, setUser, setExpoPushToken, expoPushToken } = useUser()
+    const { user, setUser, setExpoPushToken, expoPushToken, updateNotification } = useUser()
     const notificationListener = useRef<Notifications.Subscription>()
     const responseListener = useRef<Notifications.Subscription>()
 
     const saveExpoPushToken = async () => {
         if (!user || !expoPushToken) return
-        if (user.expoPushToken.includes(expoPushToken)) return
+        if (user.expoPushToken?.includes(expoPushToken)) return
 
         try {
-            const response = await api.patch("/user", { id: user.id, expoPushToken: [...user.expoPushToken, expoPushToken] })
+            const response = await api.patch("/user", { id: user.id, expoPushToken: [...(user.expoPushToken || []), expoPushToken] })
             setUser(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const fetchNotification = async (id: string) => {
+        if (!user) return
+        try {
+            const response = await api.get("/notification", { params: { notification_id: id } })
+            console.log(response.data)
+            updateNotification(response.data)
         } catch (error) {
             console.log(error)
         }
@@ -89,6 +100,7 @@ export const NotificationsHandler: React.FC<NotificationsHandlerProps> = ({}) =>
 
         notificationListener.current = Notifications.addNotificationReceivedListener((data) => {
             console.log(JSON.stringify(data, null, 4))
+            fetchNotification(data.request.content.data.id)
         })
 
         responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {

@@ -7,6 +7,7 @@ interface UserContextValue {
     setUser: React.Dispatch<React.SetStateAction<User | null>>
     expoPushToken: string
     setExpoPushToken: React.Dispatch<React.SetStateAction<string>>
+    updateNotification: (notification: Notification) => void
 }
 
 interface UserProviderProps {
@@ -21,5 +22,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null)
     const [expoPushToken, setExpoPushToken] = useState("")
 
-    return <UserContext.Provider value={{ user, setUser, expoPushToken, setExpoPushToken }}>{children}</UserContext.Provider>
+    const updateNotification = (notification: Notification) => {
+        console.log(user)
+        // @ts-ignore
+        setUser((user) => ({ ...user, notifications: [...user?.notifications.filter((item) => item.id != notification.id), notification] }))
+    }
+
+    return <UserContext.Provider value={{ user, setUser, expoPushToken, setExpoPushToken, updateNotification }}>{children}</UserContext.Provider>
 }

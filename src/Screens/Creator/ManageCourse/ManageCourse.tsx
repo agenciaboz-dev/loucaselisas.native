@@ -25,6 +25,7 @@ interface ManageCourseProps {
 
 export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route }) => {
     const theme = useTheme()
+    const course_id = route.params?.course_id as string | undefined
 
     const [showMenu, setShowMenu] = useState(false)
     const [course, setCourse] = useState(route.params?.course as Course | undefined)
@@ -42,7 +43,7 @@ export const ManageCourse: React.FC<ManageCourseProps> = ({ navigation, route })
 
     const refreshCourse = async () => {
         try {
-            const response = await api.get("/course", { params: { course_id: course?.id } })
+            const response = await api.get("/course", { params: { course_id: course?.id || course_id } })
             setCourse(response.data)
         } catch (error) {
             console.log(error)

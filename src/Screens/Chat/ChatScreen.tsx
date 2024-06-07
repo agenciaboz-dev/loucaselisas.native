@@ -37,11 +37,12 @@ interface ChatProps {
 
 export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
     const theme = useTheme()
+    const course_id = route.params?.course_id as string | undefined
     const { user } = useUser()
-    const course = route.params?.course as Course | undefined
     const socket = useRef<Socket | null>(null)
     const scrollRef = useRef<FlatList>(null)
 
+    const [course, setCourse] = useState(route.params?.course as Course | undefined)
     const [sharingLesson, setSharingLesson] = useState(
         route.params?.sharingLesson as { lesson: Lesson; timestamp: number; thumb: string } | undefined
     )
@@ -176,15 +177,31 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
         setSelectedList([])
     }
 
+    const refreshCourse = async () => {
+        console.log("fetching course")
+        try {
+            const response = await api.get("/course", { params: { course_id } })
+            setCourse(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useFocusEffect(
         useCallback(() => {
-            socketConnect()
+            if (course && chat) {
+                console.log(course)
+                socketConnect()
 
-            return () => {
-                unListenEvents()
-                socket.current?.disconnect()
+                return () => {
+                    unListenEvents()
+                    socket.current?.disconnect()
+                }
+            } else {
+                console.log("oi")
+                refreshCourse()
             }
-        }, [])
+        }, [course, chat])
     )
 
     useEffect(() => {
@@ -193,6 +210,13 @@ export const ChatScreen: React.FC<ChatProps> = ({ route }) => {
             setTimeout(() => scrollRef.current?.scrollToOffset({ offset: 0 }), 2000)
         }
     }, [messages])
+
+    useEffect(() => {
+        if (course) {
+            setChat(course.chat!)
+        }
+    }, [course])
+
 
     const [keyboardOpen, setKeyboardOpen] = useState(false)
     const iosKeyboard = Platform.OS == "ios" && keyboardOpen

@@ -3,6 +3,7 @@ import UserContext from "../contexts/userContext"
 import { User } from "../types/server/class"
 import { useNavigation } from "@react-navigation/native"
 import { api } from "../backend/api"
+import { Notification } from "../types/server/class/Notification"
 
 export const useUser = () => {
     const context = useContext(UserContext)
@@ -19,7 +20,7 @@ export const useUser = () => {
     }
 
     const logout = async () => {
-        if (!context.user) return
+        if (!context.user?.expoPushToken) return
 
         navigation.navigate("home")
         context.setUser(null)
@@ -42,5 +43,14 @@ export const useUser = () => {
         }
     }
 
-    return { ...context, onLogin, logout, refresh }
+    const sendViewedNotification = async (notification: Notification) => {
+        try {
+            const response = await api.post("/notification/viewed", { id: notification.id })
+            context.updateNotification(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    return { ...context, onLogin, logout, refresh, sendViewedNotification }
 }

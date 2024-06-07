@@ -1,7 +1,7 @@
 import React, { useState } from "react"
-import { IconButton, Menu, Text, useTheme } from "react-native-paper"
+import { Badge, IconButton, Menu, Text, useTheme } from "react-native-paper"
 import { useUser } from "../../hooks/useUser"
-import { Pressable, View } from "react-native"
+import { FlatList, Pressable, View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { NotificationItem } from "./NotificationItem"
 import placeholders from "../../tools/placeholders"
@@ -13,7 +13,7 @@ interface HeaderProps {}
 export const Header: React.FC<HeaderProps> = ({}) => {
     const theme = useTheme()
     const navigation = useNavigation<any>()
-    const { user } = useUser()
+    const { user, sendViewedNotification } = useUser()
 
     const [showNotifications, setShowNotifications] = useState(false)
 
@@ -40,19 +40,34 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 </Pressable>
                 <Text variant="titleLarge">{user.name}</Text>
             </View>
-            {/* <Menu
+            <Menu
                 visible={showNotifications}
                 onDismiss={() => setShowNotifications(false)}
                 anchorPosition="bottom"
-                anchor={<IconButton icon={"bell-outline"} onPress={() => setShowNotifications(true)} />}
+                anchor={
+                    <View style={{ position: "relative" }}>
+                        <IconButton icon={"bell-outline"} onPress={() => setShowNotifications(true)} />
+                        <Badge style={{ position: "absolute" }}>{user.notifications.filter((item) => !item.viewed).length}</Badge>
+                    </View>
+                }
                 contentStyle={{ width: "100%" }}
-                style={{ width: "93%", marginTop: 30 }}
+                style={{ width: "93%", marginTop: 40 }}
             >
                 <TrianguloMiseravel />
-                <NotificationItem />
-                <NotificationItem />
-                <NotificationItem />
-            </Menu> */}
+                <FlatList
+                    data={user.notifications.sort((a, b) => Number(b.datetime) - Number(a.datetime))}
+                    renderItem={({ item }) => (
+                        <NotificationItem
+                            notification={item}
+                            closeModal={() => setShowNotifications(false)}
+                            sendViewedNotification={sendViewedNotification}
+                        />
+                    )}
+                    keyExtractor={(item) => item.id}
+                    style={{ height: 500, margin: -10 }}
+                    contentContainerStyle={{ padding: 10 }}
+                />
+            </Menu>
         </View>
     ) : null
 }
